@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folha de Fórmulas & Guia Definitivo de Prova: MLG (MATD50/UFBA)</title>
+  <!-- KaTeX CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --secondary: #0284c7;
+      --accent: #dc2626;
+      --emerald: #059669;
+      --amber: #d97706;
+      --purple: #7c3aed;
+      --bg-gray: #f8fafc;
+      --border-gray: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      color: #1e293b;
+      background: #e2e8f0;
+      padding: 20px;
+    }
+    .sheet {
+      background: #ffffff;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 35px 45px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      border-radius: 12px;
+    }
+    .header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 16px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: var(--primary);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .header .badge {
+      background: var(--primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 25px;
+      padding: 12px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      position: sticky;
+      top: 10px;
+      z-index: 10;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .nav-bar a {
+      color: #0369a1;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      background: white;
+      border-radius: 5px;
+      border: 1px solid #cbd5e1;
+      transition: all 0.2s;
+    }
+    .nav-bar a:hover {
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      background: var(--primary);
+      padding: 10px 16px;
+      border-radius: 6px;
+      margin: 30px 0 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-title.alt {
+      background: var(--primary-dark);
+    }
+    .card {
+      background: var(--bg-gray);
+      border: 1px solid var(--border-gray);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+    .formula-box {
+      background: #ffffff;
+      border-left: 4px solid var(--secondary);
+      padding: 10px 14px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+    }
+    .alert-box {
+      background: #fff1f2;
+      border-left: 4px solid var(--accent);
+      padding: 10px 14px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      color: #9f1239;
+    }
+    .success-box {
+      background: #ecfdf5;
+      border-left: 4px solid var(--emerald);
+      padding: 10px 14px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      color: #065f46;
+    }
+    .script-box {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      color: #1e3a8a;
+      font-style: italic;
+      line-height: 1.6;
+    }
+    ul, ol {
+      margin-left: 20px;
+      font-size: 13px;
+      color: #334155;
+    }
+    li { margin-bottom: 5px; }
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 12px;
+      background: #e2e8f0;
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: #0f172a;
+    }
+    pre {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+      line-height: 1.45;
+    }
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      margin: 12px 0;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+    tr:nth-child(even) { background: #f8fafc; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .sheet { padding: 20px 15px; }
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .sheet { box-shadow: none; max-width: 100%; padding: 15px; }
+      .nav-bar { display: none; }
+      .section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="header">
+    <div>
+      <h1>Folha de Fórmulas & Guia Definitivo de Prova</h1>
+      <div class="subtitle">Modelos Lineares Generalizados (MATD50 — UFBA) | Profa. Rosemeire L. Fiaccone</div>
+    </div>
+    <span class="badge">COLA OFICIAL 2026.2</span>
+  </div>
+
+  <div class="nav-bar">
+    <a href="#etapa1">Etapa 1: ANODEV Completa</a>
+    <a href="#etapa2">Etapa 2: Diagnósticos & Gráficos</a>
+    <a href="#etapa3">Etapa 3: Regressão Logística</a>
+    <a href="#etapa4">Etapa 4: Todos os Testes & H0</a>
+    <a href="#etapa5">Etapa 5: Respostas Prontas</a>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ETAPA 1: GUIA DEFINITIVO DA ANODEV, DEVIANCE, PHI E G.L. -->
+  <!-- ========================================== -->
+  <div id="etapa1" class="section-title">
+    <span>ETAPA 1: GUIA DEFINITIVO DA ANODEV, DEVIANCE, $\hat{\phi}$ E GRAUS DE LIBERDADE</span>
+    <span style="font-size:11px; font-weight:normal;">Conceito, Não-Escalonada vs Escalonada, $\hat{\phi}$, Regras de g.l. &amp; Exercícios Resolvidos</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.1 O Que É, Quando Usar e Modelos de Referência (Slides 2, 7)</div>
+    <p style="font-size:13px; margin-bottom:8px;">
+      A <strong>Análise do Desvio (ANODEV)</strong> generaliza a ANOVA para os MLGs substituindo somas de quadrados pela comparação das log-verossimilhanças maximizadas de <strong>modelos encaixados</strong> ($M_{\text{reduzido}} \subset M_{\text{completo}}$).
+    </p>
+    <ul>
+      <li><strong>Quando usar ANODEV:</strong> (1) Testar significância da inclusão/exclusão de covariáveis, fatores e interações em modelos encaixados; (2) Guiar seleção de variáveis (<em>Forward</em>, <em>Backward</em>, <em>Stepwise</em>); (3) Avaliar bondade de ajuste global (somente se $\phi$ conhecido e dados agrupados/Poisson).</li>
+      <li><strong>Quando NÃO usar ANODEV/TRV:</strong> Para modelos <strong>não encaixados</strong> (ex.: comparar ligação <code>logit</code> vs <code>probit</code> ou preditores disjuntos), use <strong>AIC</strong> ($AIC = -2\ell + 2p$; regra: $\Delta AIC &gt; 2 \implies$ menor AIC fortemente preferível).</li>
+    </ul>
+    <div class="formula-box">
+      <strong>Hierarquia (Reta das Log-Verossimilhanças — Slide 7):</strong>
+      $$\ell_0 \le \ell_m \le \ell_q \le \ell_n \qquad \Longleftrightarrow \qquad D_0^* \ge D_m^* \ge D_q^* \ge D_n^* = 0$$
+      • <strong>Modelo Nulo ($M_0$):</strong> Só intercepto ($p=1$, $\mu_i = \bar{y}$). Maior deviance (<code>Null deviance</code>).<br>
+      • <strong>Modelo Proposto ($M_p$):</strong> Modelo com $p$ parâmetros ($1 &lt; p &lt; n$).<br>
+      • <strong>Modelo Saturado ($M_n$):</strong> $n$ parâmetros ($\hat{\mu}_i = y_i$). Verossimilhança máxima $\ell_n$, desvio $D_n = 0$.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.2 Deviance Não-Escalonada ($D_p$) vs. Deviance Escalonada ($D^*$) — Cuidado Máximo na Prova!</div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>Deviance Escalonada ($D^*$ — <em>Scaled Deviance</em>):</strong>
+        $$D^* = 2(\ell_n - \ell_p) = a^{-1}(\phi) D_p = a^{-1}(\phi)\sum_{i=1}^n d_i^2$$
+        • <strong>Adimensional</strong> (sem unidade de $Y$).<br>
+        • Sob o modelo correto: $D^* \sim_a \chi^2_{n-p}$ (exata na Normal c/ $\sigma^2$ conhecido).<br>
+        • <em>Slide 7:</em> Se $\phi$ não foi estimado/conhecido, $D^*$ <strong>não pode</strong> ser determinada diretamente!
+      </div>
+      <div class="formula-box">
+        <strong>Deviance Não-Escalonada ($D_p$ ou $D$ — <em>Unscaled Deviance</em>):</strong>
+        $$D_p = \sum_{i=1}^n d_i^2 = 2 a(\phi)(\ell_n - \ell_p)$$
+        • <strong>Não depende de $\phi$!</strong> Na Normal: $D_p = \sum (y_i-\hat{\mu}_i)^2 = SQRes$ (unidade de $Y^2$).<br>
+        • <strong>É o que o R imprime!</strong> <code>Null deviance</code> e <code>Residual deviance</code> no R são $D_p$.<br>
+        • Quando $\phi = 1$ (Poisson/Binomial): <strong>$D_p = D^*$</strong>!
+      </div>
+    </div>
+    <div class="alert-box">
+      <strong>🚨 Conciliação das Duas Notações nos Slides (para nunca errar na prova!):</strong><br>
+      • <strong>Convenção 1 (Slides 42–50 &amp; R — parâmetro de dispersão $\phi$):</strong> $a(\phi)=\phi \implies \mathbf{D^* = D_p / \phi}$. Normal: $\phi = \sigma^2$; Gama: $\phi = \nu^{-1}$; NI: $\phi = \sigma^2$. É o padrão do R (<code>Dispersion parameter</code>) e de $\hat{\phi}_D = D_p/(n-p)$.<br>
+      • <strong>Convenção 2 (Notação Gilberto Paula — Slides 2 e 8 — parâmetro de precisão):</strong> Escreve $\phi$ no numerador: $\mathbf{D^*(\mathbf{y};\hat{\boldsymbol{\mu}}) = \phi D(\mathbf{y};\hat{\boldsymbol{\mu}})}$, onde Normal tem $\phi = \sigma^{-2}$. Em testes $F$ comparando modelos, $\phi$ cancela e a decisão é <strong>idêntica</strong>!
+    </div>
+    <table>
+      <thead>
+        <tr><th>Distribuição</th><th>$\phi$ (Conv. 1)</th><th>$V(\mu)$</th><th>Deviance Não-Escalonada ($D_p$)</th><th>Comparar $D_p$ direto com $\chi^2_{n-p}$?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Normal</strong></td><td>$\sigma^2$ (est.)</td><td>$1$</td><td>$\sum_{i=1}^n (y_i - \hat{\mu}_i)^2 = SQRes$</td><td><strong>Não!</strong> Só $D^* = SQRes/\sigma^2$</td></tr>
+        <tr><td><strong>Poisson</strong></td><td>$1$ (fixo)</td><td>$\mu$</td><td>$2\sum_{i=1}^n [y_i \ln(y_i/\hat{\mu}_i) - (y_i - \hat{\mu}_i)]$</td><td><strong>Sim</strong> ($D_p = D^*$)</td></tr>
+        <tr><td><strong>Binomial Agrup.</strong></td><td>$1$ (fixo)</td><td>$\pi(1-\pi)/n_i$</td><td>$2\sum_{i=1}^N [y_i \ln(\frac{y_i}{n_i\hat{\pi}_i}) + (n_i-y_i)\ln(\frac{n_i-y_i}{n_i-n_i\hat{\pi}_i})]$</td><td><strong>Sim</strong> (se contagens adequadas)</td></tr>
+        <tr><td><strong>Bernoulli ($m_i=1$)</strong></td><td>$1$ (fixo)</td><td>$\pi(1-\pi)$</td><td>$-2\sum_{i=1}^n [y_i\ln\hat{\pi}_i + (1-y_i)\ln(1-\hat{\pi}_i)]$</td><td><strong>Não!</strong> Falha ($m_i=1 \to$ Hosmer-Lemeshow)</td></tr>
+        <tr><td><strong>Gama</strong></td><td>$\nu^{-1}$ (est.)</td><td>$\mu^2$</td><td>$2\sum_{i=1}^n [-\ln(y_i/\hat{\mu}_i) + (y_i-\hat{\mu}_i)/\hat{\mu}_i]$</td><td><strong>Não!</strong> Só $D^* = D_p/\hat{\phi}$</td></tr>
+        <tr><td><strong>Normal Inversa</strong></td><td>$\sigma^2$ (est.)</td><td>$\mu^3$</td><td>$\sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{y_i \hat{\mu}_i^2}$</td><td><strong>Não!</strong> Só $D^* = D_p/\hat{\phi}$</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.3 Estimação Completa do Parâmetro de Dispersão ($\hat{\phi}$) (Slides 42–49)</div>
+    <p style="font-size:12.5px; margin-bottom:8px;">
+      <strong>Conhecido ($\phi = 1$):</strong> Binomial (e Bernoulli), Poisson e Binomial Negativa. &nbsp;|&nbsp; <strong>Desconhecido (estimar):</strong> Normal ($\sigma^2$), Gama ($\nu^{-1}$) e Normal Inversa ($\sigma^2$).
+    </p>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>1. Método do Desvio (Slides 43–44):</strong><br>
+        Como $D^* = D_p/\phi \sim \chi^2_{n-p} \implies E(D^*) = n-p$:
+        $$\hat{\phi}_D = \frac{D_p}{n - p}$$
+        • Na Normal, iguala $QMRes = SQRes/(n-p)$.<br>
+        • <em>Limitação:</em> Na Gama, $y_i$ perto de zero infla $D_p$ e distorce $\hat{\phi}_D$.
+      </div>
+      <div class="formula-box">
+        <strong>2. Método de Pearson ($\hat{\phi}_P$ — Favorito do R):</strong><br>
+        Como $\chi_p^2/\phi \sim \chi^2_{n-p}$:
+        $$\hat{\phi}_P = \frac{1}{n - p}\sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{V(\hat{\mu}_i)} = \frac{X_p^2}{n - p}$$
+        • Depende só de $\hat{\mu}_i$ e $V(\hat{\mu}_i)$; mais estável na Gama (usado no <code>summary(glm)</code>).
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>3. Método da Máxima Verossimilhança ($\hat{\phi}_{MV}$ — Slide 47–48):</strong><br>
+        Resolve $U_\phi = \frac{\partial \ell(\beta, \phi)}{\partial \phi} = 0$:<br>
+        • <strong>Normal e Normal Inversa:</strong> $\hat{\phi}_{MV} = \frac{D_p}{n}$ (viesado, divide por $n$!)<br>
+        • <strong>Gama — Cordeiro &amp; McCullagh (1991):</strong>
+        $$\hat{\phi}_{CM} = \frac{2 D_p}{n \left[ 1 + \left( 1 + \frac{2 D_p}{3n} \right)^{1/2} \right]}$$
+      </div>
+      <div class="success-box">
+        <strong>4. Propriedade Teórica — Ortogonalidade $\beta \perp \phi$ (Slide 49):</strong><br>
+        $$\mathfrak{I}_{\beta\phi}(\theta) = E\left[\frac{\partial^2 \ell(\beta, \phi)}{\partial \beta \partial \phi}\right] = 0 \implies \mathfrak{I}_\theta = \text{diag}\{\mathfrak{I}_{\beta\beta}, \mathfrak{I}_{\phi\phi}\}$$
+        • A matriz de informação de Fisher é <strong>bloco-diagonal</strong>.<br>
+        • $\hat{\boldsymbol{\beta}}$ e $\hat{\phi}$ são assintoticamente independentes; estima-se $\hat{\boldsymbol{\beta}}$ sem depender de $\phi$!
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.4 Regras Completas de $n$ ($N$), $p$, $m$, $q$, Graus de Liberdade ($gl$) &amp; Armadilhas (Slides 3–9, 74)</div>
+    <div class="grid-2">
+      <div>
+        <ul>
+          <li><strong>Quem é $n$ (ou $N$)?</strong> Em dados individuais, $n$ = nº de indivíduos. Em <strong>dados agrupados</strong> (Slides 8, 74), $N$ = nº de <strong>subpopulações</strong> (linhas da tabela de combinações de fatores), e <strong>NÃO</strong> o total de sujeitos! Logo: $gl_{\text{Nulo}} = N - 1$.</li>
+          <li><strong>Contagem de $p$ (parâmetros totais):</strong> Intercepto ($+1$) + contínua ($+1$) + polinômio quadrático ($+2$) + fator $A$ ($+[n(A)-1]$) + interação $A\!:\!B$ ($+[n(A)-1][n(B)-1]$).</li>
+          <li><strong>Graus de liberdade residuais:</strong> $gl_{\text{modelo}} = n - p$ (Saturado: $gl = 0, D = 0$).</li>
+          <li><strong>Diferença entre encaixados ($M_m \subset M_q$):</strong> $\Delta gl = gl_m - gl_q = q - m$.</li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><strong>🚨 Armadilha dos <code>NA</code>s (Slide 8):</strong> Se covariáveis tiverem dados faltantes, cada modelo ajusta em um $n$ diferente $\implies$ <strong>ANODEV/TRV fica INVÁLIDA</strong>! (Confira se <code>Resid. Df</code> cai apenas $\Delta p$).</li>
+          <li><strong>Aditividade e Monotonicidade (Slide 3):</strong> Deviance é <strong>aditiva</strong> ($\Delta D = D_m - D_q$) e <strong>sempre decresce</strong> ao adicionar termos. Pearson ($X^2$) <strong>não</strong> é aditiva e pode oscilar!</li>
+          <li><strong>Pseudo-$R^2$ (Slide 4):</strong> $R^2 = \frac{D_0 - D_1}{D_0} = 1 - \frac{D_1}{D_0}$ (proporção explicada; $\phi$ cancela na razão!).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">1.5 Como Fazer a ANODEV: Passo a Passo</div>
+      <ol>
+        <li><strong>Hipóteses ($M_m \subset M_q$, $m &lt; q$):</strong>
+          $$H_0: \beta_{m+1} = \cdots = \beta_q = 0 \quad \text{vs} \quad H_1: \text{pelo menos um } \beta_j \ne 0$$
+        </li>
+        <li><strong>Diferenças:</strong> $\Delta D = D_m - D_q = 2(\ell_q - \ell_m) \ge 0$ e $\Delta gl = gl_m - gl_q = q - m$.</li>
+        <li><strong>Teste conforme $\phi$:</strong>
+          <ul>
+            <li><strong>Caso A ($\phi = 1$ — Binomial/Poisson):</strong> $\Delta D^* = \Delta D \sim_a \chi^2_{q-m}$ (<code>test="Chisq"</code>).</li>
+            <li><strong>Caso B ($\phi$ desconhecido — Normal/Gama/NI):</strong> Teste $F$ (<code>test="F"</code>, quadro ao lado).</li>
+          </ul>
+        </li>
+        <li><strong>Decisão ($\alpha=5\%$):</strong> Se $p &lt; 0.05$ (ou est. $&gt;$ crítico) $\implies$ Rejeita $H_0 \implies$ Adota $M_q$. Caso contrário, mantém $M_m$ por parcimônia.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title">1.6 $\phi$ Desconhecido &amp; Regra do Maximal (Slides 3, 50)</div>
+      <div class="formula-box">
+        $$F = \frac{(D_m - D_q)/(q - m)}{\hat{\phi}_{\text{maximal}}} = \frac{\Delta D / \Delta gl}{D_{\text{max}} / (n - q_{\text{max}})} \sim_a F_{q - m, \, n - q_{\text{maximal}}}$$
+      </div>
+      <div class="alert-box">
+        <strong>🚨 Regra de Ouro da Professora Rosemeire (Slide 50):</strong><br>
+        Numa sequência de modelos encaixados, aplique em <strong>TODOS os testes $F$</strong> a estimativa $\hat{\phi}$ do <strong>modelo maximal</strong>! Se usar $\hat{\phi}$ de um modelo intermediário sub-ajustado, variáveis omitidas inflam $D_m$, aumentam $\hat{\phi}$, derrubam $F$ e escondem termos significantes!
+      </div>
+      <p style="font-size:12px; color:#475569;"><em>Nota:</em> O Slide 50 grafa $(D_m^*-D_q^*)$ sobre $D_q^*/(n-q)$ (onde $\phi$ cancela); na tabela do R usa-se diretamente $D_p$ (<code>Residual deviance</code>).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.7 Interpretação de Tabelas ANODEV: Tipo I (<code>anova</code>) vs. Tipo II (<code>Anova</code>) vs. Saídas Reais</div>
+    <div class="grid-2">
+      <div>
+        <pre><code># Lista 4 — Gestantes (Binomial Agrupada, N = 8 subpopulações):
+Analysis of Deviance Table (Model: binomial, link: logit)
+Terms added sequentially (first to last)
+                     Df Deviance Resid. Df Resid. Dev Pr(&gt;Chi)    
+NULL                                     7    352.271              
+Tempo_gestacao        1  342.334         6      9.937  &lt; 2e-16 ***
+Idade_mae             1    6.038         5      3.898  0.01400 *  
+Qtde_cigarros         1    2.411         4      1.488  0.12048    
+
+# Slide 43 — Cupons (Binomial Agrupada, N = 7 níveis de desconto):
+Null deviance:     442.2377 on 6 degrees of freedom
+Residual deviance:   2.1571 on 5 degrees of freedom (p = 0.83)</code></pre>
+      </div>
+      <div class="success-box" style="margin-top:0;">
+        <strong>Diferença Crucial na Prova + Guia do <code>epiDisplay::logistic.display()</code> (Slide 36):</strong><br>
+        • <strong><code>anova(m)</code> (Tipo I — Sequencial):</strong> A ordem importa! Cada linha testa o termo <em>dado que apenas os termos acima já estão no modelo</em>. Ex.: <code>Idade_mae</code> reduz $9.937 \to 3.898$ ($\Delta D = 6.038, p=0.014$); reordenando a fórmula, os valores intermediários mudam (exceto o último).<br>
+        • <strong><code>car::Anova(m)</code> (Tipo II — Parcial):</strong> Testa cada termo <em>ajustado por todos os demais</em>. <strong>Independe da ordem!</strong><br>
+        • <strong><code>anova(m1, m2)</code>:</strong> Compara um bloco de $\Delta gl$ variáveis entre dois modelos encaixados.<br>
+        • <strong><code>logistic.display(m)</code>:</strong> Traz numa só saída <code>crude OR</code> (bruto), <code>adj. OR (95% CI)</code>, <code>P(Wald's test)</code> e <code>P(LR-test)</code> (prefira o <code>LR-test</code> quando houver discrepância sob $\hat{\pi}$ extremos!).
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.8 Exercícios Resolvidos Completos de ANODEV (Estilo Prova — Sem Programação)</div>
+
+    <div class="script-box" style="font-style:normal; margin-bottom:12px;">
+      <strong>📝 Exercício Resolvido A ($\phi = 1$ Conhecido — Dados Binomiais Agrupados da Lista 4, Gestantes):</strong><br>
+      Fatores binários <em>Tempo de gestação</em>, <em>Idade da mãe</em> e <em>Cigarros/dia</em> combinados geram $2 \times 2 \times 2 = 8$ subpopulações (total de $6789$ nascimentos):
+      <pre style="margin:6px 0;"><code>                       Df Deviance Resid. Df Resid. Dev Pr(&gt;Chi)
+NULL                                     [A]    352.271         
+Tempo_gestacao          1  342.334         6        [B]  &lt; 0.001 ***
+Idade_mae               1    6.038       [C]      3.898    0.014 *
+Quantidade_cigarros     1      [D]         4      1.488    0.120  </code></pre>
+      • <strong>Passo 1 (Completar tabela):</strong> Como são dados agrupados em $N=8$ subpopulações, $gl_N = N - 1 \implies$ <strong>[A] = 7</strong> (e NÃO $6788$!). Por aditividade: <strong>[B] = $352.271 - 342.334 = 9.937$</strong>; adicionando $+1$ parâmetro, <strong>[C] = $6 - 1 = 5$</strong>; e <strong>[D] = $3.898 - 1.488 = 2.410$</strong> (na saída arredondada: $2.411$).<br>
+      • <strong>Passo 2 (Decisão a 5%):</strong> <code>Tempo</code> ($p&lt;0.001$) e <code>Idade</code> ($p=0.014 &lt; 0.05$) superam $\chi^2_{1;0.95} = 3.841$ e permanecem. <code>Cigarros</code> tem $\Delta D = 2.411 &lt; 3.841$ ($p=0.12 \ge 0.05$) $\implies$ fica fora. Seleciona-se <strong>Tempo + Idade</strong> ($p=3, gl=5$).<br>
+      • <strong>Passo 3 (Pseudo-$R^2$ e Bondade de Ajuste):</strong> Pseudo-$R^2 = 1 - \frac{3.898}{352.271} = \mathbf{98.89\%}$. Como os dados são agrupados ($N=8$ subpopulações grandes) e $\phi=1$, vale $\frac{D_p}{N-p} = \frac{3.898}{5} = \mathbf{0.78} \approx 1$ (e $3.898 &lt; \chi^2_{5;0.95}=11.07$, $p=0.564 &gt; 0.05$) $\implies$ modelo muito bem ajustado e sem superdispersão!
+    </div>
+
+    <div class="script-box" style="font-style:normal; background:#fffbeb; border-color:#d97706; color:#78350f; margin-bottom:12px;">
+      <strong>📝 Exercício Resolvido B ($\phi$ Desconhecido — Gama com 4 Modelos Encaixados, Estimação de $\hat{\phi}$ e Teste $F$):</strong><br>
+      Estudo Gama ($\phi = \nu^{-1}$ desconhecido) com $n = 60$ pacientes: $M_0$ (Nulo): $D_p=42.00$; $M_1$ ($+X_1$ contínua): $D_p=39.80$; $M_2$ ($+X_2$ fator c/ 3 níveis): $D_p=18.50$; $M_3$ (Maximal, $+X_3$ contínua): $D_p=17.90$ e $X_3^2 = 16.50$. Críticos: $F_{1,55;0.95}=4.016$; $F_{2,55;0.95}=3.165$.<br>
+      • <strong>1. Parâmetros e $gl$:</strong> $M_0: p=1, gl=59$; $M_1: p=2, gl=58$; $M_2: p=2+(3-1)=4, gl=56$; $M_3: p=5, gl=55$.<br>
+      • <strong>2. Estimativas de $\hat{\phi}$ no Maximal ($M_3$, $gl=55$):</strong><br>
+        – Desvio: $\hat{\phi}_D = \frac{17.90}{55} = \mathbf{0.3255}$ &nbsp;|&nbsp; – Pearson: $\hat{\phi}_P = \frac{16.50}{55} = \mathbf{0.3000}$ &nbsp;|&nbsp; – Cordeiro &amp; McCullagh: $\hat{\phi}_{CM} = \frac{2(17.90)}{60[1+\sqrt{1+\frac{2(17.90)}{180}}]} \approx \mathbf{0.2848}$.<br>
+      • <strong>3. Testes $F$ usando $\hat{\phi}_{\text{max}} = 0.3255$:</strong><br>
+        – $M_1$ vs $M_0$ ($\Delta gl=1$): $F_1 = \frac{(42.00 - 39.80)/1}{0.3255} = \mathbf{6.760} &gt; 4.016$ ($p=0.0119 &lt; 0.05$) $\implies$ Rejeita $H_0$, $X_1$ entra! <em>(⚠️ Pegadinha: se errasse usando $\hat{\phi}_1 = 39.80/58 = 0.6862$, daria $F=3.206, p=0.0786$, mascarando $X_1$!)</em><br>
+        – $M_2$ vs $M_1$ ($\Delta gl=2$): $F_2 = \frac{(39.80 - 18.50)/2}{0.3255} = \mathbf{32.723} &gt; 3.165$ ($p &lt; 0.0001$) $\implies$ $X_2$ é altamente significante!<br>
+        – $M_3$ vs $M_2$ ($\Delta gl=1$): $F_3 = \frac{(18.50 - 17.90)/1}{0.3255} = \mathbf{1.844} &lt; 4.016$ ($p = 0.1801 \ge 0.05$) $\implies$ $X_3$ não é significante.<br>
+      • <strong>4. Conclusão:</strong> Escolhe-se $M_2$ (Pseudo-$R^2 = 1 - 18.50/42.00 = \mathbf{55.95\%}$). Note que $D_p^{(2)} = 18.50$ é não-escalonada; escalonando: $D^*_2 = 18.50 / 0.3255 = \mathbf{56.84} \approx gl_2 = 56$!
+    </div>
+
+    <div class="script-box" style="font-style:normal; background:#f5f3ff; border-color:#7c3aed; color:#4c1d95; margin-bottom:12px;">
+      <strong>📝 Exercício Resolvido C (Tipo I vs Tipo II &amp; Bernoulli Individual — Lista 4, Kyphosis, $n=81$):</strong><br>
+      Ajuste logístico: Modelo 1 (<code>~ Age + Number + Start</code>) tem <code>Null dev=83.234 (80 df)</code>, <code>Resid dev=61.380 (77 df)</code>, <code>AIC=69.38</code>; Modelo 2 (<code>~ Start</code>) tem <code>Resid dev=68.072 (79 df)</code>, <code>AIC=72.072</code>.<br>
+      • <strong>1. Tipo I (<code>anova</code>):</strong> <code>Age</code> ($\Delta D=1.302$), <code>Number</code> ($\Delta D=10.306$), <code>Start</code> ($\Delta D=10.247$). &nbsp;|&nbsp; <strong>Tipo II (<code>Anova</code>):</strong> <code>Age</code> ($3.157, p=0.076$), <code>Number</code> ($3.919, p=0.048^*$), <code>Start</code> ($10.247, p=0.0014^{**}$). <em>Por que mudam?</em> Porque na Tipo I, <code>Number</code> entra antes de <code>Start</code>; na Tipo II, cada termo é testado por último; apenas <code>Start</code> coincide!<br>
+      • <strong>2. Comparação Modelo 1 vs Modelo 2 ($H_0: \beta_{\text{Age}}=\beta_{\text{Number}}=0$):</strong> $\Delta D = 68.072 - 61.380 = \mathbf{6.692}$ com $\Delta gl = 79 - 77 = \mathbf{2}$. Como $6.692 &gt; \chi^2_{2;0.95}=5.991$ ($p=0.0352 &lt; 0.05$) e $\Delta AIC = 72.072 - 69.38 = 2.692 &gt; 2$, rejeita-se $H_0$: conjuntamente, <code>Age</code> e <code>Number</code> melhoram o ajuste!<br>
+      • <strong>3. 🚨 Pegadinha:</strong> Como são dados individuais binários ($m_i=1$), <code>61.380 / 77 = 0.80</code> <strong>NÃO</strong> avalia bondade de ajuste nem dispersão (exige Hosmer-Lemeshow), mas o TRV $\Delta D = 6.692$ é 100% válido!
+    </div>
+
+    <div class="success-box" style="margin-bottom:0;">
+      <strong>1.9 Modelos Prontos para Escrever na Folha da Prova:</strong><br>
+      • <strong>Se $\phi = 1$ (Binomial/Poisson):</strong> <em>"Realizou-se ANODEV via TRV testando $H_0: \beta_{\text{adic}} = 0$ vs $H_1: \text{pelo menos um } \beta \ne 0$. Com $\phi=1$, $\Delta D^* = D_m - D_q = [\text{val}]$ com $\Delta gl = [\text{val}]$ sob $\chi^2_{\Delta gl}$. Como $p = [\text{val}] &lt; 0.05$, rejeita-se $H_0$, mantendo o(s) termo(s) por melhorar significativamente o ajuste."</em><br>
+      • <strong>Se $\phi$ desconhecido (Normal/Gama/NI):</strong> <em>"Como $\phi$ é desconhecido, as deviances são não-escalonadas ($D_p$). Estimou-se $\hat{\phi}_{\text{max}} = [\text{val}]$ a partir do modelo maximal ($gl = [\text{val}]$) e aplicou-se $F = \frac{(D_m-D_q)/\Delta gl}{\hat{\phi}_{\text{max}}} = [\text{val}] \sim F_{\Delta gl, gl_{\text{max}}}$. Como $p = [\text{val}]$, [rejeita-se / não rejeita-se] $H_0$."</em>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ETAPA 2: DIAGNÓSTICOS DO MLG -->
+  <!-- ========================================== -->
+  <div id="etapa2" class="section-title">
+    <span>ETAPA 2: GUIA COMPLETO DE DIAGNÓSTICOS DO MLG</span>
+    <span style="font-size:11px; font-weight:normal;">Robustez, Tríade Assintótica, Resíduos (incl. Anscombe &amp; Williams), Alavanca e Influência</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.0 Robustez Assintótica, Tríade de Testes, IC pela Deviance &amp; Alerta de Convenção de $\phi$ (Slides 20–27, 90–95)</div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>1. Robustez da Ligação vs. Má Especificação de $\phi$:</strong><br>
+        • <strong>Ligação e preditor corretos ($\mu_i = g^{-1}(x_i^T\beta)$):</strong> Mesmo que $\phi$ esteja mal especificado (ex.: superdispersão em Binomial/Poisson), $\hat{\beta}$ permanece assintoticamente consistente! <strong>PORÉM</strong>, os $EP(\hat{\beta}_j)$ ingênuos ($\phi=1$) ficam <strong>subestimados</strong> $\implies z$ inflado $\implies$ <strong>falsos positivos</strong>.<br>
+        • <strong>Ligação ou preditor errados:</strong> $\hat{\beta}$ torna-se <strong>viciado</strong>; ajustar $\phi$ não corrige!
+      </div>
+      <div class="formula-box">
+        <strong>2. Tríade Assintótica para $H_0: C\beta = d$ e IC pela Deviance:</strong><br>
+        • <strong>Wald:</strong> $W = \hat{\beta}_j^2 / \widehat{\text{Var}}(\hat{\beta}_j) \sim \chi^2_1$ (rápido no <code>summary</code>, mas <strong>falha no efeito Hauck-Donner</strong> sob separação!).<br>
+        • <strong>TRV ($\Delta D^*$):</strong> $2(\ell_1-\ell_0) = D^*_0 - D^*_1 \sim \chi^2_q$. Invariante e <strong>imune a Hauck-Donner</strong>.<br>
+        • <strong>Escore de Rao:</strong> $S_R = U(\hat{\beta}_0)^T \mathcal{I}(\hat{\beta}_0)^{-1} U(\hat{\beta}_0) \sim \chi^2_q$, avaliado <strong>só sob $H_0$</strong> (= $\chi^2$ de Pearson).<br>
+        • <strong>IC da Deviance (<code>confint()</code>):</strong> $\{\beta_j : D^*(\beta_j,\hat{\beta}_{-j})-D^*(\hat{\beta}) \le \chi^2_{1;1-\alpha}\}$ — captura <strong>assimetria</strong> pelas duas raízes (ao contrário do Wald simétrico).
+      </div>
+    </div>
+    <div class="alert-box">
+      <strong>🚨 Alerta Crítico de Dupla Convenção de $\phi$ em Resíduos e Influência (Paula vs. Williams/R):</strong><br>
+      • <strong>Slides Paula (Slides 31–39 — $\phi$ como Precisão):</strong> $\text{Var}(Y_i)=\phi^{-1}V(\mu_i) \implies \hat{\phi}$ fica no <strong>numerador</strong> ($r_{Di} = \hat{\phi}^{1/2}d_i/\sqrt{1-h_{ii}}$, $r_{Pi} = \hat{\phi}^{1/2}(y_i-\hat{\mu}_i)/\sqrt{V(\hat{\mu}_i)(1-h_{ii})}$, $LD_i \propto \hat{\phi}$, Cook $D_i \propto \hat{\phi}$).<br>
+      • <strong>Williams (1987, Slide 40) e R (<code>Dispersion parameter</code> — $\phi_{\text{disp}} = \phi^{-1}$):</strong> $\text{Var}(Y_i)=\phi_{\text{disp}}V(\mu_i) \implies \hat{\phi}_{\text{disp}}$ fica no <strong>denominador</strong> ($r_{Di} = d_i/\sqrt{\hat{\phi}_{\text{disp}}(1-h_{ii})}$, $r_{Pi} = (y_i-\hat{\mu}_i)/\sqrt{\hat{\phi}_{\text{disp}}V(\hat{\mu}_i)(1-h_{ii})}$). Em <strong>Binomial/Poisson ($\phi=1$)</strong> ambas são idênticas!
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.1 A Relação entre Residual Deviance e Graus de Liberdade ($D$ vs $gl$)</div>
+    <p style="font-size:13px; margin-bottom:8px;">
+      Em modelos bem ajustados com $\phi = 1$ conhecido (Poisson ou Binomial com dados agrupados), a teoria assintótica estabelece que $E(D^*) \approx n - p$. Logo, a razão $\frac{D_p}{n - p}$ (somente quando $\phi=1$!) é um termômetro vital; se $\phi$ for desconhecido, $\frac{D_p}{n-p}$ é o próprio estimador $\hat{\phi}_D$ e exige dividir por $\hat{\phi}$ antes de comparar com $gl$:
+    </p>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>Ajuste Ideal ($\phi=1$):</strong> $\frac{D_p}{n - p} \approx 1.0$<br>
+        <strong>Sobredispersão (<em>Overdispersion</em>):</strong> $\frac{D_p}{n - p} \gg 1.0$ (variabilidade observada maior que a teórica; requer modelo Quasi-verossimilhança ou Binomial Negativa).<br>
+        <strong>Subdispersão:</strong> $\frac{D_p}{n - p} \ll 1.0$ (rara; indica superajuste ou correlação negativa).
+      </div>
+      <div class="alert-box">
+        <strong>🚨 O Paradoxo de Dados Binários Puros ($y \in \{0, 1\}$ / $m_i = 1$):</strong><br>
+        Em dados individuais, a deviance residual $D = -2\sum [\hat{\pi}\ln\hat{\pi} + (1-\hat{\pi})\ln(1-\hat{\pi})]$ depende unicamente das probabilidades ajustadas e <strong>NÃO segue $\chi^2_{n-p}$</strong>! A relação $\frac{D}{n-p}$ perde o sentido de teste global (embora $\Delta D$ entre encaixados continue válido!). Exige-se o teste de <strong>Hosmer-Lemeshow</strong>!
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.2 Todos os Resíduos em MLG (incl. Anscombe e Williams $r_{Gi}$)</div>
+    <table>
+      <thead>
+        <tr><th>Resíduo</th><th>Fórmula (Convenção Precisão Paula / Dispersão R)</th><th>Por que / Quando Fazer</th><th>Limitações</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ordinário</strong></td>
+          <td>$r_i = y_i - \hat{\mu}_i$</td>
+          <td>Diferença bruta observada menos predita.</td>
+          <td><strong>Falha em MLG:</strong> Heterocedasticidade intrínseca ($\text{Var}(Y) = \phi_{\text{disp}}V(\mu)$) e assimetria. Não usar.</td>
+        </tr>
+        <tr>
+          <td><strong>De Pearson Padronizado ($r_{Pi}$)</strong></td>
+          <td>$r_{Pi} = \frac{\hat{\phi}^{1/2}(y_i - \hat{\mu}_i)}{\sqrt{V(\hat{\mu}_i)(1-h_{ii})}} = \frac{y_i - \hat{\mu}_i}{\sqrt{\hat{\phi}_{\text{disp}}V(\hat{\mu}_i)(1-h_{ii})}}$</td>
+          <td>Base da estatística $X^2$; padroniza variância pela função $V(\mu)$ e $1-h_{ii}$.</td>
+          <td>Ainda assimétrico em Poisson/Gama e ruim em dados binários individuais ($m_i=1$).</td>
+        </tr>
+        <tr>
+          <td><strong>Deviance Padronizado ($r_{Di}$)</strong></td>
+          <td>$r_{Di} = \frac{\hat{\phi}^{1/2}d_i}{\sqrt{1 - h_{ii}}} = \frac{d_i}{\sqrt{\hat{\phi}_{\text{disp}}(1 - h_{ii})}}$</td>
+          <td>Corrige contribuição individual à deviance $d_i=\text{sign}(y_i-\hat{\mu}_i)|d_i|$ pelo peso $1-h_{ii}$.</td>
+          <td>Requer $h_{ii}$ e $d_i$; ainda pode ter leve assimetria em contagens muito pequenas.</td>
+        </tr>
+        <tr>
+          <td><strong>De Anscombe ($r_i^A$)</strong></td>
+          <td>$r_i^A = \frac{\hat{\phi}^{1/2}[A(y_i) - A(\hat{\mu}_i)]}{A'(\hat{\mu}_i)\sqrt{V(\hat{\mu}_i)(1-h_{ii})}}$</td>
+          <td>Aplica transformação $A(\cdot)$ que <strong>estabiliza a assimetria</strong> (ex.: $y^{2/3}$ Poisson, $y^{1/3}$ Gama).</td>
+          <td>Forma fechada $A(\cdot)$ varia por família; na prática $r_{Di}$ costuma aproximá-lo muito bem.</td>
+        </tr>
+        <tr style="background:#ecfdf5;">
+          <td><strong>Combinado de Williams ($r_{Gi}$)</strong></td>
+          <td>$$r_{Gi} = \text{sign}(y_i - \hat{\mu}_i)\sqrt{(1 - h_{ii})\,r_{Di}^2 + h_{ii}\,r_{Pi}^2}$$</td>
+          <td><strong>O preferido em diagnóstico de MLG (Williams, 1987).</strong> Usa os padronizados $r_{Di}$ e $r_{Pi}$ (já divididos por $\sqrt{1-h_{ii}}$), aproximando o resíduo de deleção da deviance!</td>
+          <td>Requer computar ambos $r_{Di}$ e $r_{Pi}$ padronizados junto com a matriz $H$.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="success-box">
+      <strong>Por que Williams ($r_{Gi}$) e Deviance Padronizado ($r_{Di}$) dominam?</strong> Sua distribuição empírica é substancialmente mais simétrica e próxima de $N(0,1)$ do que $r_{Pi}$, validando a faixa de alerta $[-2, +2]$ e a aproximação 1-passo para o impacto da remoção do caso $i$.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.3 Todos os 4 Gráficos Diagnósticos, Matriz $H$, Influência &amp; Half-Normal Envelope</div>
+    <div class="grid-2">
+      <div class="card" style="margin-bottom:0;">
+        <span class="font-bold text-slate-800 block text-xs mb-1">1. Resíduos vs Índice</span>
+        <p style="font-size:12px;"><strong>Por que fazer:</strong> Identificar outliers isolados e tendências/dependência na ordem de coleta.</p>
+        <p style="font-size:12px;"><strong>Interpretação:</strong> Oscilação aleatória em $[-2, +2]$. Pontos além de $[-3, +3]$ são candidatos fortes a outliers.</p>
+        <p style="font-size:11.5px; color:#64748b;"><em>Limitação:</em> Não testa a forma do preditor nem a função de ligação.</p>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <span class="font-bold text-slate-800 block text-xs mb-1">2. Resíduos vs Valores Ajustados ($\hat{\eta}_i$ ou $\hat{\mu}_i$)</span>
+        <p style="font-size:12px;"><strong>Por que fazer:</strong> Checar linearidade da ligação/preditor e função de variância $V(\mu)$.</p>
+        <p style="font-size:12px;"><strong>Interpretação:</strong> Padrão curvo $\implies$ falta termo quadrático ou ligação errada. Funil $\implies V(\mu)$ inadequada.</p>
+        <p style="font-size:11.5px; color:#64748b;"><em>Limitação:</em> Em binários puros ($m_i=1$), forma duas curvas paralelas difíceis de ler a olho nu.</p>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="card" style="margin-bottom:0;">
+        <span class="font-bold text-slate-800 block text-xs mb-1">3. Meio-Normal com Envelope Simulado (Atkinson, 1985)</span>
+        <p style="font-size:12px;"><strong>Construção:</strong> Ordena $|r|_{(i)}$ vs escores esperados $\Phi^{-1}\!\left(\frac{i + n - 1/8}{2n + 1/2}\right)$ e gera <strong>$99$ amostras simuladas</strong> (bandas nos percentis 5%, 50%, 95%).</p>
+        <p style="font-size:12px;"><strong>Diagnóstico Diferencial (Crucial na Prova!):</strong><br>
+          • <strong>Outlier isolado:</strong> Apenas os <strong>maiores resíduos</strong> saltam acima da banda superior.<br>
+          • <strong>Superdispersão / Ligação ou Distribuição errada:</strong> Pontos <strong>pequenos E grandes</strong> escapam sistematicamente das bandas!</p>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <span class="font-bold text-slate-800 block text-xs mb-1">4. Alavancagem ($h_{ii}$), Pregibon 1-Passo, $LD_i$ &amp; Cook ($D_i$)</span>
+        <p style="font-size:11.5px;"><strong>Matriz de Projeção Geral:</strong> $H = W^{1/2}X(X^TWX)^{-1}X^TW^{1/2}$, com $w_i = [\phi_{\text{disp}} V(\hat{\mu}_i) g'(\hat{\mu}_i)^2]^{-1}$ ($\phi$ cancela em $H$; se há intercepto, $\frac{1}{n} \le h_{ii} \le 1$ e $\sum h_{ii} = p$). Ponto de corte: $h_{ii} &gt; \frac{2p}{n}$ ou $\frac{3p}{n}$.</p>
+        <p style="font-size:11.5px;"><strong>Insight de Williams (1987 — $X$ vs $Y$):</strong> Como $W$ depende de $\hat{\mu}_i$, um ponto extremo em $X$ com $w_i \approx 0$ (ex.: $\hat{\pi}_i \to 0$ ou $1$) pode exibir $h_{ii}$ <strong>pequeno</strong> apesar de extremo!</p>
+        <p style="font-size:11.5px;"><strong>Pregibon 1-passo &amp; Medidas Globais:</strong> $\hat{\beta}-\hat{\beta}_{(i)} \approx (X^TWX)^{-1}x_i\frac{y_i-\hat{\mu}_i}{(1-h_{ii})V(\hat{\mu}_i)g'(\hat{\mu}_i)}$. Deslocamento da verossimilhança $LD_i \approx \frac{h_{ii}}{1-h_{ii}}r_{Pi}^2$; Distância de Cook $D_i = \frac{h_{ii}}{p(1-h_{ii})}r_{Pi}^2$ (ou com $r_{Gi}$; alerta $D_i &gt; \frac{4}{n-p}$ ou salto isolado).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ETAPA 3: REGRESSÃO LOGÍSTICA -->
+  <!-- ========================================== -->
+  <div id="etapa3" class="section-title">
+    <span>ETAPA 3: GUIA COMPLETO DO MODELO DE REGRESSÃO LOGÍSTICA</span>
+    <span style="font-size:11px; font-weight:normal;">Quando Usar, Passo a Passo, Odds Ratio e Risco Relativo</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">3.1 Quando Usar, Ligações e Linearidade no Logito</div>
+      <p style="font-size:12.5px;">Usado para resposta dicotômica ($Y_i \sim \text{Bernoulli}(\pi_i)$) ou proporções agrupadas ($y_i/n_i$). Regressão linear falha ($\hat{\pi} \notin [0,1]$ e $\text{Var}=\pi(1-\pi)$).</p>
+      <div class="formula-box">
+        <strong>1. Ligação Canônica (Logito — simétrica em $\pi=0.5$):</strong>
+        $$\eta_i = \ln\left(\frac{\pi_i}{1 - \pi_i}\right) = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}, \quad \pi_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}}, \quad \text{odds} = e^{\eta_i}$$
+        <strong>2. Alternativas:</strong> <strong>Probito</strong> ($\Phi^{-1}(\pi_i)=\eta_i$, simétrica, caudas leves) e <strong>Cloglog</strong> ($\ln[-\ln(1-\pi_i)]=\eta_i$, <strong>assimétrica</strong> quando $\pi$ cresce rápido perto de 1).<br>
+        <strong>3. Checagem de Linearidade no Logito &amp; Variância de $\hat{\eta}_0$:</strong><br>
+        • Covariável contínua deve ser linear <em>em $\eta$</em> (checar quartis / termos quadráticos / gráfico vs $\hat{\eta}$).<br>
+        • $\widehat{\text{Var}}(\hat{\eta}_0) = \mathbf{x}_0^T \widehat{\text{Cov}}(\hat{\beta}) \mathbf{x}_0$ (1 pred.: $V(\hat{\alpha}) + x_0^2 V(\hat{\beta}) + 2x_0\text{Cov}(\hat{\alpha},\hat{\beta})$). Construa o IC em $\hat{\eta}_0 \pm z\,EP(\hat{\eta}_0)$ e aplique $\frac{e^\eta}{1+e^\eta}$ nos extremos!
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3.2 Odds Ratio (OR): $\{0,1\}$, $\{-1,+1\}$ e Contínua ($c$ unidades)</div>
+      <ul>
+        <li><strong>Dummy $\{0, 1\}$ ou Contínua ($\Delta x = 1$):</strong> $OR = e^{\beta_j}$ ($\Delta\% = [OR-1]\times 100\%$).</li>
+        <li><strong>🚨 Pegadinha de Codificação $\{-1, +1\}$ (Contraste Soma Zero):</strong> A distância entre os grupos vale $2$ unidades! Logo, $\mathbf{OR = e^{2\beta_j}}$ (e nunca $e^{\beta_j}$)!</li>
+        <li><strong>Contínua com Incremento de $c$ Unidades:</strong>
+          $$OR = e^{c \cdot \beta_j} \qquad IC_{95\%} = \left[e^{c(\hat{\beta}_j - 1.96\,EP)}, \; e^{c(\hat{\beta}_j + 1.96\,EP)}\right]$$
+          <em>🚨 Nunca multiplique o OR por $c$! $c$ entra no expoente!</em>
+        </li>
+        <li><strong>Seleção &amp; Tamanho Amostral:</strong> Stepwise usa critério liberal de triagem $P_E \in [0.15, 0.25]$; evite sobreajuste mantendo regra <strong>EPV $\ge 10\text{–}15$ eventos</strong> ($\min(n_1,n_0)/p \ge 10$) por parâmetro!</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">3.3 Risco Relativo ($RR$), Risco Atribuível ($d$) &amp; Doença Rara (Slide 68)</div>
+      <div class="formula-box">
+        $$RR = \frac{\pi_1}{\pi_0}, \qquad d = \pi_1 - \pi_0 \;\; (\text{Risco Atribuível}), \qquad OR = \frac{\pi_1/(1-\pi_1)}{\pi_0/(1-\pi_0)}$$
+      </div>
+      <div class="alert-box">
+        <strong>Condição de Cornfield (Doença Rara):</strong> Quando a doença é rara em <strong>AMBOS</strong> os grupos ($\max(\pi_1, \pi_0) &lt; 0.10$), $1-\pi \approx 1 \implies \mathbf{OR \approx RR}$. Se o desfecho for comum (ex.: Titanic 74% vs 20%), $OR$ afasta-se fortemente de $RR$!
+      </div>
+      <p style="font-size:12px;">Em <strong>Caso-Controle</strong>, a prevalência é artificial e nem $RR$ nem $d$ são estimáveis, mas o $OR$ permanece invariante e estima o $RR$ sob doença rara.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3.4 Interações (Slide 71 — 4 Hipóteses) &amp; Caso #172 (Slides 39–44)</div>
+      <p style="font-size:11.5px; margin-bottom:6px;">Para $\text{logit}(\pi)=\beta_0+\beta_1 F + \beta_2 E + \beta_3(F\times E)$ ($F,E \in \{0,1\}$): <strong>(1)</strong> $H_0:\beta_3=0$ (multiplicatividade / ausência de interação); <strong>(2)</strong> Se $\beta_3=0$: $H_0:\beta_1=0$ (efeito do fator $F$); <strong>(3)</strong> Se $\beta_3\ne 0$: $H_0:\beta_1=\beta_3=0$ ($F$ nulo em ambos os estratos de $E$); <strong>(4)</strong> Efeito de $E$ dentro de $F=1$ é $\beta_2+\beta_3$ ($OR = e^{\beta_2+\beta_3}$).</p>
+      <table style="font-size:11px; margin:6px 0;">
+        <tr><th>Modelo (Heliópolis)</th><th><code>sexo:ff</code> ($\hat{\beta}$)</th><th>EP</th><th>$p$-valor</th></tr>
+        <tr style="background:#ecfdf5;"><td>Com #172 ($n=175$)</td><td>-3.3494</td><td>1.4800</td><td><strong>0.0236 (Sig.)</strong></td></tr>
+        <tr style="background:#fff1f2;"><td>Sem #172 ($n=174$)</td><td>-19.3711</td><td>1357.18</td><td><strong>0.9886 (N.S.)</strong></td></tr>
+      </table>
+      <p style="font-size:11.5px; margin:0;"><strong>Conclusão de Prova:</strong> #172 causava separação/falsa significância em <code>sexo:ff</code> $\implies$ <strong>remover a interação</strong> do modelo final.</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ETAPA 4: TODOS OS TESTES DO MODELO LOGÍSTICO -->
+  <!-- ========================================== -->
+  <div id="etapa4" class="section-title">
+    <span>ETAPA 4: TODOS OS TESTES DO MODELO LOGÍSTICO (COM $H_0$ E DECISÃO)</span>
+    <span style="font-size:11px; font-weight:normal;">TRV Global, Wald, Hosmer-Lemeshow, Tabela 2x2 e ROC/AUC</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Quadro Comparativo de Todos os Testes da Regressão Logística</div>
+    <table>
+      <thead>
+        <tr><th>Teste</th><th>Hipótese Nula ($H_0$)</th><th>Estatística de Teste</th><th>Distribuição</th><th>Quando Rejeita $H_0$?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>TRV Global do Modelo</strong></td>
+          <td>$H_0: \beta_1 = \cdots = \beta_p = 0$ (Nenhuma covariável tem efeito)</td>
+          <td>$\Delta D = D_{\text{nula}} - D_{\text{residual}}$</td>
+          <td>$\chi^2_{p}$</td>
+          <td>Se $p < 0.05 \implies$ Rejeita $H_0$. O modelo com covariáveis é significante.</td>
+        </tr>
+        <tr>
+          <td><strong>Wald Individual</strong></td>
+          <td>$H_0: \beta_j = 0$ (A covariável $j$ não afeta a resposta)</td>
+          <td>$z = \frac{\hat{\beta}_j}{\text{EP}(\hat{\beta}_j)}$ ou $W = z^2$</td>
+          <td>$N(0, 1)$ ou $\chi^2_1$</td>
+          <td>Se $|z| > 1.96$ ($p < 0.05$) $\implies$ Rejeita $H_0$. Termo significante. <em>(Cuidado com efeito Hauck-Donner).</em></td>
+        </tr>
+        <tr>
+          <td><strong>Deviance / Pearson Global ($m_i &gt; 1$ agrupado)</strong></td>
+          <td>$H_0:$ Modelo logístico agrupado em $N$ subpopulações ajusta bem</td>
+          <td>$D_p$ ou $X^2 = \sum \frac{(y_i - n_i\hat{\pi}_i)^2}{n_i\hat{\pi}_i(1-\hat{\pi}_i)}$</td>
+          <td>$\chi^2_{N - p}$</td>
+          <td>Válido se $N$ subpopulações tiverem contagens esperadas $E_{ij} \ge 5$ (maioria $\ge 5$ e todas $\ge 1$). <strong>Falha totalmente se $m_i=1$!</strong></td>
+        </tr>
+        <tr style="background:#eff6ff;">
+          <td><strong>Hosmer-Lemeshow (<code>hoslem.test</code>)</strong></td>
+          <td><strong>$H_0$: O modelo ajusta-se bem aos dados (Bom Ajuste)</strong></td>
+          <td>$\hat{C} = \sum_{k=1}^g \left[ \frac{(O_{1k}-E_{1k})^2}{E_{1k}} + \frac{(O_{0k}-E_{0k})^2}{E_{0k}} \right]$</td>
+          <td>$\chi^2_{g - 2} = \chi^2_8$ ($g=10$)</td>
+          <td><strong>Se $p > 0.05 \implies$ NÃO rejeita $H_0$</strong> (Bom ajuste!). <em>Limitações:</em> dependente da escolha de $g$/empates, baixo poder em $n$ pequeno e hipersensível em $n$ gigante.</td>
+        </tr>
+        <tr>
+          <td><strong>Tabela 2x2 & Acurácia</strong></td>
+          <td>Ponto de corte $c = 0.5$ ($\hat{Y}=1$ se $\hat{\pi} \ge 0.5$)</td>
+          <td>$S = \frac{VP}{VP+FN}, \; E = \frac{VN}{VN+FP}, \; \text{Acc} = \frac{VP+VN}{N}$</td>
+          <td>Métricas empíricas</td>
+          <td>Avalia sensibilidade, especificidade e acurácia de classificação.</td>
+        </tr>
+        <tr>
+          <td><strong>Área sob a Curva ROC (AUC)</strong></td>
+          <td>$H_0: AUC = 0.50$ (Classificação equivalente a jogar moeda)</td>
+          <td>$AUC = P(\hat{\pi}_A > \hat{\pi}_B \mid Y_A=1, Y_B=0)$</td>
+          <td>Grau de concordância de pares</td>
+          <td>$<0.70$ pobre; $0.70-0.80$ aceitável; $0.80-0.90$ excelente; $\ge 0.90$ excepcional.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert-box" style="margin-bottom:0;">
+      <strong>🚨 Eventos Raros &amp; Separação Completa (Slides finais):</strong> Quando quase todas as observações são $0$ ou um preditor separa perfeitamente $Y=0$ de $Y=1$, a MV padrão diverge ($\hat{\beta} \to \pm\infty$, $EP \to \infty$, Wald falha). Soluções: <strong>Correção de King &amp; Zeng</strong> (<code>Zelig::relogit</code>), <strong>Verossimilhança Penalizada de Firth</strong> (<code>logistf</code>) ou <strong>Regressão Logística Exata</strong> (<code>elrm</code>).
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ETAPA 5: MODELOS PRONTOS DE RESPOSTA -->
+  <!-- ========================================== -->
+  <div id="etapa5" class="section-title">
+    <span>ETAPA 5: MODELOS PRONTOS DE RESPOSTA PARA PROVAS ("COPIE E COMPLETE")</span>
+    <span style="font-size:11px; font-weight:normal;">Scripts de Resposta Textual para a Folha de Prova</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Script 1: Interpretação de Variável Contínua com Incremento $c$</div>
+    <div class="script-box">
+      "O coeficiente estimado para a variável $X$ é $\hat{\beta} = 0.0387$ ($p = 0.0251 < 0.05$). Para um aumento de $c = 10$ unidades em $X$, o Odds Ratio é dado por $OR = e^{c \cdot \hat{\beta}} = e^{10 \times 0.0387} = e^{0.3871} \approx 1.472$. Mantendo todas as demais variáveis constantes, para cada 10 unidades adicionais em $X$, a chance de ocorrência do evento aumenta em $47.2\%$ ($[1.472 - 1] \times 100\%$)."
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Script 2: Interpretação do Teste de Hosmer-Lemeshow</div>
+    <div class="script-box">
+      "O teste de qualidade de ajuste de Hosmer-Lemeshow com $g=10$ decis de risco avaliou as hipóteses $H_0$: o modelo ajusta-se adequadamente aos dados observados vs $H_1$: o modelo apresenta falta de ajuste. A estatística calculada foi $\hat{C} = 6.8216$ com $df = g - 2 = 8$ graus de liberdade, gerando um $p\text{-valor} = 0.556$. Como $p = 0.556 > 0.05$, NÃO rejeitamos a hipótese nula $H_0$ ao nível de significância de 5%. Conclui-se que o modelo logístico apresenta excelente calibração e bondade de ajuste global aos dados."
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Script 3: Avaliação da Curva ROC e AUC</div>
+    <div class="script-box">
+      "A Área sob a Curva ROC obtida foi $AUC = 0.8539$ (85,39%). Segundo as diretrizes clínicas de Hosmer e Lemeshow, valores no intervalo $0.80 \le AUC < 0.90$ qualificam o modelo como de <strong>excelente capacidade discriminativa</strong>. Isso significa que, ao selecionar aleatoriamente um paciente com a condição e um sem a condição, a probabilidade de o modelo atribuir uma probabilidade predita maior ao paciente doente é de 85,39%."
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Script 4: Justificativa para Usar Hosmer-Lemeshow em vez da Deviance Residual</div>
+    <div class="script-box">
+      "Tratando-se de dados binários individuais ($y_i \in \{0, 1\}$ e $m_i = 1$), a deviance residual depende exclusivamente das probabilidades preditas e sua distribuição empírica não converge para a qui-quadrado $\chi^2_{n-p}$. Portanto, a deviance residual e a estatística de Pearson são teoricamente inválidas para o teste de bondade de ajuste global nesse contexto. A ferramenta assintoticamente correta e preconizada na literatura é o Teste de Hosmer-Lemeshow, baseado no agrupamento por decis de risco predito."
+    </div>
+  </div>
+</div>
+
+
+  <!-- ETAPA 6 -->
+  <div id="etapa6" class="section-title" style="background: linear-gradient(90deg, #92400e, #d97706);">
+    <span>ETAPA 6: BANCO DE QUESTÕES TÍPICAS DA PROFESSORA ROSEMEIRE (GABARITOS & RESOLUÇÕES)</span>
+    <span style="font-size:11px; font-weight:normal;">Padrão de Resposta Exaustivo sem Necessidade de Programação</span>
+  </div>
+
+  <!-- Caso 1 -->
+  <div class="card">
+    <div class="card-title" style="color:#b45309;">6.1 CASO 1: Regressão Logística em Transporte Urbano (Atividade 5 em Sala)</div>
+    <p style="font-size:12px; margin-bottom:10px;">
+      <strong>Contexto:</strong> Estudo de acidentes de trânsito com motoristas ($Y=1$ acidente, $Y=0$ não). Modelo ajustado:<br>
+      $$\log\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 \text{HorasDirigidas}_i + \beta_2 \text{Treinamento}_i + \beta_3 \text{Experiencia}_i$$
+    </p>
+
+    <table class="table-compact">
+      <thead>
+        <tr><th>Parâmetro</th><th>Estimativa ($\hat{\beta}$)</th><th>Erro-Padrão ($EP$)</th><th>$OR = e^{\hat{\beta}}$</th><th>Interpretação Exata no Contexto</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Intercepto ($\beta_0$)</strong></td><td>-1.80</td><td>0.50</td><td>0.165</td><td>Logito basal para motorista sem horas, sem experiência e sem treinamento.</td></tr>
+        <tr><td><strong>HorasDirigidas ($\beta_1$)</strong></td><td>+0.030</td><td>0.008</td><td>1.030</td><td>Para cada 1 hora a mais dirigida por semana, a <strong>chance de acidente aumenta em 3,0%</strong> ($p < 0.05$).</td></tr>
+        <tr><td><strong>Treinamento ($\beta_2$)</strong></td><td>-0.70</td><td>0.25</td><td>0.497</td><td>Motoristas com treinamento têm <strong>redução de 50,3% na chance de acidente</strong> ($OR = 0.50$).</td></tr>
+        <tr><td><strong>Experiência ($\beta_3$)</strong></td><td>-0.015</td><td>0.010</td><td>0.985</td><td>Cada ano adicional de experiência reduz a chance de acidente em 1,5% ($OR = 0.985$).</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2" style="margin-top:12px;">
+      <div style="background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid #0284c7; font-size:11.5px;">
+        <strong>Teste de Wald para Treinamento ($\alpha = 0.05$):</strong><br>
+        $H_0: \beta_2 = 0$ vs $H_1: \beta_2 \ne 0$<br>
+        $z_{\text{calc}} = \frac{-0.70}{0.25} = -2.80 \implies |z| = 2.80 > 1.96$<br>
+        <strong>Decisão:</strong> Rejeita $H_0$. O treinamento reduz significativamente o risco de acidente ($p = 0.0051 < 0.05$).
+      </div>
+      <div style="background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid #059669; font-size:11.5px;">
+        <strong>Cálculo de Probabilidade (45h, 12 anos exp, Treinado):</strong><br>
+        $\hat{\eta} = -1.80 + 0.030(45) - 0.70(1) - 0.015(12) = -1.33$<br>
+        $\hat{\pi} = \frac{e^{-1.33}}{1+e^{-1.33}} = \frac{0.2645}{1.2645} \approx 0.2091$ (20,91%).<br>
+        <strong>Com limiar $c=0.40$:</strong> Como $0.2091 < 0.40 \implies$ <strong>Classe 0 (Sem Risco)</strong>.
+      </div>
+    </div>
+
+    <div style="margin-top:12px; background:#fffbeb; border:1px solid #fde68a; padding:10px; border-radius:6px; font-size:12px;">
+      <strong>Matriz de Confusão com Limiar $c = 0.40$ ($N=300$ motoristas):</strong><br>
+      <table class="table-compact" style="width: auto; margin: 8px 0;">
+        <tr><th></th><th>Predito 1</th><th>Predito 0</th><th>Total Real</th></tr>
+        <tr><td><strong>Real 1 (Acidente)</strong></td><td>$VP = 45$</td><td>$FN = 30$</td><td>75</td></tr>
+        <tr><td><strong>Real 0 (Sem Acidente)</strong></td><td>$FP = 25$</td><td>$VN = 200$</td><td>225</td></tr>
+      </table>
+      <strong>Acurácia:</strong> $\frac{45+200}{300} = \frac{245}{300} = 81.67\%$ | 
+      <strong>Sensibilidade (<em>Recall</em>):</strong> $\frac{45}{75} = 60.00\%$ | 
+      <strong>Especificidade:</strong> $\frac{200}{225} = 88.89\%$.<br>
+      <strong>Por que a AUC ($0.84$) é superior à Acurácia?</strong> A acurácia depende de um limiar fixado ($c=0.40$) e é vulnerável ao desbalanceamento de classes ($225:75$). A AUC mede a capacidade discriminatória em todos os possíveis limiares de corte ($c \in [0,1]$) e é invariante à prevalência da classe rara.
+    </div>
+
+    <div class="script-box" style="margin-top:10px;">
+      <strong>Interpretação de Interações com Sinais Opostos ($\beta_{\text{Trein}} = -0.90$ vs $\beta_{\text{Trein}\times\text{Turno}} = +1.10$):</strong><br>
+      "Quando o termo principal e o termo de interação apresentam sinais opostos, a interação age como um <strong>modificador/atenuador de efeito</strong>. No turno diurno ($\text{Turno}=0$), o treinamento exerce efeito protetor substancial ($OR = e^{-0.90} \approx 0.407$, redução de 59% na chance). Contudo, no turno noturno ($\text{Turno}=1$), o efeito resultante do treinamento torna-se $\beta_3 + \beta_6 = -0.90 + 1.10 = +0.20$ ($OR = e^{0.20} \approx 1.22$). Logo, o efeito protetor é completamente neutralizado à noite devido a fatores de risco específicos da jornada noturna."
+    </div>
+  </div>
+
+  <!-- Caso 2 -->
+  <div class="card">
+    <div class="card-title" style="color:#0369a1;">6.2 CASO 2: Diagnóstico dos 4 Gráficos Clássicos (<code>plot(modelo)</code>) (Atividade 7)</div>
+    <table class="table-compact">
+      <thead>
+        <tr><th>Gráfico Clássico</th><th>Utilidade</th><th>Caso 1 (Padrão Adequado)</th><th>Caso 2 (Padrão Problemático)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Residuals vs Fitted</strong></td>
+          <td>Verifica a <strong>linearidade</strong> da função de ligação e $E[\varepsilon] = 0$.</td>
+          <td>Pontos distribuídos aleatoriamente em torno do $0$, sem padrões.</td>
+          <td>Padrão parabólico/curvilíneo acentuado $\implies$ <strong>falta termo não-linear ou ligação errada</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>2. Normal Q-Q</strong></td>
+          <td>Avalia a <strong>distribuição teórica/normalidade</strong> dos resíduos.</td>
+          <td>Pontos sobre a reta diagonal tracejada a $45^\circ$.</td>
+          <td>Caudas curvadas ou pontos distantes $\implies$ <strong>não normalidade, assimetria ou caudas pesadas</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>3. Scale-Location</strong></td>
+          <td>Verifica a <strong>homocedasticidade</strong> (variância constante dos erros).</td>
+          <td>Linha vermelha horizontal e largura constante da nuvem.</td>
+          <td>Linha inclinada para cima ou formato em funil/megafone $\implies$ <strong>heterocedasticidade</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>4. Residuals vs Leverage</strong></td>
+          <td>Detecta <strong>pontos influentes</strong> (alavancagem e Distância de Cook).</td>
+          <td>Todos os pontos dentro dos contornos de Cook ($D < 0.5$).</td>
+          <td>Pontos além dos contornos de Cook com alto leverage $\implies$ <strong>observações influentes distorcendo $\hat{\beta}$</strong>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Caso 3 e 4 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="color:#dc2626;">6.3 CASO 3: Titanic — Odds Ratio vs Risco Relativo (Lista 4)</div>
+      <p style="font-size:11.5px;">
+        <strong>Erro Comum:</strong> Dizer que $OR = 11.4$ significa "probabilidade 11,4 vezes maior".<br>
+        <strong>Correção:</strong> $OR$ compara <em>chances</em> ($\pi/(1-\pi)$), nunca probabilidades diretas, exceto se $\pi < 0.10$ (doença rara).<br><br>
+        <strong>Cálculos com $\text{chance}_M = 2.9$:</strong><br>
+        • $\pi_{\text{Mulheres}} = \frac{2.9}{1+2.9} = \frac{2.9}{3.9} \approx 0.7436$ (74,36%).<br>
+        • $\text{chance}_H = \frac{2.9}{11.4} = 0.2544 \implies \pi_H = \frac{0.2544}{1.2544} \approx 0.2028$ (20,28%).<br>
+        • <strong>Risco Relativo Real:</strong> $RR = \frac{0.7436}{0.2028} \approx 3.67$ (bem menor que 11.4!).
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#7c3aed;">6.4 CASO 4: Cifose (Kyphosis) — anova() vs Anova() (Lista 4)</div>
+      <p style="font-size:11.5px;">
+        <strong>Por que Age tem $p=0.25$ no anova() e $p=0.075$ no Anova()?</strong><br>
+        • <code>anova(modelo)</code> é <strong>sequencial (Tipo I)</strong>: a ordem importa. Age entra primeiro contra o nulo sem controlar por Number e Start.<br>
+        • <code>Anova(modelo, type="II")</code> é <strong>parcial (Tipo II)</strong>: avalia Age ajustada condicionalmente por todas as outras variáveis.<br><br>
+        <strong>IC da Probabilidade via <code>predict(type='link')</code>:</strong><br>
+        1º: $[\hat{\eta} \pm 1.96 EP(\hat{\eta})] = [1.4467 \pm 1.96(0.783)] = [-0.088, 2.981]$<br>
+        2º: Inversa logística: $[\frac{e^{-0.088}}{1+e^{-0.088}}, \frac{e^{2.981}}{1+e^{2.981}}] = [0.478, 0.952]$.
+      </p>
+    </div>
+  </div>
+
+  <!-- Caso 5 e 6 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="color:#059669;">6.5 CASO 5: Superdispersão Severa & Envelope (Lista 5 — Rotifers)</div>
+      <p style="font-size:11.5px;">
+        <strong>Como Identificar sem Código:</strong><br>
+        • Deviance residual muito maior que graus de liberdade: $D = 434.25$ para $gl = 37 \implies D/gl = 11.74 \gg 1$.<br>
+        • Gráfico de envelope simulado: praticamente <strong>todos os resíduos caem acima da banda superior</strong>.<br>
+        • <strong>Conclusão:</strong> Superdispersão severa (falha da premissa $\phi = 1$). Erros-padrão da binomial são subestimados.<br>
+        • <strong>Solução da Professora:</strong> Modelo Beta-Binomial com parâmetro de correlação intraclasse $\rho = 0.115$.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#1e3a8a;">6.6 CASO 6: Dedução Teórica da Razão de Verossimilhanças (Atividade 8)</div>
+      <p style="font-size:11.5px;">
+        Se $y_i \sim \text{Bernoulli}(\pi)$ com ligação $\text{logit}(\pi) = \alpha$:<br>
+        • $\ell(\alpha) = \alpha \sum y_i - n\log(1+e^\alpha)$<br>
+        • Escore: $U(\alpha) = n\bar{y} - n\pi = 0 \implies \hat{\alpha} = \log\left(\frac{\bar{y}}{1-\bar{y}}\right)$<br>
+        • Informação de Fisher: $I(\alpha) = n\pi(1-\pi) \implies \text{Var}(\hat{\alpha}) = \frac{1}{n\bar{y}(1-\bar{y})}$<br>
+        • Teste de $H_0: \alpha = 0$ ($\pi = 0.5$): $\ell(0) = -n\log 2$<br>
+        • TRV: $\Lambda = 2[\ell(\hat{\alpha}) - \ell(0)] = 2n[\bar{y}\log(2\bar{y}) + (1-\bar{y})\log(2(1-\bar{y}))] \sim_a \chi^2_1$.
+      </p>
+    </div>
+  </div>
+
+
+<script>
+  function renderMath() {
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false,
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      });
+    } else {
+      setTimeout(renderMath, 100);
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => { renderMath(); });
+  window.addEventListener('load', () => { renderMath(); });
+</script>
+</body>
+</html>
