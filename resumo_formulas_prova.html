@@ -659,6 +659,34 @@ Quantidade_cigarros     1      [D]         4      1.488    0.120  </code></pre>
     </div>
   </div>
 
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">3.5 Especial Lista 5 (<em>HorseCrab</em> a–j): Haldane, 4 Limitações, $x_{0,50}$ e Efeito Marginal</div>
+    <div class="grid-2" style="gap:10px;">
+      <div>
+        <p style="font-size:11.5px; margin-bottom:4px;"><strong>• Linearidade no Logito (Item c):</strong> (1) TRV com termo quadrático ($\Delta D^* = 0,8508,\, p = 0,3563$ $\implies$ linear suficiente); (2) Logito empírico em decis com correção de Haldane (evita $\ln(y/0)$ quando fracassos $=0$):</p>
+        <div class="formula-box">
+          $$\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0,5}{m_k - y_k + 0,5}\right)$$
+        </div>
+        <p style="font-size:11.5px; margin:4px 0;"><strong>• 4 Limitações das Medidas de Ajuste ($m_i=1$, Item d):</strong><br>
+          <strong>(1) $D_p$:</strong> não segue $\chi^2_{n-p}$ (parâmetros saturados crescem com $n$);<br>
+          <strong>(2) AIC:</strong> apenas índice relativo (sem valor-$p$);<br>
+          <strong>(3) $X^2$:</strong> mesma falha assintótica e sensível a $\hat{\pi}_i \approx 0$ ou $1$;<br>
+          <strong>(4) Hosmer-Lemeshow ($\hat{C}$):</strong> depende da escolha arbitrária dos $g=10$ decis e tem baixo poder em regiões locais.</p>
+      </div>
+      <div>
+        <p style="font-size:11.5px; margin-bottom:4px;"><strong>• Ponto de Inflexão ($50\%$ de Chance) &amp; Defasagem (Item i):</strong></p>
+        <div class="formula-box">
+          $$x_{0,50} = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cor}}}{\hat{\beta}_{\text{largura}}} \quad (\text{Clara}=27,17\text{ cm vs. EFra}=24,17\text{ cm} \implies \Delta = 3,00\text{ cm})$$
+        </div>
+        <p style="font-size:11.5px; margin:4px 0;"><strong>• Efeito Marginal Condicional (Item j — Curva em Sino, Não Constante!):</strong></p>
+        <div class="formula-box">
+          $$\frac{\partial \pi(x)}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1-\pi(x)\big) \implies \text{Máx (em } \pi=0,50\text{)} = \frac{\hat{\beta}_{\text{larg}}}{4} = 0,4680 \times 0,25 = 0,1170$$
+        </div>
+        <p style="font-size:11.5px; margin:0;"><strong>Resumo HorseCrab:</strong> Multicolinearidade Largura $\times$ Peso ($r=0,8869$); <code>hnp</code> $0/173$ fora; Youden ótimo em $c=0,685$ ($\text{AUC}=0,7714$).</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ========================================== -->
   <!-- ETAPA 4: TODOS OS TESTES DO MODELO LOGÍSTICO -->
   <!-- ========================================== -->
@@ -756,6 +784,20 @@ Quantidade_cigarros     1      [D]         4      1.488    0.120  </code></pre>
     <div class="card-title">Script 4: Justificativa para Usar Hosmer-Lemeshow em vez da Deviance Residual</div>
     <div class="script-box">
       "Tratando-se de dados binários individuais ($y_i \in \{0, 1\}$ e $m_i = 1$), a deviance residual depende exclusivamente das probabilidades preditas e sua distribuição empírica não converge para a qui-quadrado $\chi^2_{n-p}$. Portanto, a deviance residual e a estatística de Pearson são teoricamente inválidas para o teste de bondade de ajuste global nesse contexto. A ferramenta assintoticamente correta e preconizada na literatura é o Teste de Hosmer-Lemeshow, baseado no agrupamento por decis de risco predito."
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="card-title">Script 5: Multicolinearidade + Seleção ANODEV/AIC (<em>HorseCrab</em>)</div>
+    <div class="script-box">
+      "Embora largura e peso diferenciem fortemente os grupos $Y=1$ e $Y=0$ na análise exploratória, sua correlação linear intensa ($r = 0,8869$) gera multicolinearidade severa no modelo completo, inflacionando os erros-padrão assintóticos e reduzindo artificialmente as estatísticas de Wald ($p = 0,1779$ e $0,2407$). Pela Análise de Deviance sequencial, após a entrada de cor e largura, a exclusão de peso ($\Delta D = 1,41;\, p = 0,235$) e condição ($\Delta D = 0,85;\, p = 0,655$) não deteriora o ajuste e reduz o AIC ($201,20 \to 197,46$). Sem a redundância do peso, a largura torna-se altamente significativa ($z = 4,43;\, p = 9,26\times 10^{-6}$, $OR = 1,597$)."
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="card-title">Script 6: Efeito Marginal Condicional, Ponto de Inflexão $x_{0,50}$ e Curvas Sigmoidais ($\hat{\pi}(x)$)</div>
+    <div class="script-box">
+      "Na escala da probabilidade, as curvas são sigmoidais em 'S' não-lineares, transladadas horizontalmente pela cor (para $\hat{\pi} = 0,50$, carapaças Claras exigem $27,17$ cm contra $24,17$ cm nas Escuras-Fracas — defasagem fisiológica de $3,00$ cm). Consequentemente, o efeito marginal $\partial\pi/\partial x = \hat{\beta}_{\text{larg}}\,\pi(x)(1-\pi(x))$ não é constante: assume formato de sino com máximo absoluto $\hat{\beta}_{\text{larg}}/4 = 0,4680 \times 0,25 = 0,1170$ ($+11,70\text{ p.p./cm}$) exatamente nos pontos de inflexão $\pi = 0,50$, caindo abaixo de $2\%/\text{cm}$ nas extremidades onde a probabilidade satura próximo a $0$ ou $1$."
     </div>
   </div>
 </div>

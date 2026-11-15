@@ -414,6 +414,23 @@ Uma das perguntas conceituais mais cobradas em provas de MLG é a relação dire
 
 ---
 
+### 3.6 Especial Lista 5 (*HorseCrab* a–j): Haldane, 4 Limitações, $x_{0,50}$ e Efeito Marginal
+* **Linearidade no Logito (Item c):** (1) **TRV com termo quadrático** ($\Delta D^* = D_{\text{lin}} - D_{\text{quad}} = 0,8508$, $gl=1$, $p = 0,3563$ $\implies$ linear suficiente); (2) **Logito Empírico com correção de Haldane** em 8 decis (evita $\ln(y/0)$ quando fracassos $= 0$):
+  $$\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0,5}{m_k - y_k + 0,5}\right)$$
+* **4 Limitações em Dados Binários Desagrupados ($m_i = 1$, Item d):**
+  1. **Deviance ($D_p$):** Não segue assintoticamente $\chi^2_{n-p}$ (parâmetros saturados crescem com $n$);
+  2. **AIC:** Apenas índice comparativo relativo (sem valor-$p$);
+  3. **Pearson ($X^2$):** Sofre da mesma falha assintótica e é sensível a $\hat{\pi}_i \approx 0$ ou $1$;
+  4. **Hosmer-Lemeshow ($\hat{C}$):** Depende da escolha arbitrária do número de decis ($g=10$) e tem menor poder em regiões locais/caudas.
+* **Ponto de Inflexão ($50\%$ de Chance) e Defasagem Fisiológica (Item i):** Como $\hat{\pi} = 0,50 \iff \hat{\eta} = 0$:
+  $$x_{0,50} = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cor}}}{\hat{\beta}_{\text{largura}}} \qquad (\text{Clara}=27,17\text{ cm vs. Escura-Fraca}=24,17\text{ cm} \implies \text{defasagem de } 3,00\text{ cm})$$
+* **Efeito Marginal Condicional da Variável Contínua (Item j — Não Constante!):** Pela regra da cadeia:
+  $$\frac{\partial \pi(x)}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1 - \pi(x)\big) \implies \text{Máx Teórico (em } \pi = 0,50\text{)} = \frac{\hat{\beta}_{\text{larg}}}{4} = 0,4680 \times 0,25 = \mathbf{0,1170} \; (11,70\%/\text{cm})$$
+  Nas extremidades ($\pi \to 0$ ou $\pi \to 1$), $\pi(1-\pi) \to 0$ (saturação nas assíntotas) e o ganho marginal cai para $<2\%/\text{cm}$.
+* **Diagnóstico, ROC e Youden (*HorseCrab* $n=173$, Itens e–h):** Multicolinearidade Largura $\times$ Peso ($r = 0,8869$); `hnp` $0/173$ fora; Deleção Leave-One-Out sem `#171` altera largura em apenas $+3,63\%$; Corte $c_0 = 0,50$ dá $\text{SE}=86,49\%, \text{SP}=50,00\%$ (prevalência alta $64,16\%$); **Corte Ótimo de Youden** $c_{\text{ótimo}} = 0,685$ ($\text{SE}=63,06\%, \text{SP}=80,65\%$, $\text{AUC} = 0,7714$).
+
+---
+
 # ETAPA 4: TODOS OS TESTES DO MODELO LOGÍSTICO (COM $H_0$, ESTATÍSTICA E INTERPRETAÇÃO)
 
 ### Teste 1: Teste Global do Modelo (TRV entre Modelo Nulo e Proposto)
@@ -505,6 +522,12 @@ Fixado o limiar $c = 0.5$:
 
 ### 5.4 Roteiro para "Decisão sobre Eliminação de Termo com Base em Ponto Influente"
 > *"A análise da Distância de Cook revelou que a observação #172 é um ponto altamente influente. A comparação dos modelos demonstrou que a significância estatística da interação dependia exclusivamente desse único indivíduo (com ele, $p = 0.0236$; sem ele, o erro padrão explodiu para 1357 e $p = 0.9886$). Trata-se de um artefato de significância. Portanto, para assegurar a estabilidade e a generalização estatística, a interação deve ser removida do modelo final."*
+
+### 5.5 Script 5: Multicolinearidade + Seleção ANODEV/AIC (*HorseCrab*)
+> *"Embora largura e peso diferenciem fortemente os grupos $Y=1$ e $Y=0$ na análise exploratória, sua correlação linear intensa ($r = 0,8869$) gera multicolinearidade severa no modelo completo, inflacionando os erros-padrão e reduzindo artificialmente as estatísticas de Wald ($p = 0,1779$ e $0,2407$). Pela ANODEV sequencial, a exclusão de peso ($\Delta D = 1,41;\, p = 0,235$) e condição ($\Delta D = 0,85;\, p = 0,655$) não deteriora o ajuste e reduz o AIC ($201,20 \to 197,46$), tornando a largura altamente significativa ($z = 4,43;\, p = 9,26\times 10^{-6}$, $OR = 1,597$)."*
+
+### 5.6 Script 6: Efeito Marginal Condicional, Ponto de Inflexão $x_{0,50}$ e Curvas Sigmoidais
+> *"Na escala da probabilidade, as curvas são sigmoidais em 'S' não-lineares, transladadas horizontalmente pela cor (para $\hat{\pi} = 0,50$, carapaças Claras exigem $27,17$ cm contra $24,17$ cm nas Escuras-Fracas — defasagem fisiológica de $3,00$ cm). Logo, o efeito marginal $\partial\pi/\partial x = \hat{\beta}_{\text{larg}}\,\pi(x)(1-\pi(x))$ não é constante: possui formato de sino com máximo absoluto $\hat{\beta}_{\text{larg}}/4 = 0,4680 \times 0,25 = 0,1170$ ($+11,70\text{ p.p./cm}$) nos pontos de inflexão $\pi = 0,50$, reduzindo-se abaixo de $2\%/\text{cm}$ nas extremidades por saturação nas assíntotas."*
 
 
 ---
