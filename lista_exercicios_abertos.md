@@ -2098,590 +2098,682 @@ A Curva ROC plota na ordenada (eixo Y) a **Sensibilidade (TVP)** contra a abscis
 
 ---
 
-## Questão 16 — HorseCrab (Lista 5 — Itens a, b): Análise Exploratória, Multicolinearidade Largura × Peso e Seleção do Modelo Principal via ANODEV & AIC
-**Bloco:** Bloco V • Especial Lista 5 (Logística HorseCrab a–j) | **Inspiração:** Lista 5 Completa (HorseCrab, n = 173) — Itens a) e b) + Seleção ANODEV • Profa. Rosemeire
+## Questão 16 — Regressão Logística Completa — Análise Exploratória, Paradoxo da Multicolinearidade e Seleção via ANODEV/AIC
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta dos Itens a), b) e c) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
 
-No clássico estudo com $n = 173$ fêmeas de caranguejo-ferradura (*HorseCrab*), definiu-se a variável resposta binária $Y = 1$ se a fêmea atrai pelo menos um macho satélite ($\text{satélite} \ge 1$, observado em $111$ fêmeas, $64,16\%$) e $Y = 0$ caso contrário ($62$ fêmeas, $35,84\%$). Ajustou-se inicialmente o modelo logístico múltiplo completo (tomando `Clara` e `AmbasBoas` como referências basais), seguido da análise sequencial de deviance para seleção de variáveis.
-
-```r
-=== TABELAS 1 & 2: Analise Exploratoria (n = 173) ===
-Variavel / Grupo      | Media   |   DP   | Mediana |   IQR  |   Min  |   Max
-Largura (cm) Y=0 (62) |   25,17 |   1,67 |   25,45 |   2,35 |  21,00 |  28,70
-Largura (cm) Y=1 (111)|   26,93 |   2,07 |   27,00 |   2,90 |  22,50 |  33,50
-Peso (g)     Y=0 (62) | 2139,11 | 448,39 | 2125,00 | 550,00 | 1200,00 | 3200,00
-Peso (g)     Y=1 (111)| 2603,68 | 575,39 | 2600,00 | 812,50 | 1475,00 | 5200,00
-
-Categoria              | Total | Y=0 | Y=1 | Prop(Y=1)
-Cor: Clara (5 - Ref)   |    22 |  15 |   7 |  31,82%
-Cor: Media (4)         |    44 |  18 |  26 |  59,09%
-Cor: Escura-Fraca (3)  |    95 |  26 |  69 |  72,63%
-Cor: Escura-Forte (2)  |    12 |   3 |   9 |  75,00%
-Cond: AmbasBoas (1-Ref)|    37 |  11 |  26 |  70,27%
-Cond: UmaQuebrada (2)  |    15 |   8 |   7 |  46,67%
-Cond: AmbasQuebradas(3)|   121 |  43 |  78 |  64,46%
-
-cor.test(largura, peso): r = 0,8869 (p < 2,2e-16)
-
-=== TABELA 3: Modelo Logistico Completo (y ~ cor + cond + largura + peso) ===
-Deviance Nula: 225,76 em 172 gl | Deviance Residual: 185,20 em 165 gl | AIC: 201,20
-(Intercept)           -9.67368   3.86456  -2.503  p=0.01231  OR=0.0001  IC95%=[0.000; 0.122]
-corMedia               1.11980   0.59329   1.887  p=0.0591   OR=3.0642  IC95%=[0.958; 9.802]
-corEscura-Fraca        1.50576   0.56667   2.657  p=0.007879  OR=4.5076  IC95%=[1.485; 13.687]
-corEscura-Forte        1.60867   0.93553   1.720  p=0.08552  OR=4.9961  IC95%=[0.799; 31.258]
-condUmaQuebrada       -0.09598   0.70337  -0.136  p=0.8915   OR=0.9085  IC95%=[0.229; 3.606]
-condAmbasQuebradas     0.40029   0.50270   0.796  p=0.4259   OR=1.4923  IC95%=[0.557; 3.997]
-largura                0.26313   0.19530   1.347  p=0.1779   OR=1.3010  IC95%=[0.887; 1.908]
-peso                   0.00083   0.00070   1.173  p=0.2407   OR=1.0008  IC95%=[0.999; 1.002]
-
-=== ANODEV Sequencial & Selecao do Modelo Principal ===
-Analysis of Deviance Table
-
-Model: binomial, link: logit
-
-Response: y
-
-Terms added sequentially (first to last)
-
-
-        Df Deviance Resid. Df Resid. Dev  Pr(>Chi)    
-NULL                      172     225.76              
-cor      3  13.6977       169     212.06  0.003347 ** 
-largura  1  24.6038       168     187.46 7.041e-07 ***
-cond     2   0.8451       166     186.61  0.655362    
-peso     1   1.4099       165     185.20  0.235073    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-=== Modelo Principal Adotado (y ~ cor + largura) | AIC = 197,46 ===
-
-Call:
-glm(formula = y ~ cor + largura, family = binomial, data = df16)
-
-Coefficients:
-                Estimate Std. Error z value Pr(>|z|)    
-(Intercept)     -12.7151     2.7617  -4.604 4.14e-06 ***
-corMedia          1.1061     0.5921   1.868   0.0617 .  
-corEscura-Fraca   1.4023     0.5484   2.557   0.0106 *  
-corEscura-Forte   1.3299     0.8525   1.560   0.1188    
-largura           0.4680     0.1055   4.434 9.26e-06 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 225.76  on 172  degrees of freedom
-Residual deviance: 187.46  on 168  degrees of freedom
-AIC: 197.46
-
-Number of Fisher Scoring iterations: 4
-
-```
-
-### Subitens Discursivos
-- **a)** **(Item a — Exploratória)** Analise as medidas descritivas de `largura` e `peso` por $Y$, bem como as proporções por `cor` e `condição da carapaça`. Qual o impacto da correlação $r = 0,8869$ ($p < 2,2 \times 10^{-16}$) e quais variáveis aparentam ser realmente discriminatórias (há sinais de não-linearidade em "U"?)?
-- **b)** **(Item b — Modelo Completo & Multicolinearidade)** No modelo completo (Tabela 3), apesar de `largura` e `peso` diferenciarem fortemente os grupos $Y=1$ vs. $Y=0$ na análise exploratória, **nenhum dos dois** atinge significância individual de Wald ($p = 0,1779$ e $p = 0,2407$). Explique rigorosamente por que esse aparente paradoxo ocorre, e interprete as razões de chances ($\text{OR} = e^{\hat{\beta}}$) e ICs $95\%$ para `cor` (`Media`, `Escura-Fraca` e `Escura-Forte` vs. `Clara`).
-- **c)** **Seleção por ANODEV e AIC:** Usando a ANODEV sequencial e o $\text{AIC}$, justifique numericamente a exclusão de `peso` ($\Delta D = 1,41;\, p = 0,2351$) e de `condição` ($\Delta D = 0,85;\, p = 0,6554$), estabelecendo o modelo parcimonioso `y ~ cor + largura`.
-- **d)** Compare a estimativa, o erro-padrão, a significância e o $\text{OR}$ da `largura` no **modelo completo** ($\hat{\beta} = 0,2631$, $p = 0,1779$) versus no **modelo principal selecionado** ($\hat{\beta} = 0,4680$, $z = 4,434$, $p = 9,26 \times 10^{-6}$). Redija a interpretação biológica final para $+1\text{ cm}$ de largura.
-
-<details>
-<summary>👣 Primeiro Passo (Por onde começar)</summary>
-
-**Item a):** Compare médias e medianas: fêmeas com satélites são maiores ($26,93$ vs. $25,17$ cm) e mais pesadas ($2603,68$ vs. $2139,11$ g). Observe o gradiente monotônico crescente de escurecimento em `cor` ($31,82\% \to 59,09\% \to 72,63\% \to 75,00\%$), em contraste com a oscilação errática de `condição` ($70,27\% \to 46,67\% \to 64,46\%$).
-
-                
-**Item b):** Quando duas covariáveis contêm praticamente a mesma informação biológica ($r = 0,8869$), seus erros-padrão assintóticos na matriz $(X^TWX)^{-1}$ ficam **inflacionados**! Por isso Wald individual ($\hat{\beta}/\text{EP}$) perde potência ao testar uma mantendo a outra fixa.
-
-                
-**Item c):** Na ANODEV sequencial após incluir `cor` ($\Delta D = 13,70;\, p=0,0033$) e `largura` ($\Delta D = 24,60;\, p=7,04\times 10^{-7}$), adicionar `cond` ($+2$ gl) reduz apenas $0,85$ na deviance ($p = 0,6554$) e adicionar `peso` ($+1$ gl) reduz apenas $1,41$ ($p = 0,2351$). Note também que o AIC cai de $201,20$ para $197,46$!
-
-                
-**Item d):** Verifique o cálculo do $\text{OR}$ da largura no modelo final: $\text{OR} = e^{0,4680} = 1,5968 \approx 1,597$. Sem a concorrência do peso, o erro-padrão de `largura` cai de $0,1953$ para $0,1055$ (redução de $46\%$)!
-
-</details>
-
-<details>
-<summary>💡 Dica & Armadilhas de Prova</summary>
-
-**Dica de Ouro — Multicolinearidade vs. Concorrência:** Nunca conclua que uma variável sem significância no modelo completo é irrelevante sem antes checar correlações entre preditoras! O teste de Wald condiciona na permanência das demais covariáveis no modelo: “qual o efeito adicional de largura *mantendo o peso fixo*?”. Como caranguejos mais largos são quase inevitavelmente mais pesados ($r=0,89$), há pouca variação independente residual.
-
-                
-**Como comparar modelos por AIC e Deviance:** Ao remover $3$ parâmetros irrelevantes (`cond` + `peso`), a deviance residual sobe muito pouco ($185,20 \to 187,46$, apenas $+2,26$ em $3\text{ gl}$, $p > 0,50$), enquanto o corte na penalização $2p$ ($-6,0$) garante um AIC claramente menor ($197,46 < 201,20$).
-
-</details>
-
-<details>
-<summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
-
-**a) Síntese Exploratória e Associação com Satélites ($n = 173$):**
-
-                  
-• **Largura e Peso:** Fêmeas com satélites ($Y=1$, $64,16\%$) têm carapaças mais largas (média $26,93$ cm, $\text{DP}=2,07$ vs. $25,17$ cm, $\text{DP}=1,67$) e são substancialmente mais pesadas ($2603,68$ g vs. $2139,11$ g). A chance cresce monotonicamente com o porte físico (sem padrão em "U"). Contudo, a correlação de Pearson de $r = 0,8869$ ($p < 2,2 \times 10^{-16}$) antecipa forte redundância (multicolinearidade) se ambas forem mantidas juntas.
-
-                  • **Cor vs. Condição:** A pigmentação exibe nítido gradiente biológico monotônico: carapaças `Claras` têm apenas $31,82\%$ de atração ($7/22$), saltando para $59,09\%$ (`Média`), $72,63\%$ (`Escura-Fraca`) e $75,00\%$ (`Escura-Forte`). Já a `condição` oscila sem padrão monotônico ($70,27\% \to 46,67\% \to 64,46\%$). Assim, `largura`, `peso` e `cor` são relevantes na etapa exploratória, ao passo que `condição` parece irrelevante.
-
-                
-
-                
-
-                  
-**b) Modelo Completo — Multicolinearidade e Interpretação de $\text{OR}$ da Cor:**
-
-                  
-No modelo completo ($D_p = 185,20$ em $165\text{ gl}$; $D_0 = 225,76$ em $172\text{ gl}$; $\text{AIC}=201,20$), apenas `cor: Escura-Fraca` atinge significância individual a $5\%$ ($p = 0,0079$). Nem `largura` ($p = 0,1779$; $\text{OR}=1,301$, IC $95\%: [0,887;\,1,908]$) nem `peso` ($p = 0,2407$) atingem $5\%$. Isso ocorre diretamente pela **multicolinearidade intensa** ($r = 0,8869$), que inflaciona os erros-padrão da matriz de variância-covariância $(X^T W X)^{-1}$, alargando os intervalos de confiança a ponto de incluírem $1$. Para a cor (basal `Clara`):
-
-                  • `Média`: $\text{OR} = e^{1,1198} = \mathbf{3,064}$ (IC $95\%: [0,958;\,9,802]$, $p=0,0591$ — chance $3,06\times$ maior);
-
-                  • `Escura-Fraca`: $\text{OR} = e^{1,5058} = \mathbf{4,508}$ (IC $95\%: [1,485;\,13,686]$, $p=0,0079^*$ — chance $4,51\times$ maior e significativa);
-
-                  • `Escura-Forte`: $\text{OR} = e^{1,6087} = \mathbf{4,996}$ (IC $95\%: [0,799;\,31,258]$, $p=0,0855$ — chance $5,00\times$ maior, mas imprecisa pois $n=12$).
-
-                
-
-                
-
-                  
-**c) e d) Seleção ANODEV/AIC e Modelo Principal Final ($y \sim \text{cor} + \text{largura}$):**
-
-                  
-
-                    **📝 Como redigir na prova:** “Na Análise de Deviance sequencial, após a entrada de `cor` ($\Delta D = 13,70;\, gl=3;\, p=0,0033$) e `largura` ($\Delta D = 24,60;\, gl=1;\, p=7,04\times 10^{-7}$), a adição de `condição` ($\Delta D = 0,85;\, gl=2;\, p=0,6554$) e de `peso` ($\Delta D = 1,41;\, gl=1;\, p=0,2351$) não traz ganho explicativo significativo. Pelo critério de parcimônia e menor AIC ($197,46$ contra $201,20$ do completo), adota-se o modelo principal:
-
-                    $$\widehat{\text{logit}}(\pi) = -12,7151 + 1,1061\,\text{cor}_{\text{Media}} + 1,4023\,\text{cor}_{\text{EFra}} + 1,3299\,\text{cor}_{\text{EFor}} + 0,4680\,\text{largura}$$
-
-                    Removida a colinearidade com o peso, o erro-padrão de `largura` reduz-se de $0,1953$ para $0,1055$, tornando-a altamente significativa ($z = 4,434;\, p = 9,26\times 10^{-6}$). Mantendo a pigmentação constante, cada centímetro adicional de carapaça multiplica a chance (*odds*) de a fêmea atrair satélites por $\text{OR} = e^{0,4680} = \mathbf{1,597}$ (IC $95\%: [1,299;\,1,964]$), ou seja, um aumento de **$+59,7\%$ na chance por centímetro adicional**.”
-
-</details>
-
----
-
-## Questão 17 — HorseCrab (Lista 5 — Item c): Investigação da Linearidade entre Largura e Logito por Dois Métodos (TRV Quadrático e Logitos Empíricos de Haldane)
-**Bloco:** Bloco V • Especial Lista 5 (Logística HorseCrab a–j) | **Inspiração:** Lista 5 Completa (HorseCrab, n = 173) — Item c) + Tabela 4 + Figura 2 • Profa. Rosemeire
-
-Uma premissa estrutural fundamental do modelo logístico `y ~ cor + largura` é que a covariável contínua `largura` se relacione **linearmente** com o logito $\eta = \ln(\pi/(1-\pi))$. Para auditar essa suposição no conjunto *HorseCrab* ($n = 173$), aplicaram-se dois métodos complementares: (1) expansão polinomial com termo quadrático `I(largura^2)` avaliada por TRV, e (2) cálculo dos logitos empíricos corrigidos por Haldane em $8$ decis homogêneos de largura.
+Em uma coorte nefrológica adaptada ao formato clássico da Lista 5 (`NefroCrab`, $n = 210$ pacientes com alto risco cardiometabólico), deseja-se modelar a presença de **Nefropatia Crônica** ($Y = 1$: $135$ casos, $64,29\%$; $Y = 0$: $75$ controles, $35,71\%$) em função de duas preditoras contínuas de pressão arterial (`PAS` e `PAM`, em mmHg) e dois fatores qualitativos (`Albuminuria` em $4$ níveis, basal `1_Normal`; e `Padrao_Sono` em $3$ níveis, basal `1_Regular`). Abaixo estão as tabelas exploratórias e o confronto entre o modelo completo e o modelo selecionado.
 
 ```r
-=== METODO 1: TRV — Modelo Linear vs. Modelo Quadratico ===
-Modelo Linear    (y ~ cor + largura):                D = 187,4570  em 168 gl
-Modelo Quadratico(y ~ cor + largura + I(largura^2)): D = 186,6062  em 167 gl
+=== 1. MODELO LOGÍSTICO COMPLETO: Nefropatia ~ Albuminuria + Padrao_Sono + PAS + PAM ===
+                         Estimate Std. Error z value Pr(>|z|)      OR    IC 95% (OR)
+(Intercept)             -13.70702    3.04186  -4.506 6.60e-06   0.0000  [0.0000 ; 0.0004]
+Albuminuria2_Micro_Leve   0.75710    0.43443   1.743  0.08138   2.1321  [0.9099 ; 4.9956]
+Albuminuria3_Micro_Mod    1.23820    0.50234   2.465  0.01371   3.4494  [1.2887 ; 9.2328]
+Albuminuria4_Macro        1.53487    0.51516   2.979  0.00289     [A]         [B]
+Padrao_Sono2_Fragmentado -0.61559    0.39596  -1.555  0.12002   0.5403  [0.2487 ; 1.1741]
+Padrao_Sono3_Insonia     -0.38648    0.42182  -0.916  0.35955   0.6794  [0.2972 ; 1.5531]
+PAS                       0.04589    0.03075   1.492  0.13558   1.0470  [0.9857 ; 1.1120]
+PAM                       0.07682    0.06209   1.237  0.21605   1.0798  [0.9561 ; 1.2196]
 
+Null deviance: 273.74 on 209 df | Residual deviance: 215.56 on 202 df | AIC: 231.56
+
+=== 2. ANODEV SEQUENCIAL & MODELO PRINCIPAL: Nefropatia ~ Albuminuria + PAS ===
 Analysis of Deviance Table
 
-Model 1: y ~ cor + largura
-Model 2: y ~ cor + largura + I(largura^2)
+Model 1: Nefropatia ~ Albuminuria + PAS
+Model 2: Nefropatia ~ Albuminuria + Padrao_Sono + PAS
+Model 3: Nefropatia ~ Albuminuria + Padrao_Sono + PAS + PAM
   Resid. Df Resid. Dev Df Deviance Pr(>Chi)
-1       168     187.46                     
-2       167     186.61  1  0.85085   0.3563
+1       205     219.95                     
+2       203     217.10  2   2.8495   0.2406
+3       202     215.56  1   1.5448   0.2139
 
-=== METODO 2: TABELA 4 — Classes de Largura (8 Decis) e Logitos Empiricos (Haldane) ===
-Formula: logit*(p_k) = ln((y_k + 0,5) / (m_k - y_k + 0,5))
-Faixa Largura (cm) | x_bar  | Total(m) | Sucessos(y) | Fracassos | Logito Haldane
-[21,23.9]          |  23,05 |       22 |           6 |        16 |        -0.9316
-(23.9,24.9]        |  24,48 |       24 |          11 |        13 |        -0.1603
-(24.9,25.6]        |  25,25 |       19 |          13 |         6 |        +0.7309
-(25.6,26.1]        |  25,86 |       22 |          13 |         9 |        +0.3514
-(26.1,26.9]        |  26,45 |       21 |          12 |         9 |        +0.2744
-(26.9,27.7]        |  27,32 |       22 |          18 |         4 |        +1.4137
-(27.7,28.7]        |  28,24 |       22 |          17 |         5 |        +1.1575
-(28.7,33.5]        |  29,93 |       21 |          21 |         0 |        +3.7612
-Reta OLS ajustada aos 8 pontos (Figura 2): inclinacao = +0,5918 | R^2 = 0,8498
+Coefficients (Modelo Principal):
+                        Estimate Std. Error z value Pr(>|z|)     OR     IC 95% (OR)
+(Intercept)            -11.34799    2.09396  -5.419 5.98e-08  0.0000  [0.0000 ; 0.0007]
+Albuminuria2_Micro_Leve  0.71718    0.42286   1.696  0.08988  2.0486  [0.8944 ; 4.6925]
+Albuminuria3_Micro_Mod   1.23810    0.49344   2.509  0.01210  3.4490  [1.3112 ; 9.0722]
+Albuminuria4_Macro       1.53263    0.50930   3.009  0.00262  4.6303  [1.7065 ; 12.5641]
+PAS                      0.07904    0.01464   5.398 6.73e-08  1.0822  [1.0516 ; 1.1138]
+
+Residual deviance: 219.95 on 205 df | AIC: 229.95
 ```
 
 ### Subitens Discursivos
-- **a)** **(Método 1 — Teste da Razão de Verossimilhanças)** Formule as hipóteses nula ($H_0$) e alternativa ($H_1$), calcule manualmente a estatística $\Delta D^*$ e sua variação nos graus de liberdade ($\Delta gl$) a partir das deviances acima, e interprete o valor-$p = 0,3563$.
-- **b)** **(Método 2 — Logitos Empíricos & Correção de Haldane)** Usando a equação $\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0,5}{m_k - y_k + 0,5}\right)$, confira os cálculos do $1^\circ$ decil ($[21,0;\,23,9]$: $m_1=22, y_1=6$) e do $8^\circ$ decil ($(28,7;\,33,5]$: $m_8=21, y_8=21$), explicando **por que** a adição de $+0,5$ é indispensável no último intervalo.
-- **c)** Analise criticamente a **Figura 2** (Logito Empírico vs. Largura Média da Classe): o comportamento empírico sustenta a forma retilínea assumida pelo logito ou denuncia necessidade de termos quadráticos/splines?
-- **d)** Em conjunto, o que os dois métodos determinam quanto à especificação final de `largura` no modelo principal?
+- **a)** Com base nas **Tabelas 1 e 2**, conduza uma análise exploratória completa no padrão da Lista 5: avalie o sentido das diferenças de `PAS` e `PAM` entre $Y=0$ e $Y=1$, examine se há relação monotônica ou formato em “U” nos níveis de `Albuminuria` e `Padrao_Sono`, e aponte qual problema estrutural grave é denunciado por $r_{\text{PAS,PAM}} = 0,9393$.
+- **b)** Escreva a equação formal do modelo logístico múltiplo completo (explicitando as categorias basais), preencha as lacunas `[A]` ($\text{OR}$) e `[B]` ($\text{IC}_{95\%}(\text{OR})$) para `Albuminuria4_Macro` e interprete o achado em comparação à categoria basal.
+- **c)** Explique detalhadamente o **paradoxo da multicolinearidade** observado no modelo completo: por que nem `PAS` ($p = 0,1356$) nem `PAM` ($p = 0,2160$) são estatisticamente significativas no teste de Wald conjunto, por que seus $\text{IC}_{95\%}(\text{OR})$ cruzam $1$, e como a ANODEV sequencial aliada ao AIC fundamenta a retenção exclusiva de `Albuminuria + PAS`?
+- **d)** Usando o **Modelo Principal selecionado** (onde $\hat{\beta}_{\text{PAS}} = 0,07904$ e $\text{EP} = 0,01464$), calcule a estimativa pontual e o $\text{IC}_{95\%}$ da $\text{OR}$ para um aumento clinicamente relevante de **$+10\text{ mmHg}$ na PAS** e redija a conclusão epidemiológica.
 
 <details>
 <summary>👣 Primeiro Passo (Por onde começar)</summary>
 
-**Item a):** Compare dois modelos encaixados com $\phi = 1$ conhecido: $\Delta D^* = D_{\text{linear}} - D_{\text{quad}} = 187,457 - 186,606 = 0,8508$ com $\Delta gl = 168 - 167 = 1$, comparado contra $\chi^2_{1;\,0,95} = 3,841$.
+**Item a):** Compare médias e medianas na Tabela 1 (pacientes com nefropatia têm PAS $149,05$ vs $135,15\text{ mmHg}$ e PAM $99,49$ vs $92,80\text{ mmHg}$). Na Tabela 2, observe a escalada estritamente monotônica em `Albuminuria` ($46,94\% \to 63,38\% \to 73,33\% \to 75,56\%$) contrastando com a oscilação errática de `Padrao_Sono` ($71,79\% \to 58,67\% \to 61,40\%$).
 
                 
-**Item b):** No último decil $(28,7;\,33,5]$, todas as $21$ fêmeas possuem satélites ($y_8 = 21$ e fracassos $= 0$!). O logito ingênuo $\ln(21/0)$ explodiria para $+\infty$, tornando impossível plotar o ponto!
+**Item b):** Para completar `[A]` e `[B]` no modelo completo, basta exponenciar $\hat{\beta} = 1,53487$ e seus extremos assintóticos $\hat{\beta} \pm 1,96 \times 0,51516$: $\text{OR} = e^{1,53487}$.
 
                 
-**Item c):** Observe na Figura 2 os $8$ pontos em relação à linha vermelha de tendência: há alinhamento crescente contínuo ($R^2 = 0,850$, inclinação $+0,592$), sem formato de parábola côncava ou convexa sistemática.
+**Item c):** No Compêndio (e exatamente como ocorre com `largura` [$p=0,1779$] e `peso` [$p=0,2407$] no estudo HorseCrab da Lista 5), a colinearidade severa ($r = 0,9393$) inflaciona a variância dos estimadores $\text{EP}(\hat{\beta})$ pela divisão informacional. Olhe na ANODEV o $\Delta D$ e os $p$-valores ao retirar `PAM` ($p=0,2139$) e `Padrao_Sono` ($p=0,2406$).
 
                 
-**Item d):** Ambos convergem para a mesma conclusão: não há violação da linearidade no logito. Manter `largura` linear evita sobreajuste e perda desnecessária de $1$ grau de liberdade.
+**Item d):** Para um incremento $\Delta x = +10\text{ mmHg}$, lembre-se da propriedade exponencial da escala linear: $\text{OR}_{10} = \exp(10 \cdot \hat{\beta}_{\text{PAS}})$ e $\text{IC}_{95\%} = \exp\big(10(\hat{\beta}_{\text{PAS}} \pm 1,96 \cdot \text{EP})\big)$.
 
 </details>
 
 <details>
 <summary>💡 Dica & Armadilhas de Prova</summary>
 
-**Atenção à Pegadinha de Prova:** Linearidade no modelo logístico significa relação retilínea entre $X$ e o *logito* $\eta = \ln(\pi/(1-\pi))$ — e NÃO linearidade entre $X$ e a probabilidade $\pi$ (que sempre será uma curva sigmoidal em "S")!
+**Espelho exato da Lista 5 (HorseCrab):** Assim como em `HorseCrab` ($64,2\%$ satélites; `largura` vs. `peso` com $r = 0,8869$, $p < 2,2\times 10^{-16}$), aqui temos prevalência de $64,29\%$ e dois preditores contínuos colineares ($r = 0,9393$). Nunca elimine ambos os preditores apenas pelos $p$-valores marginais de Wald no modelo saturado de colinearidade!
 
                 
-**Correção de Haldane-Anscombe:** Sempre que uma faixa ou célula tiver $0$ sucessos ($y_k = 0$) ou $0$ fracassos ($m_k - y_k = 0$), soma-se $0,5$ tanto ao numerador quanto ao denominador para estabilizar o logito empírico em valores finitos ($\ln(21,5/0,5) = \ln(43) = +3,7612$).
+**Por que o AIC decide junto com a ANODEV:** Quando retiramos `Padrao_Sono` ($2\text{ gl}$) e `PAM` ($1\text{ gl}$), a Deviance sobe apenas $+4,39$ em $3\text{ gl}$, mas a penalização $2p$ cai em $-6$, fazendo o AIC cair de $231,56$ para $229,95$ (modelo mais parcimonioso) e reduzindo o $\text{EP}(\hat{\beta}_{\text{PAS}})$ de $0,03075$ para menos da metade ($0,01464$)!
 
 </details>
 
 <details>
 <summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
 
-**a) Método 1 — Teste da Razão de Verossimilhanças (TRV):**
+**a) Análise Descritiva Comparativa (Tabelas 1 e 2):**
 
                   
-Testa-se $H_0: \beta_{\text{quad}} = 0$ (efeito linear suficiente no logito) contra $H_1: \beta_{\text{quad}} \ne 0$ (curvatura quadrática necessária). Como a Binomial tem $\phi = 1$ fixo:
-
-                  $$\Delta D^* = D_{\text{lin}} - D_{\text{quad}} = 187,4570 - 186,6062 = \mathbf{0,8508} \quad (\Delta gl = 168 - 167 = 1)$$
-
-                  Como $0,8508 \ll \chi^2_{1;\,0,95} = 3,841$ e o valor-$p = P(\chi^2_1 \ge 0,8508) = \mathbf{0,3563} \gg 0,05$, **não se rejeita $H_0$**: o termo quadrático `I(largura^2)` não adiciona poder explicativo estatisticamente relevante.
+A resposta binária `Nefropatia` apresenta alta prevalência amostral ($135/210 = 64,29\%$). Na **Tabela 1**, observa-se claro deslocamento positivo nas distribuições das pressões arteriais para os doentes ($Y=1$): a média da `PAS` sobe de $135,15\text{ mmHg}$ (DP $= 10,24$) para $149,05\text{ mmHg}$ (DP $= 17,13$), e a `PAM` acompanha o mesmo padrão ($92,80$ vs. $99,49\text{ mmHg}$), sem evidência de comportamento parabólico ou bimodal. Na **Tabela 2**, `Albuminuria` exibe gradiente estritamente monotônico crescente na chance de lesão ($46,94\% \to 63,38\% \to 73,33\% \to 75,56\%$), sugerindo associação real ordenada e descartando não linearidade em “U”. Em contrapartida, `Padrao_Sono` oscila de forma discreta e não monotônica ($71,79\% \to 58,67\% \to 61,40\%$). Finalmente, a correlação de Pearson extrema $r = 0,9393$ ($t = 39,474;\, p = 1,43\times 10^{-98}$) sinaliza **colinearidade severa** entre `PAS` e `PAM` (redundância fisiológica direta, tal qual largura e peso da carapaça em `HorseCrab`).
 
                 
 
                 
 
                   
-**b) Método 2 — Conferência Numérica da Tabela 4 e Função de $+0,5$:**
+**b) Equação do Modelo Completo e Cálculo de `[A]` e `[B]`:**
 
                   
-• **$1^\circ$ Decil $[21,0;\,23,9]$ ($y_1=6$, fracassos $= 16$):**
+Adotando `1_Normal` (Albuminúria) e `1_Regular` (Sono) como categorias de referência:
 
-                  $\text{logit}^*(p_1) = \ln\!\left(\frac{6 + 0,5}{16 + 0,5}\right) = \ln\!\left(\frac{6,5}{16,5}\right) = \ln(0,3939) = \mathbf{-0,9316}$.
+                  
+$$\ln\!\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 I_{(\text{Micro\_Leve})} + \beta_2 I_{(\text{Micro\_Mod})} + \beta_3 I_{(\text{Macro})} + \beta_4 I_{(\text{Frag})} + \beta_5 I_{(\text{Ins})} + \beta_6 \text{PAS}_i + \beta_7 \text{PAM}_i$$
 
-                  • **$8^\circ$ Decil $(28,7;\,33,5]$ ($y_8=21$, fracassos $= 0$):**
+                  
 
-                  $\text{logit}^*(p_8) = \ln\!\left(\frac{21 + 0,5}{0 + 0,5}\right) = \ln\!\left(\frac{21,5}{0,5}\right) = \ln(43) = \mathbf{+3,7612}$.
+                    
+• **`[A]` (OR de `Albuminuria4_Macro`):** $\exp(1,53487) = \mathbf{4.6407}$
 
-                  • **Importância da correção de Haldane ($+0,5$):** Sem esse acréscimo, como há zero fracassos no último decil ($m_8 - y_8 = 0$), a razão $21/0$ divergiria para $+\infty$, inviabilizando tanto o cálculo tabular quanto o ajuste gráfico da reta de tendência.
+                    
+• **`[B]` (IC 95% OR):** $\exp(1,53487 \pm 1,96 \times 0,51516) = \exp([0,52516;\, 2,54458]) = \mathbf{[1,6908;\, 12,7376]}$
+
+                    
+• **Interpretação:** Mantidas constantes as demais variáveis, pacientes com macroalbuminúria apresentam chance ($\text{odds}$) estimada $4,64$ vezes maior de desenvolver nefropatia crônica em relação aos normoalbuminúricos ($p = 0,00289$, estatisticamente significativo pois o IC não contém $1$).
+
+                  
 
                 
 
                 
 
                   
-**c) e d) Interpretação da Figura 2 e Decisão Final:**
+**c) O Paradoxo da Multicolinearidade e Seleção via ANODEV/AIC:**
+
+                  
+Quando `PAS` e `PAM` entram juntas no modelo completo ($r = 0,9393$), elas disputam a mesma informação preditiva sobre a carga hipertensiva. Na matriz de informação de Fisher $(X^TWX)^{-1}$, a alta correlação infla os erros-padrão assintóticos (o EP de `PAS` mais que dobra para $0,03075$), comprimindo as razões de Wald para $z = 1,492$ ($p = 0,1356$) e $z = 1,237$ ($p = 0,2160$) e fazendo seus $\text{IC}_{95\%}(\text{OR})$ cruzarem o valor nulo $1$ ($[0,9857; 1,1120]$ e $[0,9561; 1,2196]$). Contudo, a **ANODEV sequencial** demonstra que a exclusão conjunta de `PAM` ($\Delta D = 1,5448;\, \Delta gl = 1;\, p = 0,2139$) e `Padrao_Sono` ($\Delta D = 2,8495;\, \Delta gl = 2;\, p = 0,2406$) **não prejudica o ajuste**, reduzindo o AIC ($231,56 \to 229,95$). No modelo parcimonioso `Nefropatia ~ Albuminuria + PAS`, livre da competição colinear, o EP de `PAS` cai para $0,01464$ e sua significância explode para $z = 5,398$ ($p = 6,73\times 10^{-8}$).
+
+                
+
+                
+
+                  
+**d) Efeito Clínico de $+10\text{ mmHg}$ na PAS (Modelo Principal):**
 
                   
 
-                    **📝 Como redigir na prova:** “Na Figura 2, os logitos empíricos corrigidos por Haldane exibem um alinhamento essencialmente retilíneo e estritamente ascendente ao longo de toda a amplitude de largura ($23$ a $30$ cm; $R^2 = 0,850$), sem apresentar inflexões em 'U' ou patamares quadráticos acentuados. Como o diagnóstico gráfico confirma integralmente o TRV formal ($\Delta D^* = 0,8508;\, p = 0,3563$), valida-se a premissa de linearidade no logito e mantém-se exclusivamente o termo linear `largura` no modelo principal.”
+                    • $\text{OR}_{+10\text{ mmHg}} = \exp(10 \times 0,07904) = \exp(0,7904) = \mathbf{2,2042}$
+
+                    • $\text{IC}_{95\%}(\text{OR}_{+10}) = \exp\big(10 \times (0,07904 \pm 1,96 \times 0,01464)\big) = \exp([0,50346;\, 1,07734]) = \mathbf{[1,6544;\, 2,9369]}$
+
+                    **📝 Conclusão padrão Rosemeire:** “Ajustando pela classificação de albuminúria, cada aumento de $10\text{ mmHg}$ na PAS eleva em **$120,4\%$ a chance (odds)** de nefropatia crônica ($\text{OR} = 2,2042$; $\text{IC}_{95\%}: 1,6544\text{ a }2,9369$; $p = 6,73\times 10^{-8}$).”
 
 </details>
 
 ---
 
-## Questão 18 — HorseCrab (Lista 5 — Itens d, e, f): Medidas de Bondade de Ajuste e Limitações Teóricas, Envelope hnp (0/173), Diagnóstico de Influência e Sensibilidade LOO
-**Bloco:** Bloco V • Especial Lista 5 (Logística HorseCrab a–j) | **Inspiração:** Lista 5 Completa (HorseCrab, n = 173) — Itens d), e) e f) + Figuras 3–4 + Tabela 5 • Profa. Rosemeire
+## Questão 17 — Investigação da Linearidade no Logito pelos 2 Métodos — TRV Quadrático e Logitos Empíricos de Haldane
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta do Item c) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
 
-Para validar globalmente o modelo principal selecionado (`y ~ cor + largura`, $p = 5$ parâmetros e $n = 173$ fêmeas com dados binários desagrupados, $m_i = 1$), calcularam-se quatro medidas de qualidade de ajuste, o gráfico meio-normal com envelope simulado (99 réplicas de Monte Carlo via pacote `hnp`), o painel diagnóstico 2×2 (Figura 4) e a análise de sensibilidade por deleção *Leave-One-Out* (LOO).
+Um requisito estrutural indispensável do MLG logístico é assegurar que a covariável contínua `PAS` possua relação linear com o preditor linear na escala do logito $\eta_i = \ln(\pi_i/(1-\pi_i))$. Seguindo exatamente a metodologia dupla da Lista 5, aplicaram-se ao modelo principal `Nefropatia ~ Albuminuria + PAS`: (1) um **Teste da Razão de Verossimilhanças (TRV)** comparando-o ao modelo estendido com termo quadrático `I(PAS^2)`; e (2) a análise gráfica dos **logitos empíricos corrigidos de Haldane** em $8$ classes quantílicas homogêneas de `PAS`.
 
 ```r
-=== ITEM d): Medidas Globais de Qualidade de Ajuste (y ~ cor + largura) ===
-Deviance Nula (D0)        = 225,7585  em 172 gl
-Deviance Residual (Dp)    = 187,4570  em 168 gl  (Pseudo-R2 McFadden = 16,97%)
-AIC                       = 197,4570
-Qui-Quadrado Pearson (X2) = 168,6590  em 168 gl  (X2/gl = 1,0039 | p = 0,4712)
-Hosmer-Lemeshow (10 decis)= C_hat = 4,4575  em 8 gl  (p = 0,8137)
+=== MÉTODO 1: Teste da Razão de Verossimilhanças com Termo Quadrático ===
+Model 1: Nefropatia ~ Albuminuria + PAS
+Model 2: Nefropatia ~ Albuminuria + PAS + I(PAS^2)
+  Resid. Df Resid. Dev Df Deviance Pr(>Chi)
+1       205     219.95                     
+2       204     219.60  1  0.3554   0.5511
 
-=== ITEM e): Envelope Simulado hnp (95%, 99 replicas Monte Carlo) ===
-Observacoes fora do envelope: 0 de 173 (0,00%)
+Resumo do Termo Quadrático (Wald) e Critério AIC:
+I(PAS^2): Estimate = 0.0005444 | SE = 0.0009549 | z = 0.570 | Pr(>|z|) = 0.5686
+AIC Modelo Linear = 229.95  vs.  AIC Modelo Quadrático = 231.60
 
-=== ITEM f): Destaques Diagnosticos (2p/n = 0,0578 | 3p/n = 0,0867) ===
-Obs   | h_ii    | Cook Di | Res.Dev | Larg(cm) | Cor          | Y | DFBETAS_larg
-#171  | 0.0659  | 0.0842  |  -1.940 |     28.0 | Escura-Forte | 0 |      -0.1190
-#7    | 0.0943  | 0.0635  |  -1.628 |     26.5 | Escura-Forte | 0 |      -0.0066
-#128  | 0.0324  | 0.0616  |  +2.141 |     22.5 | Clara        | 1 |      -0.2189
-#32   | 0.1084  | 0.0543  |  -1.480 |     25.8 | Escura-Forte | 0 |      +0.0485
-#131  | 0.1308  | 0.0320  |  +1.144 |     24.5 | Escura-Forte | 1 |      -0.1260
-#87   | 0.0141  | 0.0220  |  -2.073 |     28.5 | Escura-Fraca | 0 |      -0.1768
-#94   | 0.0143  | 0.0244  |  -2.112 |     28.7 | Escura-Fraca | 0 |      -0.1872
-#157  | 0.0139  | 0.0197  |  -2.033 |     28.3 | Escura-Fraca | 0 |      -0.1657
-#23   | 0.0410  | 0.0195  |  +1.523 |     22.5 | Escura-Fraca | 1 |      -0.2514
-#54   | 0.0371  | 0.0145  |  +1.439 |     22.9 | Escura-Fraca | 1 |      -0.2151
-
-=== Analise de Sensibilidade Leave-One-Out (LOO) ===
-Sem Obs #171: Variacao Intercepto = -3.44% | Variacao Largura = +3.63% (p_larg = 6.72e-06)
-Sem Obs #7  : Variacao Intercepto = -0.26% | Variacao Largura = +0.28% (p_larg = 9.84e-06)
-Sem Obs #131: Variacao Intercepto = -2.43% | Variacao Largura = +2.57% (p_larg = 7.16e-06)
+=== MÉTODO 2 (Resumo da Reta OLS na Figura 2) ===
+Intercepto = -11.0632 | Inclinação OLS = 0.0827
+Correlação de Pearson (r) = 0.9507 | R² = 0.9039 | p = 2.88e-04
 ```
 
 ### Subitens Discursivos
-- **a)** **(Item d — Valores & Interpretação)** Interprete cada uma das quatro medidas reportadas: (1) a redução $D_0 \to D_p$ ($\text{Pseudo-}R^2$), (2) o $\text{AIC}$, (3) a razão $X^2/gl = 1,0039$, e (4) o Teste de Hosmer-Lemeshow ($\hat{C} = 4,4575, gl = 8, p = 0,8137$).
-- **b)** **(Item d — Limitações Críticas!)** Explique claramente a **limitação teórica específica de cada uma das 4 medidas** em regressão logística para dados binários individuais ($m_i = 1$). Por que $D_p$ e $X^2$ NÃO seguem assintoticamente $\chi^2_{n-p}$ aqui, e qual a limitação do próprio $\hat{C}$ de Hosmer-Lemeshow?
-- **c)** **(Itens e & f — Envelope & Painel Diagnóstico)** O que significa encontrar **0 de 173 observações ($0,00\%$)** fora do envelope simulado de $95\%$ (`hnp`)? Analisando a **Figura 4** e a tabela de destaques ($2p/n = 0,0578$, $3p/n = 0,0867$), explique por que observações como `#131` ($h_{ii}=0,1308$), `#171` ($D_i=0,0842$) e `#128` ($d_i=+2,141$) aparecem destacadas.
-- **d)** **(Análise Leave-One-Out)** Com base nas variações LOO ao remover `#171` ($+3,63\%$ na largura), `#7` e `#131` ($<2,6\%$), decida se alguma observação é influente prejudicial e se deve ser removida da amostra.
+- **a)** Para o **Método 1 (TRV Polinomial)**, formule formalmente as hipóteses $H_0$ e $H_1$ quanto ao parâmetro $\beta_{\text{quad}}$, calcule a estatística do teste $\Delta D^*$ a partir das deviances residuais e explique por que o AIC também respalda a decisão tomada.
+- **b)** Na **Tabela 4 (Método 2)**, observe que a **Classe 8** (`(163, 195]` mmHg) apresenta $m_8 = 27$ pacientes, $y_8 = 27$ eventos e **$0$ fracassos** ($m_8 - y_8 = 0$). Calcule à mão a lacuna `[C]` usando a fórmula do **logito empírico com correção de Haldane** $\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0,5}{m_k - y_k + 0,5}\right)$ e explique por que a adição de $+0,5$ é essencial aqui.
+- **c)** Interprete conjuntamente a nuvem de $8$ pontos e a reta de tendência na **Figura 2** ($r = 0,9507;\, R^2 = 0,9039;\, p = 2,88\times 10^{-4}$): o padrão monotônico crescente confirma ou refuta o pressuposto de linearidade no logito? Há sinal de curvatura em “U” invertido ou polinomial?
+- **d)** Integrando o resultado da ANODEV prévia (Questão 16) com os Métodos 1 e 2, redija uma justificativa concisa de prova explicando por que a modelagem linear aditiva `Nefropatia ~ Albuminuria + PAS` deve ser consagrada como modelo definitivo.
 
 <details>
 <summary>👣 Primeiro Passo (Por onde começar)</summary>
 
-**Item a):** Calcule o Pseudo-$R^2$ de McFadden: $1 - 187,46/225,76 = 16,97\%$. Em Hosmer-Lemeshow, note que como $\hat{C} = 4,4575$ em $g-2 = 8$ gl gera $p = 0,8137 \gg 0,05$, $H_0$ de boa calibração **não é rejeitada**!
+**Item a):** Sob $H_0: \beta_{\text{quad}} = 0$ (forma linear suficiente no logito), a diferença $\Delta D^* = D_{\text{lin}} - D_{\text{quad}}$ segue assintoticamente $\chi^2_1$. Verifique se $\Delta D^* = 0.3554$ ultrapassa o valor crítico $\chi^2_{1;0,95} = 3,841$ ou se $p = 0.5511 > 0,05$.
 
                 
-**Item b):** Lembre-se da regra fundamental de dados binários desagrupados ($m_i = 1$, $y_i \in \{0, 1\}$): a deviance $D_p$ passa a ser função exclusiva das probabilidades preditas $\hat{\pi}_i$, não convergindo para $\chi^2_{n-p}$ porque o número de parâmetros do modelo saturado cresce junto com $n$!
+**Item b):** Sem a correção de Haldane, o logito empírico clássico $\ln\big(p_8 / (1 - p_8)\big) = \ln(27 / 0) = +\infty$ explodiria! Aplicando $+0,5$ no numerador e no denominador: $\ln\big((27 + 0,5) / (0 + 0,5)\big) = \ln(27,5 / 0,5) = \ln(55)$.
 
                 
-**Item c):** Olhe os perfis biológicos na tabela de destaques! `#171` é uma fêmea larga ($28,0$ cm) e escura-forte sem satélite ($Y=0$), indo contra a tendência; `#131` pertence ao estrato raro `Escura-Forte` ($n=12$, peso grande na matriz $H$) e tem alta alavancagem $h_{ii} = 0,1308 > 3p/n = 0,0867$; `#128` é uma fêmea `Clara` estreita ($22,5$ cm) mas com satélite ($Y=1$), gerando resíduo positivo $+2,141$.
-
-                
-**Item d):** Compare variações máximas LOO: no pior caso (`#171`, maior Cook), $\hat{\beta}_{\text{larg}}$ muda apenas $+3,63\%$ e mantém $p < 10^{-5}$ — mudança totalmente desprezível!
+**Item c):** A sequência dos $8$ logitos na Tabela 4 sobe suavemente sem inversões ($-0,57 \to -0,39 \to -0,28 \to +0,85 \to +0,96 \to +1,15 \to +1,15 \to +4,01$), alcançando $R^2 = 90,39\%$ para uma reta simples com inclinação OLS ($0,0827$) virtualmente idêntica à do GLM ($\hat{\beta}_{\text{PAS}} = 0,07904$)!
 
 </details>
 
 <details>
 <summary>💡 Dica & Armadilhas de Prova</summary>
 
-**Checklist das 4 Limitações (Cai Muito na Prova da Profa. Rosemeire!):**
-                  
-1. **Deviance Residual ($D_p$):** Com $m_i = 1$, NÃO segue distribuição $\chi^2_{n-p}$ — logo NÃO serve como teste formal de bondade de ajuste! (Nota: na Binomial, como $\phi=1$ é fixo e $m_i=1$, também não existe teste formal de sobredispersão por $D_p/gl$ — embora $X^2/gl = 1,004$ mostre ausência prática de anomalias).
-                  
-2. **AIC:** Não é um teste de hipótese (não possui valor-$p$ nem escala absoluta de "bom/ruim"); só ordena modelos comparáveis na mesma amostra.
-                  
-3. **Pearson ($X^2$):** Sofre da mesma falha assintótica de $D_p$ quando $m_i = 1$ e explode artificialmente caso existam probabilidades preditas muito próximas de $0$ ou $1$ (denominadores $\hat{\pi}(1-\hat{\pi}) \approx 0$).
-                  
-4. **Hosmer-Lemeshow ($\hat{C}$):** Embora seja o teste correto para $m_i=1$, depende da partição arbitrária em $g=10$ grupos (decis), podendo variar conforme empates/cortes, e tem baixo poder para detectar desvios locais isolados nas caudas.
+**Memória da Lista 5 (HorseCrab, Tabela 4):** No gabarito oficial de `HorseCrab`, exatamente na Classe 8 de largura da carapaça (`> 28,26 cm`, $m_8 = 21, y_8 = 21, 0$ fracassos), o termo $+0,5$ produziu $\ln(21,5 / 0,5) = +3,7612$! A questão clínica acima reproduz exatamente esse fenômeno matemático clássico nas extremidades.
 
                 
-**Corte prático de Cook e Alavancagem:** Nenhuma observação supera $D_i = 0,5$ ou $1,0$ (o máximo é apenas $0,0842$!), indicando ausência de influência global grave.
+**Cuidado com AIC em termos extras:** Incluir uma covariável puramente ruidosa ($\Delta D^* = 0,355$) sempre aumenta a penalidade de parâmetros em $+2$ unidades, elevando o AIC em $+2 - 0,355 \approx +1,65$ ($229,95 \to 231,60$). Menor deviance isolada não vence AIC mais alto!
 
 </details>
 
 <details>
 <summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
 
-**a) Interpretação das 4 Medidas Numéricas de Ajuste:**
+**a) Método 1 — Teste da Razão de Verossimilhanças (TRV Quadrático):**
 
                   
-• **Deviance ($D_0=225,76 \to D_p=187,46$):** As variáveis `cor` e `largura` explicam $16,97\%$ do desvio nulo ($\text{Pseudo-}R^2 = 1 - 187,457/225,759$).
+Testam-se $H_0: \beta_{\text{quad}} = 0$ (efeito linear da PAS na escala do logito é adequado) contra $H_1: \beta_{\text{quad}} \ne 0$ (há curvatura quadrática residual):
 
-                  • **AIC ($197,46$):** Menor dentre os modelos concorrentes, demonstrando equilíbrio ótimo entre verossimilhança e parcimônia ($p=5$).
+                  
+$$\Delta D^* = D_{\text{lin}} - D_{\text{quad}} = 219.95 - 219.60 = \mathbf{0.3554} \quad (\Delta gl = 1,\; \text{valor-}p = P(\chi^2_1 \ge 0,3554) = \mathbf{0.5511})$$
 
-                  • **Qui-Quadrado de Pearson ($X^2 = 168,66;\, X^2/gl = 1,0039$):** Razão praticamente unitária ($\approx 1$), sinalizando boa dispersão empírica compatível com a variância binomial.
-
-                  • **Hosmer-Lemeshow ($\hat{C} = 4,4575;\, gl=8;\, p = 0,8137$):** Como $p = 0,8137 \gg 0,05$, **não se rejeita** $H_0$ de que as probabilidades preditas concordam com as frequências observadas nos $10$ decis de risco — atestando **excelente calibração preditiva**.
+                  
+Como $\Delta D^* = 0,3554 \ll \chi^2_{1;0,95} = 3,841$ ($p = 0,5511 \gg 0,05$; em concordância com Wald $p = 0,5686$), **não se rejeita $H_0$**. Ademais, o critério AIC piora ao incluir o termo polinomial ($229,95 \to 231,60$, pois o ganho mínimo na verossimilhança não compensa a penalização $2p$). Logo, não há necessidade de termos quadráticos ou *splines*.
 
                 
 
                 
 
                   
-**b) Limitações Teóricas de Cada Medida em Dados Binários Individuais ($m_i = 1$):**
+**b) Correção de Haldane na Classe 8 — Cálculo de `[C]`:**
 
                   
-
-                    
-1. **Deviance ($D_p$):** Com dados desagrupados ($y_i \in \{0,1\}, m_i=1$), a deviance depende apenas dos $\hat{\pi}_i$ e **NÃO segue distribuição $\chi^2_{n-p}$** (o número de parâmetros saturados cresce com $n$). Assim, não pode testar bondade de ajuste absoluta.
-
-                    
-2. **AIC:** É apenas um índice comparativo relativo (sem valor-$p$); não avalia se o melhor modelo dentre os candidatos é realmente adequado em termos absolutos.
-
-                    
-3. **Pearson ($X^2$):** Padece da mesma invalidade assintótica da deviance quando $m_i = 1$ e é altamente sensível a probabilidades ajustadas extremas próximas de $0$ ou $1$.
-
-                    
-4. **Hosmer-Lemeshow ($\hat{C}$):** Embora supere a falha assintótica via agrupamento em decis, sofre sensibilidade à escolha arbitrária de $g$ ($g=10$) e possui poder reduzido para detectar falta de ajuste localizada em sub-regiões pequenas.
+Sem correção, $p_8 = 27/27 = 1,0000$ geraria divisão por zero: $\ln(1/0) = +\infty$, inviabilizando a representação gráfica e o ajuste da reta exploratória. Aplicando a correção de continuidade de Haldane ($+0,5$ em sucessos e fracassos):
 
                   
+$$\text{logit}^*(p_8) = \ln\!\left(\frac{27 + 0,5}{0 + 0,5}\right) = \ln\!\left(\frac{27,5}{0,5}\right) = \ln(55) = \mathbf{+4,0073}$$
 
                 
 
                 
 
                   
-**c) e d) Envelope `hnp`, Painel Diagnóstico (Figura 4) e Análise LOO:**
+**c) Interpretação da Figura 2 (Logitos Empíricos vs. Média da Classe):**
+
+                  
+Os $8$ pontos descrevem uma tendência linear acentuadamente crescente e monotônica ($r = 0,9507;\, R^2 = 0,9039;\, p = 2,88\times 10^{-4}$), sem concavidades ou pontos de retorno em “U”. Inclusive, o coeficiente angular bruto da reta exploratória ($0,0827$ por mmHg) aproxima-se notavelmente do efeito ajustado no modelo logístico múltiplo ($\hat{\beta}_{\text{PAS}} = 0,07904$), corroborando visualmente a especificação linear adotada.
+
+                
+
+                
+
+                  
+**d) Síntese Metodológica de Consagração do Modelo:**
 
                   
 
-                    **📝 Como redigir na prova:** “No gráfico meio-normal simulado (`hnp`, 99 réplicas), observa-se que exatamente **0 de 173 observações (0,00%)** ultrapassam as bandas empíricas de $95\%$, validando rigorosamente a distribuição Binomial, a função de ligação logito e a ausência de *outliers* discrepantes. Na Figura 4, algumas observações destacam-se pontualmente: `#131` ($h_{ii}=0,1308 > 3p/n=0,0867$) e `#32` ($h_{ii}=0,1084$) apresentam alavancagem elevada por pertencerem à categoria rara `Escura-Forte` ($n=12$); `#128` ($d_i=+2,141$) e `#94` ($d_i=-2,112$) excedem discretamente $\pm 2$ no resíduo deviance; `#171` detém a maior Distância de Cook ($0,0842$, ainda muito abaixo de $0,5$); e `#23` registra o maior $|\text{DFBETAS}|$ para largura ($-0,2514$). Contudo, a análise de sensibilidade *Leave-One-Out* demonstra total robustez: removendo `#171`, $\hat{\beta}_{\text{larg}}$ varia apenas $+3,63\%$ e o intercepto $+3,44\%$; removendo `#7` ou `#131`, a variação na largura fica abaixo de $2,6\%$, sem alterar sinais nem conclusões inferenciais ($p < 10^{-5}$). Conclui-se que **não há observações influentes prejudiciais**, devendo todas as $173$ observações permanecer no modelo final.”
+                    **📝 Como redigir na prova:** “Tanto o teste formal da razão de verossimilhanças para o termo quadrático ($\Delta D^* = 0,3554;\, p = 0,5511$) quanto a inspeção gráfica dos logitos empíricos de Haldane em $8$ classes quantílicas ($R^2 = 90,39\%$) demonstram a validade estrita da linearidade funcional de `PAS` na escala do logito. Combinando essa evidência à redução conjunta de variáveis redundantes pela ANODEV (`PAM`: $p = 0,2139$; `Padrao_Sono`: $p = 0,2406$) e à minimização do AIC ($229,95$), consagra-se `Nefropatia ~ Albuminuria + PAS` como modelo principal parcimonioso e livre de multicolinearidade.”
 
 </details>
 
 ---
 
-## Questão 19 — HorseCrab (Lista 5 — Itens g, h): Matriz de Confusão em c = 0,50, Curva ROC (AUC = 0,771) e Otimização pelo Índice de Youden (c = 0,685)
-**Bloco:** Bloco V • Especial Lista 5 (Logística HorseCrab a–j) | **Inspiração:** Lista 5 Completa (HorseCrab, n = 173) — Itens g) e h) + Tabelas 6–7 + Figura 5 • Profa. Rosemeire
+## Questão 18 — As 4 Medidas de Qualidade do Ajuste, Limitações Teóricas do Compêndio & Envelope Simulado Meio-Normal (hnp)
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta dos Itens d) e e) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
 
-Avaliou-se a capacidade discriminatória e preditiva do modelo principal *HorseCrab* (`y ~ cor + largura`, $n = 173$ fêmeas: $111$ com satélites [$Y=1$, prevalência $64,16\%$] e $62$ sem satélites [$Y=0$]). Inicialmente classificou-se como Caso ($\hat{Y}=1$) se $\hat{\pi} \ge 0,50$; em seguida construiu-se a Curva ROC e identificou-se o ponto de corte ótimo pelo Índice de Youden em $c_{\text{ótimo}} = 0,685$.
+Após selecionar o modelo principal `Nefropatia ~ Albuminuria + PAS` ($n = 210$ observações individuais binárias com $m_i = 1$, $p = 5$ parâmetros estimados e $gl = 205$), avaliou-se a qualidade global do ajuste através das **4 métricas clássicas** abordadas no Compêndio da disciplina, complementadas pela tabela de decis de Hosmer & Lemeshow e pelo **gráfico meio-normal com envelope simulado (95%, 99 simulações de Monte Carlo)**.
 
 ```r
-=== ITEM g): TABELA 6 — Matriz de Confusao no Corte Padrao c0 = 0,50 ===
-                    Observado
-Classif. Predita    Sem Satelite (Y=0)   Com Satelite (Y=1)   Total Predito
-Predito Nao (Y^=0)         VN = 31               FN = 15             46
-Predito Caso(Y^=1)         FP = 31               VP = 96            127
-Total Real                     62                  111            173
+=== Teste de Qualidade de Ajuste de Hosmer & Lemeshow (g = 10 grupos, gl = 8) ===
+Stat Chi-sq = 5.1138 | df = 8 | p-value = 0.7454
 
-=== ITEM h): Curva ROC, AUC e Comparacao (Tabela 7) ===
-AUC = 0,7714  (EP = 0,0351 | IC 95% = [0,703; 0,840])
-
-Metrica Preditiva   | Corte Padrao (c=0,50) | Corte Otimo Youden (c=0,685) | Diferenca Abs.
-Sensibilidade (SE)  | 86,49% (96/111)      | 63,06% (70/111)            | -23,43 p.p.
-Especificidade (SP) | 50,00% (31/62)       | 80,65% (50/62)             | +30,65 p.p.
-Acuracia Global     | 73,41% (127/173)    | 69,36% (120/173)          | -4,05 p.p.
-Indice Youden (J)   | 0,3649                | 0,4371                     | +0,0722
+    Grupo n_k O1     E1 O0     E0 Contrib
+  Decil 1  21  5  5.194 16 15.806  0.0096
+  Decil 2  21  9  7.572 12 13.428  0.4212
+  Decil 3  21  7  9.848 14 11.152  1.5510
+  Decil 4  21 12 11.444  9  9.556  0.0594
+  Decil 5  21 15 12.975  6  8.025  0.8270
+  Decil 6  21 14 14.378  7  6.622  0.0315
+  Decil 7  21 17 16.031  4  4.969  0.2475
+  Decil 8  21 16 17.860  5  3.140  1.2955
+  Decil 9  21 19 19.295  2  1.705  0.0556
+ Decil 10  21 21 20.402  0  0.598  0.6155
 ```
 
 ### Subitens Discursivos
-- **a)** **(Item g — Métricas em $c_0 = 0,50$)** A partir da Tabela 6 ($VN=31, FN=15, FP=31, VP=96$), calcule e interprete a **Sensibilidade**, a **Especificidade**, o **VPP**, o **VPN** e a **Acurácia Global**.
-- **b)** Explique por que o limiar padrão $c_0 = 0,50$ privilegiou a Sensibilidade ($86,49\%$), mas sofreu Especificidade modesta de exatos $50,00\%$ ($31$ falsos positivos — metade das fêmeas sem satélites mal classificada!), relacionando com a prevalência amostral de $64,16\%$.
-- **c)** **(Item h — Curva ROC & AUC)** Analisando a Figura 5, interprete probabilisticamente $\text{AUC} = 0,7714$ e classifique o poder discriminatório do modelo na escala de Hosmer & Lemeshow.
-- **d)** **(Ponto de Corte Ótimo & Trade-off)** Defina o **Índice de Youden ($J$)**, confira o valor de $J$ em $c = 0,50$ vs. $c_{\text{ótimo}} = 0,685$, e discuta o *trade-off* completo da Tabela 7 ao adotar $c = 0,685$ (redução de $31$ para quantos falsos positivos?).
+- **a)** Complete as lacunas `[D]` ($\text{Pseudo-}R^2$ de McFadden/Deviance) e `[E]` ($\text{AIC}$ do modelo principal). Em seguida, interprete os valores observados de $X^2 / gl = 0,9461$ e do teste de Hosmer & Lemeshow ($\hat{C} = 5,1138;\, p = 0,7454$).
+- **b)** Apresente as **4 limitações teóricas formais** destacadas no Compêndio de MLG (Seções 5.4, 5.7, 5.9 e 8.8) para cada uma dessas medidas em dados binários não agrupados ($m_i = 1$): (i) Deviance Residual $D_p$ vs. $\chi^2_{n-p}$; (ii) Critério AIC; (iii) Qui-quadrado de Pearson $X^2$; e (iv) Teste $\hat{C}$ de Hosmer & Lemeshow.
+- **c)** Descreva como é construído o **gráfico meio-normal com envelope simulado** (`hnp`, Figura 3) e interprete o resultado de **$0$ de $210$ pontos ($0,00\%$) fora das bandas** frente à tolerância empírica de $5\%$ esperada sob o modelo verdadeiro.
+- **d)** Por que a leitura simultânea da calibração por decis (Hosmer & Lemeshow) e do envelope simulado de Monte Carlo constitui validação muito superior ao teste ingênuo $P(\chi^2_{205} \ge 219,95) = 0,2254$?
 
 <details>
 <summary>👣 Primeiro Passo (Por onde começar)</summary>
 
-**Item a):** Confira os 5 quocientes no corte $0,50$: $\text{SE} = 96/111$, $\text{SP} = 31/62$, $\text{VPP} = 96/127$, $\text{VPN} = 31/46$ e $\text{Acc} = (96+31)/173$.
+**Item a):** Use diretamente as fórmulas: $\text{Pseudo-}R^2 = 1 - \frac{D_p}{D_0} = 1 - \frac{219,95}{273,74}$ e $\text{AIC} = D_p + 2p = 219,95 + 2(5)$.
 
                 
-**Item b):** Quando a prevalência de $Y=1$ é alta ($111/173 = 64,16\%$), as probabilidades preditas deslocam-se naturalmente para cima — muitas fêmeas $Y=0$ acabam recebendo $\hat{\pi}_i$ entre $0,50$ e $0,68$, caindo acima de $c_0=0,50$ como Falsos Positivos!
+**Item b):** Lembre o argumento central do Compêndio para $m_i = 1$: quando cada paciente forma sua própria subpopulação de tamanho $1$, o número de parâmetros do modelo saturado ($n = 210$) cresce na mesma taxa que o tamanho da amostra, destruindo a aproximação assintótica $\chi^2_{n-p}$ de $D_p$ e $X^2$!
 
                 
-**Item c):** Na tabela de Hosmer-Lemeshow: $0,50 =$ acaso; $0,50$–$0,70 =$ fraco; $0,70$–$0,80 =$ **aceitável/razoável (Classificação C)**; $0,80$–$0,90 =$ excelente; $\ge 0,90 =$ excepcional.
-
-                
-**Item d):** Calcule os $FP$ em $c = 0,685$: como existem $62$ fêmeas $Y=0$ e $VN = 50$ ($\text{SP} = 80,65\%$), restam $FP = 62 - 50 = 12$ falsos positivos (queda de $31 \to 12$!). E $J(0,685) = 0,6306 + 0,8065 - 1 = 0,4371 > J(0,50) = 0,3649$.
+**Item c):** No algoritmo `hnp`, geram-se $99$ novas respostas $y^*_i \sim \text{Bernoulli}(\hat{\pi}_i)$, reajusta-se o mesmo modelo em cada simulação e extraem-se os percentis $2,5\%$ e $97,5\%$ dos resíduos absolutos ordenados. Como $5\%$ de $210$ seriam até $10,5$ pontos, observar $0$ fora é excelência absoluta!
 
 </details>
 
 <details>
 <summary>💡 Dica & Armadilhas de Prova</summary>
 
-**Simetria com o Corte Baixo (Q15 vs. Q19):** Note o contraste didático precioso para a prova! Quando a prevalência é *baixa* ($23,5\%$ na Q15), o corte $0,50$ peca por *baixa Sensibilidade* (precisa baixar $c$ para $\sim 0,20$). Já quando a prevalência é *alta* ($64,2\%$ aqui em HorseCrab), o corte $0,50$ peca por *baixa Especificidade* ($50\%$) e precisa ser **elevado** para $c_{\text{ótimo}} = 0,685$!
-
-                
-**Geometria do Índice de Youden:** $J = \text{Sensibilidade} + \text{Especificidade} - 1 = \text{TVP} - \text{TFP}$ mede exatamente a *distância vertical* entre a Curva ROC e a diagonal aleatória de $45^\circ$!
+**Checklist das 4 Limitações para responder completo na prova:**
+                  
+1. **Deviance ($D_p$):** em dados individuais ($m_i=1$), $D_p$ **não segue $\chi^2_{n-p}$**; sua utilidade legítima é apenas via **diferença $\Delta D$** entre modelos aninhados! (E o Pseudo-$R^2$ logístico é naturalmente bem menor que o $R^2$ gaussiano).
+                  
+2. **AIC:** métrica puramente comparativa — não testa adequação absoluta contra o processo gerador verdadeiro (dois modelos péssimos ainda terão um “menor AIC”).
+                  
+3. **Pearson ($X^2$):** igualmente viola a $\chi^2_{n-p}$ sob $m_i=1$ e torna-se numérica e assintoticamente instável quando muitas probabilidades preditas $\hat{\pi}_i$ se aproximam de $0$ ou $1$ (denominadores $\hat{\pi}_i(1-\hat{\pi}_i) \to 0$).
+                  
+4. **Hosmer & Lemeshow ($\hat{C}$):** depende da partição arbitrária em $g=10$ grupos e apresenta baixo poder estatístico para detectar desvios locais em subgrupos pequenos.
 
 </details>
 
 <details>
 <summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
 
-**a) e b) Métricas em $c_0 = 0,50$ e Efeito da Prevalência ($64,16\%$):**
+**a) Cálculos das Lacunas `[D]` e `[E]` e Leitura Global:**
 
                   
 
                     
-• **Sensibilidade (SE):** $96 / 111 = \mathbf{0,8649}$ ($86,49\%$) — alta detecção de fêmeas com satélites (apenas $15$ falsos negativos);
+• **`[D]` (Pseudo-$R^2$):** $1 - \frac{219.95}{273.74} = 1 - 0,8035 = \mathbf{0.1965}$ ($\mathbf{19,65\%}$ da deviance nula explicada — perfeitamente compatível com desfechos binários individuais).
 
                     
-• **Especificidade (SP):** $31 / 62 = \mathbf{0,5000}$ ($50,00\%$) — baixa capacidade de descartar fêmeas sem satélites ($31$ falsos positivos!);
+• **`[E]` (AIC):** $D_p + 2p = 219.95 + 2(5) = \mathbf{229.95}$ (inferior ao modelo completo $231,56$).
 
                     
-• **VPP:** $96 / 127 = \mathbf{0,7559}$ ($75,59\%$) — dado que o modelo previu $Y=1$, acerta em $75,6\%$ dos casos;
-
-                    
-• **VPN:** $31 / 46 = \mathbf{0,6739}$ ($67,39\%$) — dado que previu $Y=0$, acerta em $67,4\%$;
-
-                    
-• **Acurácia Global:** $(96 + 31)/173 = 127/173 = \mathbf{0,7341}$ ($73,41\%$).
+• **Dispersão de Pearson e Hosmer–Lemeshow:** A razão $X^2/gl = 193,95 / 205 = 0,9461$ situa-se muito próxima da unidade teórica ($1$), descartando sinais de superdispersão aparente. Já o teste de Hosmer–Lemeshow retorna $\hat{C} = 5,1138$ ($gl = 8$, $p = 0,7454 \gg 0,05$), evidenciando notável concordância entre casos observados ($O_1$) e esperados ($E_1$) em todos os $10$ decis de risco (ex.: Decil 1: $5$ vs $5,19$; Decil 10: $21$ vs $20,40$).
 
                   
-
-                  
-**Por que $\text{SP} = 50,00\%$?** Como a prevalência amostral de casos ($64,16\%$) já ultrapassa $0,50$, o intercepto ajusta probabilidades basais relativamente altas. Muitas fêmeas sem satélites atingem $\hat{\pi}_i \in [0,50;\,0,68]$ e são classificadas erroneamente como positivas pelo limiar fixo $0,50$.
 
                 
 
                 
 
                   
-**c) e d) Curva ROC, AUC e Corte Ótimo de Youden ($c = 0,685$):**
+**b) As 4 Limitações Teóricas do Compêndio ($m_i = 1$):**
 
                   
 
-                    **📝 Como redigir na prova:** “A Curva ROC (Figura 5) revela $\text{AUC} = \mathbf{0,7714}$ ($\approx 0,771$; IC $95\%: [0,699;\,0,844]$). Isso significa que, ao sortear aleatoriamente uma fêmea com satélite e uma sem satélite, há $77,14\%$ de probabilidade de o modelo atribuir $\hat{\pi}_{\text{com}} > \hat{\pi}_{\text{sem}}$, classificando a capacidade discriminatória como **aceitável / razoável (Classificação C de Hosmer & Lemeshow)**.
+                    
+**Deviance ($D_0, D_p$) e Pseudo-$R^2$:** Para respostas individuais Bernoulli ($m_i=1$), o modelo saturado contém tantos parâmetros quanto observações ($n = 210$). Assim, $D_p$ **não possui distribuição assintótica $\chi^2_{n-p}$** (seu valor passa a depender quase exclusivamente das probabilidades estimadas $\hat{\pi}_i$ e não mais das observações $y_i$).
 
-                    Pelo **Índice de Youden** $J = \text{SE} + \text{SP} - 1$, o corte padrão apresenta $J(0,50) = 0,8649 + 0,5000 - 1 = 0,3649$, enquanto a busca na curva ROC maximiza $J$ em $c_{\text{ótimo}} = \mathbf{0,685}$ ($J = 0,6306 + 0,8065 - 1 = \mathbf{0,4371}$). Ao elevar o corte de $0,50$ para $0,685$, ganha-se expressivamente em Especificidade (**$+30,65$ p.p.**, subindo de $50,00\%$ para $80,65\%$ e cortando os falsos positivos de $31$ para apenas **$12$**) ao custo controlado de redução na Sensibilidade ($-23,43$ p.p., indo para $63,06\%$) e leve variação na acurácia global ($73,41\% \to 69,36\%$). O limiar $0,685$ equilibra os erros entre as duas classes quando se busca discriminação simétrica.”
+                    
+**Critério AIC:** Não é um teste de hipóteses nem gera valor-$p$; serve unicamente para ranquear modelos candidatos entre si (mesmo que todos sejam mal especificados).
+
+                    
+**Qui-quadrado de Pearson ($X^2$):** Também falha na aproximação assintótica $\chi^2_{n-p}$ quando $m_i=1$ e sofre distorções severas quando há $\hat{\pi}_i$ extremos ($\to 0$ ou $1$), onde pesos $1/[\hat{\pi}_i(1-\hat{\pi}_i)]$ inflam explosivamente qualquer discrepância isolada.
+
+                    
+**Teste $\hat{C}$ de Hosmer & Lemeshow:** É sensível à escolha arbitrária do número de intervalos ($g = 10$), pode ter células com $E_k < 5$ e possui baixo poder para capturar não linearidades restritas a regiões pequenas do espaço das covariáveis.
+
+                  
+
+                
+
+                
+
+                  
+**c) Interpretação do Envelope Simulado Meio-Normal (`hnp`, Figura 3):**
+
+                  
+Seguindo Atkinson (1985), simulam-se $99$ bancos artificiais sob a suposição exata de que $Y_i^* \sim \text{Bernoulli}(\hat{\pi}_i)$ do modelo ajustado; ordenam-se em módulo os resíduos componentes do desvio $|r_{Di}|$ de cada simulação para construir as bandas de $95\%$ ($2,5\%$ a $97,5\%$). Como os resíduos binários individuais assumem apenas dois valores possíveis para cada $x_i$, os gráficos clássicos de resíduos exibem duas faixas curvas enganosas — tornando o **envelope simulado a ferramenta definitiva de adequação**. Na Figura 3, **$0$ de $210$ pontos ($0,00\%$)** saem das bandas (muito abaixo da margem tolerável de $5\% \approx 10$ pontos), confirmando integralmente a distribuição Binomial, a função de ligação logito e a inexistência de *outliers* discrepantes.
+
+                
+
+                
+
+                  
+**d) Síntese de Validação Global:**
+
+                  
+
+                    **📝 Como redigir na prova:** “Embora $D_p = 219,95$ ($gl = 205$) pareça satisfatório se comparado ingenuamente à $\chi^2_{205}$ ($p = 0,2254$), tal referência assintótica é inválida em dados individuais ($m_i=1$). A adequação global do modelo principal fica solidamente demonstrada apenas pela convergência entre a boa calibração decílica de Hosmer–Lemeshow ($\hat{C} = 5,1138;\, p = 0,7454$) e, sobretudo, pelo gráfico meio-normal com envelope simulado (`hnp`), que registra $0,00\%$ de pontos ($0/210$) fora das bandas de $95\%$.”
 
 </details>
 
 ---
 
-## Questão 20 — HorseCrab (Lista 5 — Itens i, j): Curvas Sigmoidais de Probabilidade Predita, Defasagem Fisiológica (x₀,₅₀) e Efeito Marginal Condicional
-**Bloco:** Bloco V • Especial Lista 5 (Logística HorseCrab a–j) | **Inspiração:** Lista 5 Completa (HorseCrab, n = 173) — Itens i) e j) + Figuras 6–7 • Profa. Rosemeire
+## Questão 19 — Diagnóstico de Observações Influentes (Cook, r_Di, Alavancagem h_ii, DFBETAS) e Análise Leave-One-Out
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta do Item f) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
 
-Na etapa final da Lista 5, avaliou-se o comportamento do modelo principal `y ~ cor + largura` na escala natural da **probabilidade** $\hat{\pi}(x)$ para cada pigmentação de carapaça (Item i) e deduziu-se a curva do **efeito marginal condicional** da largura da carapaça via regra da cadeia (Item j): $\frac{\partial \pi(x)}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1 - \pi(x)\big)$.
+Para verificar se casos atípicos distorcem as inferências de `Nefropatia ~ Albuminuria + PAS` ($n = 210,\, p = 5$), construiu-se o painel diagnóstico $2\times 2$ por índice (**Figura 4**), listaram-se as $8$ observações mais notáveis na **Tabela 5** e realizou-se uma **Análise de Sensibilidade via Deleção (Leave-One-Out)** medindo o impacto percentual sobre $\hat{\beta}_{\text{PAS}}$.
 
 ```r
-=== Equacao Predita do Modelo Principal ===
-eta(cor, largura) = -12.7151 + 1,1061*corMedia + 1,4023*corEscura-Fraca + 1,3299*corEscura-Forte + 0.4680*largura
-pi_hat(x)         = [1 + exp(-eta(cor, largura))]^(-1)
-
-=== Pontos de Inflexao (pi_hat = 0,50), Probabilidades e Efeitos Marginais por Cor ===
-Cor          | Offset Cor | x_0.50(cm) | pi(22) | pi(26) | pi(30) | Marg(22) | Marg(32)
-Clara        |    +0.0000 |      27,17 | 0.0817 | 0.3663 | 0.7898 |   3.51%  |   4.01%
-Media        |    +1.1061 |      24,81 | 0.2118 | 0.6360 | 0.9191 |   7.81%  |   1.51%
-Escura-Fraca |    +1.4023 |      24,17 | 0.2655 | 0.7014 | 0.9385 |   9.12%  |   1.14%
-Escura-Forte |    +1.3299 |      24,33 | 0.2516 | 0.6860 | 0.9342 |   8.81%  |   1.22%
-
-Efeito Marginal Maximo Teorico: beta_larg * 0,25 = 0.4680 * 0,25 = 0.1170 (11,70% por cm)
-Defasagem fisiologica Clara vs. Escura-Fraca em pi = 0,50: 3,00 cm
+=== Diagnóstico de Influência (n = 210, p = 5) ===
+Obs. maior Distância de Cook:  #69 (D = 0.0345, r_Di = -2.156)
+Obs. maior |DFBETAS_PAS|:      #94 (DFBETAS = -0.2428, h = 0.0483)
+Obs. maior Alavancagem h_ii:   #207 (h_ii = 0.0497, D = 0.0056)
+Total com |r_Di| > 2:          4 observações (nenhuma com |r_Di| > 3)
+Total com h_ii > 2p/n:         3 observações  |  Total com h_ii > 3p/n: 0 observações
 ```
 
 ### Subitens Discursivos
-- **a)** **(Item i — Curvas Sigmoidais $\hat{\pi}(x)$)** Observando a **Figura 6**, descreva o formato das curvas preditas na escala de probabilidade ($g^{-1}(\eta) = (1+e^{-\eta})^{-1}$): ele é linear ou não-linear? Qual o impacto do termo de `cor` sobre a geometria das $4$ curvas (há alteração de inclinação/interação ou translação horizontal)?
-- **b)** **(Ponto de Inflexão $x_{0,50}$ e Defasagem Fisiológica)** Sabendo que $\hat{\pi}(x) = 0,50 \iff \hat{\eta}(x) = 0$, calcule algebricamente a largura exata $x_{0,50}$ necessária para atingir $50\%$ de chance de atrair satélites nas fêmeas `Clara` e `Escura-Fraca`, demonstrando a defasagem fisiológica de $3,00\text{ cm}$ visível na Figura 6.
-- **c)** **(Item j — Derivada & Efeito Marginal Condicional)** Partindo da ligação logística $\pi(x) = (1+e^{-\eta})^{-1}$, explique por que o efeito marginal $\frac{\partial \pi}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1 - \pi(x)\big)$ **não é constante** (Figura 7, formato de sino), e demonstre algebricamente seu valor máximo teórico ($0,1170$, ou $11,70\%/\text{cm}$).
-- **d)** **(Saturação e Coincidência de Picos)** Por que os picos das $4$ curvas de efeito marginal na Figura 7 coincidem exatamente com as larguras $x_{0,50}$ encontradas no item b ($24,17;\, 24,33;\, 24,81;\, 27,17$ cm), e o que acontece com o efeito marginal de $+1\text{ cm}$ nas extremidades ($\text{largura} \le 22$ cm ou $\ge 32$ cm)?
+- **a)** Calcule numericamente os dois pontos de corte teóricos de alavancagem para $n = 210$ e $p = 5$: `[F1]` $= 2p/n$ e `[F2]` $= 3p/n$. Quantas observações da **Figura 4(C)** e da **Tabela 5** ultrapassam cada um desses patamares?
+- **b)** Compare as observações destacadas `#69`, `#94` e `#207` na **Tabela 5**: (i) qual discrepância entre evento observado $y_i$ e probabilidade predita $\hat{\pi}_i$ gerou os sinais extremos de $r_{Di}$ em `#69` ($-2,156$) e `#94` ($+1,671$)? (ii) Por que `#207`, apesar de ter a **maior alavancagem** da amostra ($h_{207} = 0,0497$), exibe Distância de Cook minúscula ($D_{207} = 0,0056$)?
+- **c)** Na tabela *Leave-One-Out*, calcule a variação percentual relativa `[G]` $= \frac{\hat{\beta}_{(-69)} - \hat{\beta}_{\text{orig}}}{\hat{\beta}_{\text{orig}}} \times 100\%$ ao excluir o ponto de maior Cook (`#69`) e avalie a estabilidade global do coeficiente e do valor-$p$ da `PAS` nos demais cenários.
+- **d)** Formule a decisão final fundamentada sobre a manutenção ou exclusão dessas observações, explicando o critério metodológico do Compêndio para descartar casos em regressão logística.
 
 <details>
 <summary>👣 Primeiro Passo (Por onde começar)</summary>
 
-**Item a):** Lembre que o modelo é aditivo (sem termo `cor:largura`): portanto na escala do *logito* as retas são paralelas, e na escala da *probabilidade* (Figura 6) a diferença de cor provoca uma **translação horizontal rígida** em forma de "S"!
+**Item a):** Com $p = 5$ parâmetros e $n = 210$: $2p/n = 10/210$ e $3p/n = 15/210$. Na Tabela 5, veja quem tem $h_{ii}$ acima desses limiares (`#94`: $0,0483$; `#117`: $0,0477$; `#207`: $0,0497$).
 
                 
-**Item b):** Resolva $\hat{\eta} = 0$: para `Clara` (offset $0$), $-12,7151 + 0,4680\,x_{0,50} = 0 \implies x_{0,50} = 12,7151/0,4680 = 27,17\text{ cm}$. Para `Escura-Fraca` ($+1,4023$), $(-12,7151 + 1,4023) + 0,4680\,x_{0,50} = 0 \implies x_{0,50} = 11,3128/0,4680 = 24,17\text{ cm}$!
+**Item b):** Lembre a decomposição conceitual de Cook: $D_i \propto r_{Pi}^2 \cdot \frac{h_{ii}}{1 - h_{ii}}$. Uma observação com alta alavancagem $h_{ii}$ só se torna influente se *também* possuir grande resíduo $|r_i|$! Como `#207` tem $y=0$ e $\hat{\pi}=0,3366$, seu resíduo é modesto ($-0,929$), mantendo $D_{207}$ pequeno!
 
                 
-**Item c):** Pela regra da cadeia, $\frac{d}{dx}(1+e^{-\eta})^{-1} = \beta \cdot \frac{e^{-\eta}}{(1+e^{-\eta})^2} = \beta\,\pi(1-\pi)$. A parábola $f(\pi) = \pi(1-\pi)$ atinge seu máximo em $\pi = 0,50$, onde $f(0,50) = 0,50 \times 0,50 = 0,25$!
-
-                
-**Item d):** Compare as extremidades na tabela de saída: para `Escura-Fraca` aos $32\text{ cm}$, $\hat{\pi}$ já saturou perto de $97,5\%$, logo $\pi(1-\pi) = 0,024$ e o efeito marginal cai para meros $1,14\%/\text{cm}$ ($< 2\%$).
+**Item c):** Para `[G]`: $\frac{0,08269 - 0,07904}{0,07904} \times 100\%$. Note que até o corte máximo ($+4,87\%$ ao tirar `#94`) fica abaixo de $5\%$ e preserva $p < 1,5 \times 10^{-7}$!
 
 </details>
 
 <details>
 <summary>💡 Dica & Armadilhas de Prova</summary>
 
-**Distinção Crucial na Prova (OR vs. Efeito Marginal):**
-                  
-• Na escala do **Odds (Chance)**, o efeito multiplicativo é *constante* ($\text{OR} = e^{0,4680} = 1,597$, sempre $+59,7\%$ na chance por cm, qualquer que seja a cor ou a largura inicial!).
-                  
-• Na escala da **Probabilidade ($\pi$)**, porém, o efeito aditivo em pontos percentuais ($\%$) *varia conforme $x$ e conforme a cor* ($\partial\pi/\partial x = \beta\pi(1-\pi)$), atingindo o ápice exato de $\beta/4$ ($11,70\text{ p.p./cm}$) quando a fêmea está exatamente em $50\%$ de chance!
+**Espelho direto do HorseCrab (Item f da Lista 5):** Na Lista 5 original, embora pontos como #51 tenham ultrapassado $3p/n$ ($0,073 > 0,0694$) e #100 tenha exibido a maior Cook ($0,0617$), a remoção Leave-One-Out alterou o coeficiente de largura em apenas $+3,63\%$ e preservou todos os sinais e significâncias — levando à **decisão inequívoca de manter todas as observações**.
 
                 
-**Regra Prática (Regra do "Divide por 4" de Gelman & Hill):** A inclinação máxima de qualquer curva logística na escala da probabilidade vale exatamente $\hat{\beta} / 4$!
+**Limiar prático de DFBETAS e Cook em MLG:** Valores críticos clássicos de alarme severo são $D_i > 0,5$ (ou $1,0$) para Cook e $|\text{DFBETAS}| > 1$ (ou $> 2/\sqrt{n} = 0,138$ como triagem exploratória). Aqui o máximo de Cook é apenas $0,0345$ e o máximo de $|\text{DFBETAS}|$ é $0,2428$!
 
 </details>
 
 <details>
 <summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
 
-**a) Formato das Curvas Sigmoidais e Translação entre Cores (Figura 6):**
+**a) Cortes Formais de Alavancagem `[F1]` e `[F2]`:**
 
                   
-Na escala da probabilidade, as curvas são **estritamente não-lineares (formato sigmoidal em "S")** devido à inversa do logito $g^{-1}(\eta) = (1+e^{-\eta})^{-1} \in [0, 1]$, sendo estritamente crescentes com a largura (abaixo de $23\text{ cm}$, $\hat{\pi} 90\%$). Como o modelo é aditivo sem interação, o termo $\hat{\beta}_{\text{cor}}$ provoca apenas **translações horizontais** entre as cores, mantendo inalterada a forma da sigmoide e a razão de chances.
+
+                    
+• **`[F1]` (Limite Moderado $2p/n$):** $\frac{2 \times 5}{210} = \frac{10}{210} = \mathbf{0.0476}$. Exatamente **$3$ observações ($1,43\%$)** ultrapassam esse patamar: `#207` ($0,0497$), `#94` ($0,0483$) e `#117` ($0,0477$).
+
+                    
+• **`[F2]` (Limite Severo $3p/n$):** $\frac{3 \times 5}{210} = \frac{15}{210} = \mathbf{0.0714}$. **Nenhuma observação ($0/210$)** viola o critério severo de alavancagem!
+
+                  
 
                 
 
                 
 
                   
-**b) Cálculo de $x_{0,50}$ e Defasagem Fisiológica:**
+**b) Anatomia dos Pontos `#69`, `#94` e `#207`:**
 
                   
-Como $\hat{\pi}(x) = 0,50 \iff \text{logit}(0,50) = \ln(1) = 0$, igualamos $\hat{\eta}(x) = 0$:
 
-                  • **Clara (referência, $+0$):** $-12,7151 + 0,4680\,x_{0,50} = 0 \implies x_{0,50} = 12,7151 / 0,4680 = \mathbf{27,17\text{ cm}}$;
+                    
+• **Observação `#69` ($y = 0$, $\hat{\pi} = 0,8978$):** paciente com albuminúria moderada e PAS elevada ($155,4\text{ mmHg}$) onde o modelo predizia quase $90\%$ de risco de nefropatia, mas que permaneceu livre de lesão ($y=0$). Essa surpresa gera o maior resíduo negativo ($r_D = -2,156$) e a maior Distância de Cook ($D_{69} = 0,0345$, ainda assim ordens de grandeza abaixo de $0,5$).
 
-                  • **Escura-Fraca ($+1,4023$):** $(-12,7151 + 1,4023) + 0,4680\,x_{0,50} = 0 \implies x_{0,50} = 11,3128 / 0,4680 = \mathbf{24,17\text{ cm}}$;
+                    
+• **Observação `#94` ($y = 1$, $\hat{\pi} = 0,2649$):** caso raro de nefropatia presente em paciente com PAS muito baixa ($115,0\text{ mmHg}$), gerando resíduo positivo ($+1,671$) aliado a alavancagem moderada ($h = 0,0483$), o que produz o maior $|\text{DFBETAS}_{\text{PAS}}|$ ($-0,2428$, suavizando discretamente a inclinação).
 
-                  *(Média: $24,81\text{ cm}$; Escura-Forte: $24,33\text{ cm}$).*
+                    
+• **Por que `#207` tem $h$ máximo e Cook mínimo:** a distância de Cook depende do produto quadrático entre *discrepância residual* e *alavancagem* ($D_i \propto r_{Pi}^2 \frac{h_{ii}}{(1-h_{ii})^2}$). Embora `#207` esteja no extremo raro de macroalbuminúria com PAS baixa ($115,6\text{ mmHg}$; $h_{207} = 0,0497$), seu desfecho observado ($y=0$) alinha-se ao lado majoritário da predição ($\hat{\pi}=0,3366$), resultando em resíduo pequeno ($r_D = -0,929$) e influência global desprezível ($D_{207} = 0,0056$).
 
-                  Portanto, há uma **defasagem fisiológica de $27,17 - 24,17 = \mathbf{3,00\text{ cm}}$**: uma fêmea escura-fraca atinge $50\%$ de probabilidade com carapaça $3\text{ cm}$ menor do que uma fêmea clara!
+                  
 
                 
 
                 
 
                   
-**c) e d) Efeito Marginal Condicional, Máximo Teórico $\hat{\beta}/4$ e Saturação (Figura 7):**
+**c) Cálculo de `[G]` e Robustez Leave-One-Out:**
+
+                  
+$$\Delta\%\hat{\beta}_{\text{PAS}(-69)} = \frac{0,08269 - 0,07904}{0,07904} \times 100\% = \frac{+0,00365}{0,07904} \times 100\% = \mathbf{+4,62\%}$$
+
+                  
+Em todos os cenários de reajuste — removendo isoladamente o maior Cook (`#69`: $+4,62\%$), o maior $|\text{DFBETAS}|$ (`#94`: $+4,87\%$), a maior alavancagem (`#207`: $-1,79\%$) ou mesmo todas as $3$ observações com $h > 2p/n$ simultaneamente ($+1,32\%$) —, a inclinação permanece estável entre $0,0776$ e $0,0829$ ($ 3$ ou $h_{ii} > 3p/n$), e a análise de sensibilidade *Leave-One-Out* comprovou variação inferior a $5\%$ nos coeficientes sem alteração de sinal ou conclusão inferencial. Pontos biologicamente plausíveis (como nefropatia precoce com PAS baixa) representam variabilidade clínica real e jamais devem ser descartados sem erro comprovado de coleta ou digitação.”
+
+</details>
+
+---
+
+## Questão 20 — Classificação sob Alta Prevalência (c₀ = 0,50), Curva ROC & Otimização pelo Índice de Youden (J)
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta dos Itens g) e h) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
+
+Avaliando a capacidade preditiva do modelo selecionado (`Nefropatia ~ Albuminuria + PAS`) em $n = 210$ pacientes ($135$ com nefropatia [$Y=1$, prevalência de $64,29\%$] e $75$ sem nefropatia [$Y=0$, $35,71\%$]), obtiveram-se as matrizes de confusão abaixo para o **ponto de corte padrão $c_0 = 0,50$** e para o **corte ótimo de Youden** $c^* = 0,5937$, além da **Curva ROC** (Figura 5) com $\text{AUC} = 0,7875$.
+
+```r
+=== TABELA 6: Matrizes de Confusão (Observado nas colunas vs Predito nas linhas) ===
+
+[Corte Padrão c_0 = 0.50]                 [Corte Ótimo de Youden c* = 0.5937]
+             Observado (Y)                             Observado (Y)
+Predito       0      1   Total            Predito       0      1   Total
+      0      38     20      58                  0      53     34      87
+      1      37    115     152                  1      22    101     123
+Total        75    135     210            Total        75    135     210
+
+AUC ROC = 0.7875  (EP = 0.0307 | IC 95%: 0.7273 a 0.8477)
+```
+
+### Subitens Discursivos
+- **a)** A partir da matriz esquerda ($c_0 = 0,50$), calcule à mão `[H1]` (**Sensibilidade**), `[H2]` (**Especificidade**), além do VPP e Acurácia Global. Em seguida, explique o mecanismo estatístico pelo qual uma coorte com alta prevalência amostral ($64,29\%$) produz especificidade medíocre (~$50,7\%$) quando se utiliza o corte fixo $0,50$.
+- **b)** Interprete probabilisticamente o valor $\text{AUC} = 0,7875$ ($\text{IC}_{95\%}: 0,7273\text{ a }0,8477$) e classifique o poder discriminatório do modelo na escala de Hosmer & Lemeshow.
+- **c)** Defina o critério matemático do **Índice de Youden** $J(c)$, calcule a lacuna `[I1]` ($J$ para $c_0 = 0,50$) e avalie o *trade-off* na **Tabela 7** e na **Figura 5** ao migrar para $c^* = 0,5937$ (destacando a redução absoluta nos Falsos Positivos).
+- **d)** Discuta clinicamente em que tipo de decisão médica seria mais sensato adotar $c^* = 0,5937$ (equilíbrio via Youden) versus preservar $c_0 = 0,50$ (ou menor) para triagem inicial.
+
+<details>
+<summary>👣 Primeiro Passo (Por onde começar)</summary>
+
+**Item a):** Na coluna $Y=1$ ($135$ doentes): $VP = 115$ e $FN = 20 \implies SE = 115/135$. Na coluna $Y=0$ ($75$ controles): $VN = 38$ e $FP = 37 \implies SP = 38/75$! Perceba que $37$ dos $75$ controles ($49,3\%$) são classificados erroneamente como positivos!
+
+                
+**Item b):** Na escala de Hosmer & Lemeshow ($<0,5$ acaso; $0,5\text{–}0,7$ pobre; $0,7\text{–}0,8$ aceitável; $0,8\text{–}0,9$ excelente; $\ge 0,9$ excepcional), $\text{AUC} = 0,7875$ fica na faixa **aceitável / limiar excelente**.
+
+                
+**Item c):** Para calcular `[I1]`: $J = SE + SP - 1 = 0,8519 + 0,5067 - 1$. Compare os dois valores de $FP$: $37 \to 22$ ($15$ falsos positivos eliminados)!
+
+</details>
+
+<details>
+<summary>💡 Dica & Armadilhas de Prova</summary>
+
+**Paralelo fiel com a Lista 5 (HorseCrab, Itens g–h):** No estudo `HorseCrab`, a prevalência de satélites era quase idêntica ($111/173 = 64,2\%$), fazendo o corte ingênuo $c_0 = 0,50$ atingir $SE = 86,49\%$ e $SP = 50,00\%$ ($31$ falsos positivos em $62$ fêmeas sem satélites)! Ao aplicar o critério de Youden ($c_{\text{ótimo}} = 0,685$), os falsos positivos despencaram de $31$ para $12$ ($SP$ subiu $+30,65\text{ p.p.}$ para $80,65\%$). O fenômeno aqui em nefropatia ($85,19\% / 50,67\% \to 74,81\% / 70,67\%$) segue exatamente a mesma lei probabilística!
+
+                
+**Por que o corte $0,50$ só é neutro quando $\bar{y} \approx 0,50$:** O corte $0,50$ exige $\hat{\pi}_i \ge 0,50$, mas quando o risco basal da amostra já começa alto ($64,3\%$), grande parte dos não-doentes ($Y=0$) possui $\hat{\pi}_i \in [0,50;\, 0,59]$, caindo automaticamente na zona positiva!
+
+</details>
+
+<details>
+<summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
+
+**a) Métricas em $c_0 = 0,50$ (`[H1]`, `[H2]`) e Efeito da Alta Prevalência:**
 
                   
 
-                    **📝 Como redigir na prova:** “Não, o efeito marginal da largura sobre a probabilidade $\pi(x)$ **não é constante**. Pela regra da cadeia, $\frac{\partial \pi(x)}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1 - \pi(x)\big) = 0,4680 \cdot \pi(x)\big(1 - \pi(x)\big)$, produzindo curvas em formato de sino (*bell-shaped*) moduladas pela variância binomial $\pi(1-\pi)$. Como a função côncava $\pi(1-\pi)$ atinge máximo absoluto em $\pi = 0,50$ (onde vale $0,25$), o **efeito marginal máximo teórico** é idêntico para todas as cores e vale $\max(\partial\pi/\partial x) = 0,4680 \times 0,25 = \mathbf{0,1170}$ (isto é, um aumento de até **$11,70\text{ pontos percentuais por centímetro adicional}$**). Esse pico ocorre exatamente no ponto de inflexão $\hat{\pi} = 0,50$ de cada sigmoide ($24,17\text{ cm}$ nas Escuras-Fracas, $24,33\text{ cm}$ nas Escuras-Fortes, $24,81\text{ cm}$ nas Médias e deslocado para $27,17\text{ cm}$ nas Claras). Nas extremidades (carapaças muito estreitas ou muito largas), $\pi(x) \to 0$ ou $1$, fazendo $\pi(1-\pi) \to 0$ (saturação nas assíntotas) e reduzindo o ganho marginal para menos de $2\%/\text{cm}$ ($<0,02$).”
+                    
+• **`[H1]` (Sensibilidade):** $SE = \frac{115}{115 + 20} = \frac{115}{135} = \mathbf{85,19\%}$
+
+                    
+• **`[H2]` (Especificidade):** $SP = \frac{38}{38 + 37} = \frac{38}{75} = \mathbf{50,67\%}$
+
+                    
+• **VPP e Acurácia Global:** $\text{VPP} = 115/(115+37) = 75,66\%$; $\text{Acurácia} = (115+38)/210 = 72,86\%$.
+
+                    
+• **Explicação do desequilíbrio:** Como a prevalência basal é elevada ($\bar{y} = 64,29\%$), o intercepto efetivo desloca a massa das probabilidades preditas $\hat{\pi}_i$ acima de $0,50$. Assim, mesmo indivíduos livres da doença ($Y=0$) com fatores moderados recebem $\hat{\pi}_i$ entre $0,50$ e $0,59$, sendo rotulados como positivos pelo corte arbitrário $c_0 = 0,50$ e fazendo com que **quase metade ($49,33\%$) dos controles vire falso positivo ($FP = 37$)**.
+
+                  
+
+                
+
+                
+
+                  
+**b) Interpretação Probabilística da AUC ($0,7875$):**
+
+                  
+O valor $\text{AUC} = 0,7875$ ($\text{IC}_{95\%}: [0,7273;\, 0,8477]$) significa que, ao sortear aleatoriamente um paciente com nefropatia ($Y=1$) e um paciente sem nefropatia ($Y=0$), há **$78,75\%$ de probabilidade** de o modelo atribuir risco estimado maior ao caso do que ao controle. Na classificação de Hosmer & Lemeshow, o modelo apresenta poder discriminatório **aceitável / limiar excelente** ($0,70 \le \text{AUC} < 0,80$, próximo de $0,80$) e muito superior ao acaso ($0,50$ fora do IC).
+
+                
+
+                
+
+                  
+**c) Otimização pelo Índice de Youden (`[I1]` e Tabela 7):**
+
+                  
+O critério de Youden escolhe o limiar $c^*$ que maximiza a distância vertical até a diagonal do acaso na Curva ROC: $J(c) = \text{Sensibilidade}(c) + \text{Especificidade}(c) - 1$.
+
+                  
+
+                    
+• **`[I1]` ($J$ em $c_0 = 0,50$):** $J(0,50) = 0,8519 + 0,5067 - 1 = \mathbf{0,3585}$ ($35,85\%$).
+
+                    
+• **Ganho em $c^* = 0,5937$:** $J$ salta para $\mathbf{0,4548}$ ($+9,63\text{ p.p.}$), impulsionado por um ganho de **$+20,00\text{ p.p.}$ na Especificidade** ($50,67\% \to 70,67\%$), reduzindo os **Falsos Positivos de $37$ para $22$ ($-15$ pacientes poupados de sobrediagnóstico)**, enquanto a Acurácia sobe ligeiramente ($72,86\% \to 73,33\%$) ao custo moderado de $-10,38\text{ p.p.}$ na Sensibilidade ($85,19\% \to 74,81\%$).
+
+                  
+
+                
+
+                
+
+                  
+**d) Escolha Clínica do Ponto de Corte:**
+
+                  
+
+                    **📝 Como redigir na prova:** “Na ausência de custos assimétricos explícitos, recomenda-se adotar o corte ótimo de Youden $c^* = 0,5937$, pois alinha a decisão à prevalência real ($64,3\%$), corrige a baixa especificidade do limiar $0,50$ e corta em $40,5\%$ os falsos positivos ($37 \to 22$), evitando biópsias renais invasivas ou tratamentos caros desnecessários. Por outro lado, em protocolos de *triagem ambulatorial barata* (onde perder casos não tratados traz risco severo de insuficiência renal terminal e falso positivo gera apenas exame confirmatório de urina), o gestor pode optar por manter $c_0 \le 0,50$ para maximizar a Sensibilidade ($85,2\%$).”
+
+</details>
+
+---
+
+## Questão 21 — Curvas Sigmoidais de Probabilidade Predita (x₀,₅₀ & Defasagem) e Efeito Marginal Condicional ∂π/∂x
+**Bloco:** Bloco V • Especial Lista 5 (Itens a–j Adaptados) | **Inspiração:** Adaptação Direta dos Itens i) e j) do Gabarito Técnico da Lista 5 (HorseCrab) • Profa. Rosemeire
+
+Na etapa final de interpretação geométrica e diferencial (espelho direto dos itens *i* e *j* do Gabarito Técnico da Lista 5), traçaram-se para o modelo selecionado `Nefropatia ~ Albuminuria + PAS` ($\hat{\beta}_0 = -11,34799$; $\hat{\beta}_{\text{Micro\_Leve}} = +0,71718$; $\hat{\beta}_{\text{Micro\_Mod}} = +1,23810$; $\hat{\beta}_{\text{Macro}} = +1,53263$; $\hat{\beta}_{\text{PAS}} = +0,07904$) as **curvas sigmoidais de probabilidade predita** $\hat{\pi}(\text{PAS})$ (**Figura 6**) e as **curvas em sino do efeito marginal condicional** $\partial\hat{\pi}/\partial\text{PAS}$ (**Figura 7**) para os $4$ níveis de albuminúria.
+
+```r
+=== Equação Ajustada do Modelo Principal ===
+eta_hat(PAS, Alb) = -11.34799 + 0.71718*I(Micro_Leve) + 1.23810*I(Micro_Mod) + 1.53263*I(Macro) + 0.07904*PAS
+pi_hat(PAS, Alb)  = 1 / [1 + exp(-eta_hat(PAS, Alb))]
+
+=== Pontos de Equiprobabilidade (pi_hat = 0.50) e Efeito Marginal Máximo ===
+1_Normal (Ref): x_0.50 = 143.58 mmHg | PAS=115: dpi/dPAS = +0.00677 | PAS=140: +0.01937 | PAS=175: +0.00562
+2_Micro_Leve:   x_0.50 = 134.50 mmHg | PAS=115: dpi/dPAS = +0.01148 | PAS=140: +0.01886 | PAS=175: +0.00297
+3_Micro_Mod:    x_0.50 = 127.91 mmHg | PAS=115: dpi/dPAS = +0.01539 | PAS=140: +0.01586 | PAS=175: +0.00182
+4_Macro:        x_0.50 =    [J]      | PAS=115: dpi/dPAS = +0.01737 | PAS=140: +0.01368 | PAS=175: +0.00137
+
+Máximo Teórico (Teto em pi = 0.50):  [K]
+```
+
+### Subitens Discursivos
+- **a)** Escreva a fórmula fechada do **ponto de inflexão / equiprobabilidade** $x_{0,50}$ (valor da PAS em que $\hat{\pi} = 0,50$), calcule à mão a lacuna `[J]` para a categoria `4_Macro` e determine a **defasagem fisiológica horizontal** $\Delta x_{0,50} = x_{0,50(\text{Normal})} - x_{0,50(\text{Macro})}$ que separa os dois grupos extremos.
+- **b)** Analise o comportamento visual das $4$ curvas da **Figura 6** quanto à forma sigmoidal em “S”, monotonicidade, limites assintóticos em $[0, 1]$ e à razão pela qual curvas perfeitamente paralelas na escala do logito se convertem em **translações horizontais** na escala de probabilidade.
+- **c)** Utilizando a regra da cadeia, demonstre a equação do **efeito marginal condicional** $\frac{\partial \pi(x)}{\partial x} = \beta_{\text{PAS}} \cdot \pi(x)(1 - \pi(x))$, justifique por que o pico máximo ocorre exatamente em $\pi = 0,50$ e calcule `[K]` (por $+1\text{ mmHg}$ e por $+10\text{ mmHg}$) pela **Regra de Divisão por 4**.
+- **d)** Explique, apoiado na **Figura 7** e na tabela numérica em $\text{PAS} = 115, 140$ e $175\text{ mmHg}$, por que todas as categorias atingem o mesmo teto máximo em alturas diferentes de pressão e por que a taxa de variação despenca para menos de $0,6\%$ por mmHg (saturação assintótica) em pressões extremas ($\text{PAS} = 175\text{ mmHg}$).
+
+<details>
+<summary>👣 Primeiro Passo (Por onde começar)</summary>
+
+**Item a):** Na regressão logística, $\hat{\pi} = 0,50 \iff \hat{\eta} = \ln(0,5/0,5) = 0$. Portanto, iguale $-11,34799 + 1,53263 + 0,07904 \cdot x_{0,50} = 0$ e isole $x_{0,50}$! Depois subtraia de $143,58\text{ mmHg}$ (`1_Normal`) para achar o deslocamento $\Delta x_{0,50}$.
+
+                
+**Item b):** Repare que o modelo principal não tem termo de interação `Albuminuria:PAS` — todas as $4$ retas do logito têm o mesmo coeficiente angular $+0,07904$, mudando apenas o intercepto. Na inversa logística, somar $+\beta_{\text{cat}}$ a $\eta$ equivale exatamente a subtrair $\beta_{\text{cat}} / \beta_{\text{PAS}}$ do eixo horizontal $x$!
+
+                
+**Item c):** Derive $\pi(x) = (1 + e^{-\eta})^{-1}$ em relação a $x$: $\frac{d\pi}{dx} = \frac{e^{-\eta}}{(1+e^{-\eta})^2} \cdot \beta_x = \beta_x \pi(1-\pi)$. O termo quadrático $p(1-p)$ atinge máximo $0,5\times 0,5 = 0,25$ em $p = 0,50$!
+
+</details>
+
+<details>
+<summary>💡 Dica & Armadilhas de Prova</summary>
+
+**Espelho exato da Lista 5 (HorseCrab, Itens i–j):** Na Lista 5, a cor escura deslocava o ponto de equiprobabilidade $x_{0,50}$ da largura da carapaça em $\Delta x_{0,50} = +1,484 / 0,46796 = 3,17\text{ cm}$ para a direita ($23,37 \to 26,54\text{ cm}$), e o teto do efeito marginal era $0,25 \times 0,46796 = 0,1170$ ($+11,70\text{ p.p./cm}$), com saturação abaixo de $2\%$ nas bordas! Aqui o raciocínio é idêntico: a macroalbuminúria desloca $x_{0,50}$ para a **esquerda** em $19,39\text{ mmHg}$ (risco de $50\%$ ocorre muito mais cedo!), e o teto em $\pi=0,50$ é $0,25 \times 0,07904 = +1,98\text{ p.p./mmHg}$!
+
+                
+**Regra de Divisão por 4 (Gelman & Hill):** Quer estimar de cabeça na prova qual o ganho máximo de probabilidade por $+1$ unidade de $X$? Basta dividir $\hat{\beta}_x$ por $4$! Aqui $0,07904 / 4 = 0,01976$ ($\approx +1,98\text{ p.p.}$ por mmHg, ou $+19,76\text{ p.p.}$ por $+10\text{ mmHg}$).
+
+</details>
+
+<details>
+<summary>✅ Gabarito Completo (Padrão Profa. Rosemeire)</summary>
+
+**a) Ponto de Inflexão `[J]` e Defasagem Fisiológica $\Delta x_{0,50}$:**
+
+                  
+Quando $\hat{\pi}(x) = 0,50$, o logito zera ($\hat{\eta} = 0$):
+
+                  
+$$x_{0,50} = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cat}}}{\hat{\beta}_{\text{PAS}}} \implies x_{0,50(\text{4\_Macro})} = -\frac{-11,34799 + 1,53263}{0,07904} = \frac{9,81536}{0,07904} = \mathbf{124,18\text{ mmHg}}$$
+
+                  
+Comparado ao grupo basal `1_Normal` ($x_{0,50} = 143,58\text{ mmHg}$), a defasagem horizontal fisiológica é:
+
+                  
+$$\Delta x_{0,50} = 143,58 - 124,18 = \frac{\hat{\beta}_{\text{Macro}}}{\hat{\beta}_{\text{PAS}}} = \frac{1,53263}{0,07904} = \mathbf{19,39\text{ mmHg}}$$
+
+                  
+*Significado clínico:* Um paciente com macroalbuminúria atinge $50\%$ de risco previsto de nefropatia já com PAS de $124,2\text{ mmHg}$ (pressão normotensa/limítrofe!), ao passo que um paciente normoalbuminúrico só alcança o mesmo risco aos $143,6\text{ mmHg}$ — quase $+20\text{ mmHg}$ depois.
+
+                
+
+                
+
+                  
+**b) Geometria das Curvas Sigmoidais (Figura 6):**
+
+                  
+Todas as quatro trajetórias formam curvas sigmoidais em “S” estritamente crescentes e confinadas a $(0, 1)$. Como o modelo principal é aditivo (sem interação `Albuminuria:PAS`), o coeficiente de `PAS` é idêntico nos quatro estratos, fazendo com que os efeitos dos níveis de albuminúria promovam uma **translação horizontal pura** para a esquerda conforme piora o marcador renal (sem cruzamentos e sem dobramentos em “U”).
+
+                
+
+                
+
+                  
+**c) Derivação do Efeito Marginal e Teto Teórico `[K]`:**
+
+                  
+Pela regra da cadeia aplicada a $\pi(x) = [1 + e^{-(\beta_0 + \beta_{\text{cat}} + \beta_x x)}]^{-1}$:
+
+                  
+$$\frac{\partial \pi(x)}{\partial x} = \frac{d\pi}{d\eta} \cdot \frac{d\eta}{dx} = \pi(x)(1 - \pi(x)) \cdot \beta_{\text{PAS}}$$
+
+                  
+O fator $\pi(1 - \pi)$ representa a variância de Bernoulli e tem derivada nula em $\pi = 0,50$, atingindo máximo exato $0,5 \times 0,5 = 0,25$. Portanto:
+
+                  
+$$\text{Máx}_{\text{[K]}} = 0,25 \times \hat{\beta}_{\text{PAS}} = 0,25 \times 0,07904 = \mathbf{+0,01976}\text{ (+1,98 p.p. por +1 mmHg; } \mathbf{+19,76\text{ p.p.}}\text{ por +10 mmHg)}$$
+
+                
+
+                
+
+                  
+**d) Picos Deslocados e Saturação Assintótica (Figura 7):**
+
+                  
+
+                    **📝 Como redigir na prova:** “Na regressão logística, o efeito marginal não é constante (ao contrário da regressão linear): ele assume formato de sino simétrico, atingindo o mesmo teto máximo ($+1,98\text{ p.p./mmHg}$) nos respectivos pontos de inflexão $x_{0,50}$ ($124,2\text{ mmHg}$ em `4_Macro` até $143,6\text{ mmHg}$ em `1_Normal`). Em pressões normais baixas ($115\text{ mmHg}$), pacientes graves já ganham $+1,74\text{ p.p./mmHg}$, enquanto em pressões extremas ($175\text{ mmHg}$), onde $\hat{\pi}_i$ já supera $92\%\text{ a }98\%$, ocorre **saturação assintótica**: o produto $\pi(1-\pi)$ tende a zero e variações adicionais da PAS acrescentam menos de $0,6\%$ ($+0,14$ a $+0,56\text{ p.p./mmHg}$) à probabilidade predita.”
 
 </details>
 
