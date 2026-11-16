@@ -312,6 +312,8 @@
     <a href="#etapa3">Etapa 3: Regressão Logística</a>
     <a href="#etapa4">Etapa 4: Todos os Testes & H0</a>
     <a href="#etapa5">Etapa 5: Respostas Prontas</a>
+    <a href="#etapa6">Etapa 6: Casos Resolvidos</a>
+    <a href="#etapa7">Etapa 7: Guia Lista 5 (a–j) &amp; Coefs</a>
   </div>
 
   <!-- ========================================== -->
@@ -972,6 +974,109 @@ Quantidade_cigarros     1      [D]         4      1.488    0.120  </code></pre>
         • Teste de $H_0: \alpha = 0$ ($\pi = 0.5$): $\ell(0) = -n\log 2$<br>
         • TRV: $\Lambda = 2[\ell(\hat{\alpha}) - \ell(0)] = 2n[\bar{y}\log(2\bar{y}) + (1-\bar{y})\log(2(1-\bar{y}))] \sim_a \chi^2_1$.
       </p>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- ETAPA 7: GUIA COMPLETO DE INTERPRETACAO (LISTA 5 a-j + CONTEXTO AMPLO) -->
+  <!-- ========================================== -->
+  <div id="etapa7" class="section-title" style="background: linear-gradient(90deg, #312e81, #4f46e5);">
+    <span>ETAPA 7: GUIA DEFINITIVO DE INTERPRETAÇÃO — COEFICIENTES, OR, RR, AUC &amp; LISTA 5 (a–j)</span>
+    <span style="font-size:11px; font-weight:normal;">Como interpretar cada item no contexto amplo + <a href="resumo_interpretacao_lista5_mlg.tex" download style="color:#fde68a; text-decoration:underline;">Baixar versão .tex</a></span>
+  </div>
+
+  <!-- 7.1 -->
+  <div class="card">
+    <div class="card-title">7.1 Escalas do Modelo Logístico, Intercepto ($\hat{\beta}_0$) e Ligações em MLG</div>
+    <div class="formula-box">
+      $$\eta_i = \text{logit}(\pi_i) = \ln\!\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \sum_{j=1}^k \beta_j x_{ij}
+      \quad \Longleftrightarrow \quad
+      \pi_i = \frac{e^{\eta_i}}{1+e^{\eta_i}} = \left[1 + e^{-\eta_i}\right]^{-1},
+      \qquad \text{Chance}_i = \frac{\pi_i}{1-\pi_i} = e^{\eta_i}$$
+    </div>
+    <ul>
+      <li><strong>Intercepto ($\hat{\beta}_0$):</strong> é o <em>logito basal</em> quando todas as covariáveis contínuas são $0$ e todas as categóricas estão na referência. Logo, $e^{\hat{\beta}_0}$ é a <strong>chance basal</strong> (nunca probabilidade!) e $\hat{\pi}_0 = \frac{e^{\hat{\beta}_0}}{1+e^{\hat{\beta}_0}}$ é a probabilidade basal. Se $x=0$ não existe biologicamente (ex.: largura = $0$\,cm ou PAS = $0$\,mmHg), funciona apenas como âncora matemática.</li>
+      <li><strong>Comparação com outras ligações:</strong> <strong>Normal (Identidade):</strong> $\Delta\mu = \beta_j$ (efeito aditivo); <strong>Poisson/Gama (Log):</strong> razão de taxas/médias $e^{\beta_j}$ (efeito multiplicativo em $\mu$); <strong>Logística (Logito):</strong> razão de chances $OR = e^{\beta_j}$ (efeito multiplicativo na chance); <strong>Log-Binomial:</strong> razão de riscos $RR = e^{\beta_j}$ (direto na probabilidade).</li>
+      <li><strong>IC da probabilidade predita $\hat{\pi}(\mathbf{x}_0)$:</strong> construa $\text{IC}_{95\%}(\eta_0) = \hat{\eta}_0 \pm 1{,}96\cdot EP(\hat{\eta}_0) = [\eta_{\text{inf}}, \eta_{\text{sup}}]$ e aplique a inversa logística nos extremos: $\left[\frac{e^{\eta_{\text{inf}}}}{1+e^{\eta_{\text{inf}}}}, \frac{e^{\eta_{\text{sup}}}}{1+e^{\eta_{\text{sup}}}}\right] \subset (0,1)$.</li>
+    </ul>
+  </div>
+
+  <!-- 7.2 -->
+  <div class="card">
+    <div class="card-title">7.2 Interpretação de Coeficientes: Binária/Categórica, Salto $c$, Interação, OR vs RR e Cornfield</div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>1. Binária / Categórica &amp; Salto Contínuo $c$:</strong><br>
+        • $\widehat{OR}_k = e^{\hat{\beta}_k}$, $\quad \text{IC}_{95\%}(OR_k) = \exp\!\big(\hat{\beta}_k \pm 1{,}96\,EP(\hat{\beta}_k)\big)$.<br>
+        • Se $OR > 1$: aumento de $(OR - 1)\times 100\%$ na chance; se $OR < 1$: redução de $(1 - OR)\times 100\%$ na chance (ou $1/OR$ menos chance).<br>
+        • Se $1 \in \text{IC}_{95\%}(OR)$ $\iff$ não significativo a $5\%$.<br>
+        • <strong>Salto de $c$ unidades:</strong> $\widehat{OR}_c = e^{c\cdot \hat{\beta}_j}$ e $\text{IC}_{95\%}(OR_c) = \exp\!\big(c(\hat{\beta}_j \pm 1{,}96\,EP(\hat{\beta}_j))\big)$. Nunca multiplique $OR$ por $c$!<br>
+        • <strong>Interação ($X_1 \times X_2$):</strong> $\widehat{OR}_{X_1 \mid X_2=x_2} = \exp(\hat{\beta}_1 + \hat{\beta}_3 x_2)$. Sinais opostos indicam atenuação ou inversão de efeito.
+      </div>
+      <div class="formula-box">
+        <strong>2. OR vs RR (Fórmula Exata &amp; Cornfield):</strong><br>
+        $$RR = \frac{\pi_1}{\pi_0} = \frac{OR}{(1 - \pi_0) + \pi_0 \cdot OR}$$
+        • <strong>Regra de Eventos Raros (Cornfield):</strong> quando $\pi_0, \pi_1 < 0{,}10$ ($< 10\%$), $OR \approx RR$.<br>
+        • <strong>Evento Comum ($\pi \ge 10\%$):</strong> $OR$ <em>superestima a magnitude</em> frente ao $RR$ (afasta-se mais de $1$: se $OR > 1 \implies OR > RR$; se $OR < 1 \implies OR < RR$). Nunca chame $OR$ de probabilidade!<br>
+        • <strong>Delineamento:</strong> Coorte/Transversal estimam $\hat{\pi}, OR, RR$; <strong>Caso-Controle</strong> estima apenas $\hat{\beta}_j$ e $OR$ ($\hat{\beta}_0, \hat{\pi}, RR$ são inválidos!).
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.3 -->
+  <div class="card">
+    <div class="card-title">7.3 Exploratória (Item a), Multicolinearidade &amp; Paradoxo de Wald (Item b) e Seleção ANODEV/AIC</div>
+    <ul>
+      <li><strong>Exploratória (a):</strong> em contínuas por $Y\in\{0,1\}$, verifique deslocamento entre médias/medianas e linearidade visual; em categóricas, calcule $\hat{p}_k = y_k/n_k$ buscando <strong>gradiente monotônico</strong> (vs oscilação errática sem relevância).</li>
+      <li><strong>Multicolinearidade e Paradoxo de Wald (b):</strong> quando duas contínuas têm alta correlação ($|r| > 0{,}85$), $EP(\hat{\beta}_j)$ inflaciona no modelo múltiplo, encolhendo $z = \hat{\beta}_j/EP$ e tornando <em>ambas não significativas no Wald</em> ($p > 0{,}05$ e $\text{IC}_{95\%}(OR)$ cruzando $1$). Resolva removendo a redundante e testando via <strong>ANODEV (TRV)</strong>:
+        <br>$\bullet$ Se $\phi$ conhecido ($\phi=1$): $\Delta D^* = D_m - D_q \sim_a \chi^2_{q-m}$;
+        <br>$\bullet$ Se $\phi$ desconhecido (Normal/Gama): $F = \frac{(D_m-D_q)/(q-m)}{\hat{\phi}_{\max}} \sim F_{q-m,\,n-p_{\max}}$;
+        <br>$\bullet$ $\text{AIC} = -2\ell + 2p$ (compara modelos encaixados ou não encaixados; menor AIC vence).</li>
+    </ul>
+  </div>
+
+  <!-- 7.4 -->
+  <div class="card">
+    <div class="card-title">7.4 Linearidade no Logito por 2 Métodos (Item c), Ajuste Global ($m_i=1$) &amp; Envelope hnp (Itens d–e)</div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>Linearidade no Logito (Item c):</strong><br>
+        1. <strong>TRV Polinomial:</strong> incluir $x^2$ e testar $H_0:\beta_{\text{quad}}=0$ via $\Delta D^* = D_{\text{lin}} - D_{\text{quad}} \sim_a \chi^2_1$. Se $p > 0{,}05$, descarta-se curvatura quadrática.<br>
+        2. <strong>Logitos Empíricos c/ Haldane:</strong> em $g$ classes quantílicas, calcular:
+        $$\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0{,}5}{m_k - y_k + 0{,}5}\right)$$
+        O $+0{,}5$ impede divisão por zero / $\ln(0)$ quando $y_k=0$ ou $y_k=m_k$ ($0$ fracassos). Alinhamento monotônico confirma linearidade no logito.
+      </div>
+      <div class="alert-box">
+        <strong>4 Limitações sob $m_i=1$ (Item d) &amp; Envelope hnp (Item e):</strong><br>
+        1. <strong>$D_p$ e $X^2$ falham como teste global em $m_i=1$:</strong> o nº de parâmetros saturados cresce com $n$; $D_p$ não segue $\chi^2_{n-p}$! Use $\text{Pseudo-}R^2 = 1 - D_p/D_0$ e $X^2/gl \approx 1$ (checar superdispersão), e teste formal via <strong>Hosmer–Lemeshow</strong> ($\hat{C} \sim_a \chi^2_{g-2}$; $p > 0{,}05 \implies H_0$ de boa calibração não rejeitada).<br>
+        2. <strong>AIC:</strong> ordenação relativa apenas (sem $p$-valor).<br>
+        3. <strong>HL ($\hat{C}$):</strong> depende da divisão arbitrária em $g=10$ decis e perde poder nas caudas.<br>
+        4. <strong>Envelope <code>hnp</code>:</strong> não requer linha a $45^\circ$; exige pontos dentro das bandas de $95\%$ ($\le 5\%$ fora; ideal $0\%$). Todos acima $\implies$ superdispersão.
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.5 -->
+  <div class="card">
+    <div class="card-title">7.5 Influência + Leave-One-Out (Item f), ROC/AUC/Youden (Itens g–h) e Sigmoides + Efeito Marginal (Itens i–j)</div>
+    <div class="grid-2">
+      <div class="formula-box">
+        <strong>Diagnóstico &amp; ROC / Youden (Itens f, g, h):</strong><br>
+        • <strong>Pontos de corte diagnósticos:</strong> alavancagem $h_{ii} > 2p/n$ (ou $3p/n$), $|r_{Di}| > 2$ (ou $> 3$), Cook $D_i > 0{,}5$ / $1$, $|\text{DFBETAS}| > 2/\sqrt{n}$. Valide com <strong>Leave-One-Out</strong>: se $|\Delta\%\hat{\beta}| < 5\%$ e decisões se mantêm, mantenha todas as obs.<br>
+        • <strong>Métricas ($c$ fixo):</strong> $SE = \frac{VP}{VP+FN}$, $SP = \frac{VN}{VN+FP}$, $\text{Acc} = \frac{VP+VN}{N}$. Em amostra de <strong>prevalência alta</strong> ($> 50\%$), $c_0 = 0{,}50$ infla $SE$, mas derruba $SP$ (muitos $FP$)!<br>
+        • <strong>AUC (Hosmer &amp; Lemeshow):</strong> prob. de o modelo dar $\hat{\pi}_{\text{caso}} > \hat{\pi}_{\text{não-caso}}$; $[0{,}7;0{,}8)$ aceitável, $[0{,}8;0{,}9)$ excelente, $\ge 0{,}9$ excepcional.<br>
+        • <strong>Corte Ótimo de Youden:</strong> $c^* = \arg\max_c (SE(c) + SP(c) - 1)$ equilibra $SE$ e $SP$.
+      </div>
+      <div class="script-box" style="font-style:normal;">
+        <strong>Curvas Sigmoidais &amp; Efeito Marginal Condicional (Itens i–j):</strong><br>
+        • As curvas $\hat{\pi}(x)$ têm formato <strong>sigmoidal em "S"</strong> (não lineares em $\pi$).<br>
+        • <strong>Ponto de equiprobabilidade ($\hat{\pi}=0{,}50 \iff \hat{\eta}=0$):</strong>
+        $$x_{0{,}50}(\text{cat}) = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cat}}}{\hat{\beta}_x}, \qquad \Delta x_{0{,}50} = \frac{\hat{\beta}_B - \hat{\beta}_A}{\hat{\beta}_x}$$
+        • <strong>Efeito marginal condicional (regra da cadeia):</strong>
+        $$\frac{\partial \pi(\mathbf{x})}{\partial x_j} = \beta_j\,\pi(\mathbf{x})\big[1 - \pi(\mathbf{x})\big]$$
+        • <strong>Formato em sino (bell-shaped) &amp; Divide-by-4:</strong> não é constante! Atinge o pico exatamente na inflexão ($\pi = 0{,}50 \implies \pi(1-\pi) = 0{,}25$): $\max(\partial\pi/\partial x_j) = 0{,}25\hat{\beta}_j = \hat{\beta}_j/4$. Nas caudas ($\pi\to 0$ ou $1$), $\pi(1-\pi)\to 0$ (saturação assintótica).
+      </div>
     </div>
   </div>
 

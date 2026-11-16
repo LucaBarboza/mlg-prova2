@@ -414,23 +414,6 @@ Uma das perguntas conceituais mais cobradas em provas de MLG é a relação dire
 
 ---
 
-### 3.6 Especial Lista 5 (*HorseCrab* a–j): Haldane, 4 Limitações, $x_{0,50}$ e Efeito Marginal
-* **Linearidade no Logito (Item c):** (1) **TRV com termo quadrático** ($\Delta D^* = D_{\text{lin}} - D_{\text{quad}} = 0,8508$, $gl=1$, $p = 0,3563$ $\implies$ linear suficiente); (2) **Logito Empírico com correção de Haldane** em 8 decis (evita $\ln(y/0)$ quando fracassos $= 0$):
-  $$\text{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0,5}{m_k - y_k + 0,5}\right)$$
-* **4 Limitações em Dados Binários Desagrupados ($m_i = 1$, Item d):**
-  1. **Deviance ($D_p$):** Não segue assintoticamente $\chi^2_{n-p}$ (parâmetros saturados crescem com $n$);
-  2. **AIC:** Apenas índice comparativo relativo (sem valor-$p$);
-  3. **Pearson ($X^2$):** Sofre da mesma falha assintótica e é sensível a $\hat{\pi}_i \approx 0$ ou $1$;
-  4. **Hosmer-Lemeshow ($\hat{C}$):** Depende da escolha arbitrária do número de decis ($g=10$) e tem menor poder em regiões locais/caudas.
-* **Ponto de Inflexão ($50\%$ de Chance) e Defasagem Fisiológica (Item i):** Como $\hat{\pi} = 0,50 \iff \hat{\eta} = 0$:
-  $$x_{0,50} = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cor}}}{\hat{\beta}_{\text{largura}}} \qquad (\text{Clara}=27,17\text{ cm vs. Escura-Fraca}=24,17\text{ cm} \implies \text{defasagem de } 3,00\text{ cm})$$
-* **Efeito Marginal Condicional da Variável Contínua (Item j — Não Constante!):** Pela regra da cadeia:
-  $$\frac{\partial \pi(x)}{\partial \text{largura}} = \hat{\beta}_{\text{larg}} \cdot \pi(x)\big(1 - \pi(x)\big) \implies \text{Máx Teórico (em } \pi = 0,50\text{)} = \frac{\hat{\beta}_{\text{larg}}}{4} = 0,4680 \times 0,25 = \mathbf{0,1170} \; (11,70\%/\text{cm})$$
-  Nas extremidades ($\pi \to 0$ ou $\pi \to 1$), $\pi(1-\pi) \to 0$ (saturação nas assíntotas) e o ganho marginal cai para $<2\%/\text{cm}$.
-* **Diagnóstico, ROC e Youden (*HorseCrab* $n=173$, Itens e–h):** Multicolinearidade Largura $\times$ Peso ($r = 0,8869$); `hnp` $0/173$ fora; Deleção Leave-One-Out sem `#171` altera largura em apenas $+3,63\%$; Corte $c_0 = 0,50$ dá $\text{SE}=86,49\%, \text{SP}=50,00\%$ (prevalência alta $64,16\%$); **Corte Ótimo de Youden** $c_{\text{ótimo}} = 0,685$ ($\text{SE}=63,06\%, \text{SP}=80,65\%$, $\text{AUC} = 0,7714$).
-
----
-
 # ETAPA 4: TODOS OS TESTES DO MODELO LOGÍSTICO (COM $H_0$, ESTATÍSTICA E INTERPRETAÇÃO)
 
 ### Teste 1: Teste Global do Modelo (TRV entre Modelo Nulo e Proposto)
@@ -522,12 +505,6 @@ Fixado o limiar $c = 0.5$:
 
 ### 5.4 Roteiro para "Decisão sobre Eliminação de Termo com Base em Ponto Influente"
 > *"A análise da Distância de Cook revelou que a observação #172 é um ponto altamente influente. A comparação dos modelos demonstrou que a significância estatística da interação dependia exclusivamente desse único indivíduo (com ele, $p = 0.0236$; sem ele, o erro padrão explodiu para 1357 e $p = 0.9886$). Trata-se de um artefato de significância. Portanto, para assegurar a estabilidade e a generalização estatística, a interação deve ser removida do modelo final."*
-
-### 5.5 Script 5: Multicolinearidade + Seleção ANODEV/AIC (*HorseCrab*)
-> *"Embora largura e peso diferenciem fortemente os grupos $Y=1$ e $Y=0$ na análise exploratória, sua correlação linear intensa ($r = 0,8869$) gera multicolinearidade severa no modelo completo, inflacionando os erros-padrão e reduzindo artificialmente as estatísticas de Wald ($p = 0,1779$ e $0,2407$). Pela ANODEV sequencial, a exclusão de peso ($\Delta D = 1,41;\, p = 0,235$) e condição ($\Delta D = 0,85;\, p = 0,655$) não deteriora o ajuste e reduz o AIC ($201,20 \to 197,46$), tornando a largura altamente significativa ($z = 4,43;\, p = 9,26\times 10^{-6}$, $OR = 1,597$)."*
-
-### 5.6 Script 6: Efeito Marginal Condicional, Ponto de Inflexão $x_{0,50}$ e Curvas Sigmoidais
-> *"Na escala da probabilidade, as curvas são sigmoidais em 'S' não-lineares, transladadas horizontalmente pela cor (para $\hat{\pi} = 0,50$, carapaças Claras exigem $27,17$ cm contra $24,17$ cm nas Escuras-Fracas — defasagem fisiológica de $3,00$ cm). Logo, o efeito marginal $\partial\pi/\partial x = \hat{\beta}_{\text{larg}}\,\pi(x)(1-\pi(x))$ não é constante: possui formato de sino com máximo absoluto $\hat{\beta}_{\text{larg}}/4 = 0,4680 \times 0,25 = 0,1170$ ($+11,70\text{ p.p./cm}$) nos pontos de inflexão $\pi = 0,50$, reduzindo-se abaixo de $2\%/\text{cm}$ nas extremidades por saturação nas assíntotas."*
 
 
 ---
@@ -773,3 +750,33 @@ Seja $y_1, \dots, y_n$ uma amostra i.i.d. de variáveis $\text{Bernoulli}(\pi)$,
    * Estatística do teste:
      $$\Lambda = 2\left[\ell(\hat{\alpha}) - \ell(0)\right] = 2n \left[ \bar{y}\log(2\bar{y}) + (1-\bar{y})\log(2(1-\bar{y})) \right]$$
    * **Distribuição Nula Assintótica:** $\Lambda \sim_a \chi^2_1$ (qui-quadrado com 1 grau de liberdade).
+
+
+---
+
+## ETAPA 7: Guia Definitivo de Interpretação — Lista 5 (`a)`–`j)`) e Contexto Geral em MLG
+
+> Também disponível em fonte LaTeX compilável: [resumo_interpretacao_lista5_mlg.tex](resumo_interpretacao_lista5_mlg.tex)
+
+### 7.1 Escalas do Modelo, Intercepto ($\hat{\beta}_0$) e Funções de Ligação
+$$\eta_i = \text{logit}(\pi_i) = \ln\!\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \sum_{j=1}^k \beta_j x_{ij} \iff \pi_i = \frac{e^{\eta_i}}{1+e^{\eta_i}}, \qquad \text{Chance}_i = e^{\eta_i}$$
+* **Intercepto ($\hat{\beta}_0$):** logito basal quando todas as contínuas valem $0$ e todas as categóricas estão na referência ($e^{\hat{\beta}_0}$ é a chance basal; $\hat{\pi}_0 = \frac{e^{\hat{\beta}_0}}{1+e^{\hat{\beta}_0}}$). Quando $x=0$ é impossível biologicamente, é apenas constante de ancoragem.
+* **Outras ligações:** Identidade ($\Delta\mu = \beta_j$), Log em Poisson/Gama (razão de taxas/médias $e^{\beta_j}$), Logito (OR $e^{\beta_j}$), Log-Binomial (RR direto $e^{\beta_j}$).
+
+### 7.2 Coeficientes, Odds Ratio ($OR$), Salto $c$, Interação e Risco Relativo ($RR$)
+* **Binária/Categórica:** $\widehat{OR}_k = e^{\hat{\beta}_k}$; $\text{IC}_{95\%}(OR_k) = \exp(\hat{\beta}_k \pm 1{,}96\,EP)$. Se $OR > 1 \implies (OR-1)\times 100\%$ de aumento na chance; se $OR < 1 \implies (1-OR)\times 100\%$ de redução. Se $1 \in \text{IC}$, não significativo a $5\%$.
+* **Contínua com salto $c$:** $\widehat{OR}_c = e^{c\cdot\hat{\beta}_j}$ (nunca multiplicar $OR$ por $c$).
+* **Interação ($X_1 \times X_2$):** $\widehat{OR}_{X_1 \mid X_2=x_2} = \exp(\hat{\beta}_1 + \hat{\beta}_3 x_2)$.
+* **OR vs RR (Cornfield):** $RR = \frac{OR}{(1-\pi_0)+\pi_0\cdot OR}$. Sob evento raro ($\pi < 10\%$), $OR \approx RR$; sob evento comum, $OR$ superestima a magnitude frente a $RR$. Em caso-controle, apenas $\hat{\beta}_j$ e $OR$ são válidos ($\hat{\beta}_0, \hat{\pi}, RR$ são inválidos).
+
+### 7.3–7.4 Exploratória (`a`), Multicolinearidade/Wald (`b`), Linearidade (`c`) e Ajuste Global (`d`–`e`)
+* **Paradoxo de Wald:** alta correlação entre preditoras infla $EP$, levando a $p_{\text{Wald}} > 0{,}05$ e IC cruzando $1$; selecione por ANODEV ($\Delta D^* \sim \chi^2_{q-m}$ para $\phi=1$, Teste $F$ com $\hat{\phi}_{\max}$ se $\phi$ estimado) e AIC.
+* **Linearidade no logito (`c`):** (1) TRV quadrático $H_0:\beta_{\text{quad}}=0$ via $\Delta D^* \sim \chi^2_1$; (2) logito empírico de Haldane $\text{logit}^*(p_k) = \ln\!\left(\frac{y_k+0{,}5}{m_k-y_k+0{,}5}\right)$ em $g$ classes quantílicas.
+* **4 Limitações sob $m_i=1$ (`d`):** $D_p$ e $X^2$ falham assintoticamente ($\chi^2_{n-p}$ inválido); AIC não tem $p$-valor; Hosmer–Lemeshow ($\hat{C} \sim \chi^2_{g-2}$) depende da escolha de $g$ decis e perde poder nas caudas. No `hnp` (`e`), espera-se $\approx 95\%$–$100\%$ dos pontos dentro das bandas (sem precisar formar linha a $45^\circ$).
+
+### 7.5 Influência (`f`), Confusão/ROC/Youden (`g`–`h`) e Sigmoides/Efeito Marginal (`i`–`j`)
+* **Diagnósticos + LOO (`f`):** checar $h_{ii} > 2p/n$, $|r_{Di}| > 2$, Cook $D_i > 0{,}5$, $|\text{DFBETAS}| > 2/\sqrt{n}$; se a deleção muda pouco os betas ($< 5\%$) e mantém sinais/decisões, manter todas as obs.
+* **Prevalência, ROC, AUC & Youden (`g`–`h`):** sob alta prevalência, $c_0=0{,}50$ reduz $SP$ e gera muitos $FP$; Youden $c^* = \arg\max_c(SE+SP-1)$ reequilibra $SE$ e $SP$; $\text{AUC}$ mede probabilidade de $\hat{\pi}_{\text{caso}} > \hat{\pi}_{\text{não-caso}}$ ($[0{,}7;0{,}8)$ aceitável, $[0{,}8;0{,}9)$ excelente, $\ge 0{,}9$ excepcional).
+* **Sigmoides e Efeito Marginal (`i`–`j`):** equiprobabilidade em $x_{0{,}50} = -(\hat{\beta}_0 + \hat{\beta}_{\text{cat}})/\hat{\beta}_x$, deslocamento $\Delta x_{0{,}50} = (\hat{\beta}_B-\hat{\beta}_A)/\hat{\beta}_x$, e efeito marginal condicional
+  $$\frac{\partial \pi(\mathbf{x})}{\partial x_j} = \beta_j\,\pi(\mathbf{x})\big[1-\pi(\mathbf{x})\big], \qquad \max\left(\frac{\partial\pi}{\partial x_j}\right) = 0{,}25\,\hat{\beta}_j \quad (\text{Divide-by-4 em }\pi=0{,}50),$$
+  saturando ($ \to 0$) nas caudas quando $\pi \to 0$ ou $\pi \to 1$.

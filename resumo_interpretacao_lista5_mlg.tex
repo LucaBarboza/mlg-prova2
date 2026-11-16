@@ -1,0 +1,346 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\geometry{margin=2cm}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\definecolor{boxbg}{HTML}{EFF6FF}
+\definecolor{boxborder}{HTML}{1D4ED8}
+\definecolor{warnbg}{HTML}{FFF1F2}
+\definecolor{warnborder}{HTML}{BE123C}
+\definecolor{okbg}{HTML}{ECFDF5}
+\definecolor{okborder}{HTML}{047857}
+
+\newenvironment{redacao}[1][Modelo de Redação para Prova]{%
+  \par\medskip\noindent
+  \fcolorbox{boxborder}{boxbg}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+    \small\textbf{\color{boxborder}#1:}\par\smallskip
+}{%
+    \end{minipage}%
+  }\par\medskip
+}
+
+\newenvironment{alerta}[1][Atenção / Armadilha Clássica]{%
+  \par\medskip\noindent
+  \fcolorbox{warnborder}{warnbg}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+    \small\textbf{\color{warnborder}#1:}\par\smallskip
+}{%
+    \end{minipage}%
+  }\par\medskip
+}
+
+\title{\textbf{Guia Definitivo de Interpretação em MLG (MATD50 -- Prova 2)}\\
+\large Coeficientes, Ligações, $OR$, $RR$, ANODEV, Diagnósticos, ROC, AUC e Lista 5 (\textit{a}--\textit{j})}
+\author{Material de Revisão Técnica -- Regressão Logística e Modelos Lineares Generalizados}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ==============================================================================
+\section{Estrutura Geral do Modelo, Intercepto e Escalas ($\pi$, Chance e Logito)}
+% ==============================================================================
+
+Na regressão logística binária ($Y_i \in \{0,1\}$ ou Binomial agrupada $Y_i \sim \text{Binomial}(m_i,\pi_i)$ com $\phi=1$), o componente sistemático relaciona-se à probabilidade $\pi_i = P(Y_i=1\mid \mathbf{x}_i)$ por meio da ligação \textbf{logito} (ligação canônica da família Binomial):
+\[
+  \eta_i = \operatorname{logit}(\pi_i) = \ln\!\left(\frac{\pi_i}{1-\pi_i}\right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_k x_{ik}.
+\]
+Para retornar da escala linear ilimitada $\eta_i \in (-\infty, +\infty)$ para a escala da probabilidade $\pi_i \in (0, 1)$, aplica-se a \textbf{função logística inversa}:
+\[
+  \pi_i = g^{-1}(\eta_i) = \frac{e^{\eta_i}}{1 + e^{\eta_i}} = \left[1 + \exp\!\big(-(\beta_0 + \mathbf{x}_i^\top\boldsymbol{\beta})\big)\right]^{-1},
+  \qquad
+  \text{Chance}(\mathbf{x}_i) = \frac{\pi_i}{1-\pi_i} = e^{\eta_i}.
+\]
+
+\subsection*{Como interpretar o Intercepto ($\hat{\beta}_0$)}
+\begin{itemize}[leftmargin=1.4em]
+  \item $\hat{\beta}_0$ é o \textbf{logito basal} (valor esperado de $\ln[\pi/(1-\pi)]$) quando \textbf{todas} as covariáveis contínuas valem $0$ e \textbf{todas} as categóricas encontram-se na categoria de referência (\textit{baseline}).
+  \item $e^{\hat{\beta}_0}$ é a \textbf{chance basal} (nunca chame $e^{\hat{\beta}_0}$ de probabilidade!) e $\hat{\pi}_0 = \frac{e^{\hat{\beta}_0}}{1+e^{\hat{\beta}_0}}$ é a probabilidade basal.
+  \item Se $x = 0$ está fora do suporte real/biológico (ex.: largura da carapaça $= 0$\,cm ou pressão arterial $= 0$\,mmHg), declara-se explicitamente que $\hat{\beta}_0$ atua apenas como \textbf{constante matemática de ancoragem}, sem interpretação clínica direta isolada.
+\end{itemize}
+
+\subsection*{Resumo Rápido de Coeficientes em Outras Ligações de MLG}
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Distribuição / Ligação} & \textbf{Relação $\mu_i$} & \textbf{Efeito de $+1$ unidade em $X_j$} & \textbf{Medida Interpretativa} \\
+\midrule
+Normal / Identidade & $\mu_i = \eta_i$ & Aditivo na média: $\Delta \mu = \hat{\beta}_j$ & Diferença de médias \\
+Poisson ou Gama / Log & $\mu_i = e^{\eta_i}$ & Multiplicativo: $\mu(X_j+1)/\mu(X_j) = e^{\hat{\beta}_j}$ & Razão de taxas ($IRR$) / médias \\
+Binomial / Logito & $\frac{\pi_i}{1-\pi_i} = e^{\eta_i}$ & Multiplicativo na \textit{chance}: $e^{\hat{\beta}_j}$ & Razão de Chances ($OR$) \\
+Binomial / Log-Binomial & $\pi_i = e^{\eta_i}$ & Multiplicativo no \textit{risco}: $e^{\hat{\beta}_j}$ & Risco Relativo direto ($RR$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{redacao}[Intervalo de Confiança da Probabilidade Predita $\hat{\pi}(\mathbf{x}_0)$]
+Sempre construa o intervalo primeiro na escala linear $\eta_0$ (ilimitada) e depois transforme os extremos pela inversa logística:
+\[
+  \operatorname{IC}_{95\%}(\eta_0) = \hat{\eta}_0 \pm z_{0{,}975}\cdot EP(\hat{\eta}_0) = [\eta_{\text{inf}},\,\eta_{\text{sup}}]
+  \implies
+  \operatorname{IC}_{95\%}(\pi_0) = \left[\frac{e^{\eta_{\text{inf}}}}{1+e^{\eta_{\text{inf}}}},\,\frac{e^{\eta_{\text{sup}}}}{1+e^{\eta_{\text{sup}}}}\right] \subset (0,1).
+\]
+Nunca faça $\hat{\pi}_0 \pm 1{,}96\,EP$, pois isso pode gerar probabilidades menores que $0$ ou maiores que $1$.
+\end{redacao}
+
+% ==============================================================================
+\section{Interpretação de Coeficientes: $OR$, Salto $c$, Interação, $RR$ e Cornfield}
+% ==============================================================================
+
+\subsection{Variável Binária ou Categórica}
+Para o nível $k$ comparado à categoria basal (\textit{ceteris paribus} --- mantendo as demais covariáveis constantes):
+\[
+  \widehat{OR}_k = e^{\hat{\beta}_k}, \qquad
+  \operatorname{IC}_{95\%}(OR_k) = \exp\!\Big(\hat{\beta}_k \pm 1{,}96 \cdot EP(\hat{\beta}_k)\Big).
+\]
+\begin{itemize}[leftmargin=1.4em]
+  \item Se $\widehat{OR}_k > 1$ (fator de risco): a chance do evento é $\widehat{OR}_k$ vezes a do grupo basal, isto é, \textbf{aumento de $(\widehat{OR}_k - 1)\times 100\%$} na chance.
+  \item Se $\widehat{OR}_k < 1$ (fator protetor): há \textbf{redução de $(1 - \widehat{OR}_k)\times 100\%$} na chance (ou a chance do grupo basal é $1/\widehat{OR}_k$ vezes maior).
+  \item Se $1 \in \operatorname{IC}_{95\%}(OR_k)$ ($\iff p\text{-valor de Wald} \ge 0{,}05$): não há evidência estatística de associação a $5\%$.
+\end{itemize}
+
+\subsection{Variável Contínua com Salto de $c$ Unidades}
+Um acréscimo de $c$ unidades em $X_j$ multiplica o logito por $+c\hat{\beta}_j$ na exponencial:
+\[
+  \widehat{OR}_c = \exp(c \cdot \hat{\beta}_j) = (\widehat{OR}_1)^c, \qquad
+  \operatorname{IC}_{95\%}(OR_c) = \exp\!\Big(c \cdot \big[\hat{\beta}_j \pm 1{,}96 \cdot EP(\hat{\beta}_j)\big]\Big).
+\]
+\begin{alerta}
+\textbf{Nunca} faça $c \times \widehat{OR}_1$. Para salto $c=10$, calcule $e^{10\hat{\beta}_j}$ e multiplique também os limites do $\operatorname{IC}(\hat{\beta}_j)$ por $10$ antes de exponenciar.
+\end{alerta}
+
+\subsection{Modelo com Interação ($\beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_2$)}
+Quando há interação significativa ($p < 0{,}05$), não existe um único $OR$ global para $X_1$: o efeito é \textbf{condicional ao nível de $X_2$}:
+\[
+  \widehat{OR}_{X_1 \mid X_2 = x_2} = \exp(\hat{\beta}_1 + \hat{\beta}_3\, x_2).
+\]
+Se $\hat{\beta}_1$ e $\hat{\beta}_3$ têm \textbf{sinais opostos}, a interação atua como \textbf{atenuadora} ou \textbf{inversora de efeito} entre subgrupos.
+
+\subsection{Odds Ratio ($OR$) vs. Risco Relativo ($RR$) e Aproximação de Cornfield}
+Em termos de probabilidades absolutas $\pi_1$ (expostos) e $\pi_0$ (não expostos):
+\[
+  OR = \frac{\pi_1 / (1-\pi_1)}{\pi_0 / (1-\pi_0)}, \qquad
+  RR = \frac{\pi_1}{\pi_0} = \frac{OR}{(1 - \pi_0) + \pi_0 \cdot OR}.
+\]
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Distorção sob evento comum:} sempre que o desfecho é frequente ($\pi_0$ ou $\pi_1 > 10\%$), o $OR$ \textbf{superestima a magnitude do efeito} frente ao $RR$ (afasta-se mais da nulidade $1$: se $OR > 1$, então $OR > RR > 1$; se $OR < 1$, então $OR < RR < 1$). Portanto, nunca traduza $OR = 4{,}5$ como ``probabilidade $4{,}5$ vezes maior'', e sim ``\textbf{chance} $4{,}5$ vezes maior''.
+  \item \textbf{Condição de Eventos Raros (Cornfield):} se $\pi_0 \to 0$ e $\pi_1 \to 0$ (prevalência $< 10\%$), então $1 - \pi_0 \approx 1$, $1 - \pi_1 \approx 1$ e $OR \approx RR$.
+  \item \textbf{Impacto do Delineamento:} em estudos de \textbf{Coorte ou Transversal}, estimam-se $\hat{\pi}$, $\widehat{OR}$ e $\widehat{RR}$. Em \textbf{Caso-Controle}, a proporção de casos é fixada artificialmente: apenas os coeficientes angulares $\hat{\beta}_j$ e os $\widehat{OR}$ são válidos; $\hat{\beta}_0$, $\hat{\pi}$ e $\widehat{RR}$ \textbf{não} são estimáveis diretamente.
+\end{itemize}
+
+% ==============================================================================
+\section{Análise Exploratória, Multicolinearidade e Paradoxo de Wald (Itens \textit{a} e \textit{b})}
+% ==============================================================================
+
+\subsection{Leitura da Análise Exploratória (Item \textit{a})}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Contínuas por grupo ($Y=0$ vs $Y=1$):} compare médias, medianas e amplitudes/IQR. Separação clara entre distribuições indica forte candidato preditor. Avalie visualmente se a associação cresce/decresce monotonicamente ou sugere curva parabólica (``U'').
+  \item \textbf{Categóricas:} calcule e compare a proporção empírica $\hat{p}_k = y_k/n_k$ em cada estrato. Um \textbf{gradiente monotônico} sustenta inclusão da variável; oscilações irregulares sem padrão sugerem irrelevância discriminatória.
+\end{itemize}
+
+\subsection{Paradoxo de Wald sob Multicolinearidade (Item \textit{b})}
+Quando duas explicativas contínuas têm correlação linear forte (ex.: $r > 0{,}85$), há \textbf{multicolinearidade}. No modelo completo com ambas:
+\begin{itemize}[leftmargin=1.4em]
+  \item Os erros-padrão assintóticos $EP(\hat{\beta}_j)$ ficam severamente inflacionados.
+  \item Consequentemente, $z_j = \hat{\beta}_j / EP(\hat{\beta}_j)$ torna-se pequeno ($p > 0{,}05$) e os $\operatorname{IC}_{95\%}(OR)$ cruzam $1$, fazendo \textbf{ambas parecerem não significativas individualmente}, mesmo sendo o bloco crucial para explicar $Y$.
+  \item \textbf{Conduta obrigatória:} jamais descarte variáveis colineares apenas olhando os testes $z$ individuais de Wald; execute um teste conjunto ou sequencial de \textbf{ANODEV (TRV)} e remova a variável redundante.
+\end{itemize}
+
+\begin{redacao}[Item \textit{b} -- Multicolinearidade e Paradoxo de Wald]
+``Embora [Variável A] e [Variável B] apresentem forte associação marginal com o desfecho, nenhuma atinge significância individual no teste de Wald ($p_A > 0{,}05$, $p_B > 0{,}05$) e ambos os intervalos de confiança de $OR$ cruzam a unidade. Isso decorre da severa multicolinearidade ($r = \dots$), que inflaciona os erros-padrão assintóticos de ambos os estimadores. Após exclusão da variável redundante, o coeficiente da preditora mantida recupera elevada significância estatística.''
+\end{redacao}
+
+% ==============================================================================
+\section{Seleção de Modelos: ANODEV (TRV vs. Teste $F$) e AIC}
+% ==============================================================================
+
+\begin{center}
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Critério} & \textbf{Exige Encaixados?} & \textbf{Quando Usar} & \textbf{Estatística} & \textbf{Regra de Decisão} \\
+\midrule
+TRV ($\chi^2$) & Sim ($M_m \subset M_q$) & $\phi$ conhecido ($1$: Bin./Pois.) & $\Delta D^* = D_m - D_q \sim_a \chi^2_{q-m}$ & $p > 0{,}05 \implies$ modelo menor \\
+Teste $F$ & Sim ($M_m \subset M_q$) & $\phi$ desconhecido (Normal/Gama) & $F = \frac{(D_m - D_q)/(q-m)}{\hat{\phi}_{\max}} \sim F_{q-m,\,n-p_{\max}}$ & Usar $\hat{\phi}_{\max}$ do maximal! \\
+$\text{AIC}$ & Não & Encaixados ou não encaixados & $\text{AIC} = -2\ell + 2p$ & Menor vence ($\Delta\text{AIC}>2$ forte) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Tipo I (\texttt{anova}) vs. Tipo II (\texttt{Anova}):} \texttt{anova()} é \textbf{sequencial} (a ordem das variáveis na fórmula altera $p$-valores sob colinearidade); \texttt{Anova(..., type="II")} é \textbf{parcial} (avalia cada variável condicionada a todas as demais no modelo).
+  \item Em regressão logística, prefira o \textbf{TRV} ao teste de Wald quando suspeitar de \textbf{efeito Hauck--Donner} (coeficientes grandes com $EP$ inflado e $p_{\text{Wald}}$ falsamente alto).
+\end{itemize}
+
+% ==============================================================================
+\section{Linearidade no Logito por Dois Métodos (Item \textit{c})}
+% ==============================================================================
+
+A regressão logística assume relação \textbf{linear na escala do logito} ($\eta_i$), não na probabilidade $\pi_i$. Verifica-se essa premissa por dois métodos complementares:
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \textbf{Método 1 -- TRV Polinomial (Termo Quadrático):}
+  Ajusta-se o modelo expandido com $x^2$ e testa-se $H_0: \beta_{\text{quad}} = 0$ vs. $H_1: \beta_{\text{quad}} \ne 0$:
+  \[
+    \Delta D^* = D_{\text{linear}} - D_{\text{quad}} \sim_a \chi^2_{\Delta gl=1}.
+  \]
+  Se $p > 0{,}05$ (e $\text{AIC}$ do quadrático não melhora), \textbf{não se rejeita $H_0$}: o termo quadrático é dispensável.
+
+  \item \textbf{Método 2 -- Logitos Empíricos por Classes Quantílicas (Correção de Haldane):}
+  Divide-se a covariável contínua em $g$ classes quantílicas homogêneas (ex.: 8 grupos de tamanho $m_k$ e $y_k$ sucessos) e calcula-se o logito empírico corrigido:
+  \[
+    \operatorname{logit}^*(p_k) = \ln\!\left(\frac{y_k + 0{,}5}{m_k - y_k + 0{,}5}\right),
+  \]
+  plotado contra a média $\bar{x}_k$ da classe. A constante $+0{,}5$ de Haldane impede $\ln(0) \to -\infty$ quando $y_k=0$ ou divisão por zero ($\ln(\infty)$) quando $y_k = m_k$ ($0$ fracassos). Uma nuvem com tendência linear monotônica (alta correlação $r$ e $R^2$ da reta OLS, sem padrão parabólico em ``U'' ou ``U'' invertido) valida a forma funcional linear no logito.
+\end{enumerate}
+
+% ==============================================================================
+\section{Medidas de Ajuste Global, Limitações com $m_i=1$ e Hosmer--Lemeshow (Item \textit{d})}
+% ==============================================================================
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Deviance Nula ($D_0$, $gl = n-1$) e Residual ($D_p$, $gl = n-p$):} medem a discrepância frente ao modelo saturado. O \textbf{Pseudo-$R^2$ de McFadden/Deviance} é dado por:
+  \[
+    \text{Pseudo-}R^2 = 1 - \frac{D_p}{D_0}.
+  \]
+  \item \textbf{Qui-Quadrado de Pearson ($X^2$):} $X^2 = \sum_{i=1}^n \frac{(y_i-\hat{\pi}_i)^2}{\hat{\pi}_i(1-\hat{\pi}_i)}$. A razão $X^2 / gl \approx 1$ indica ausência de superdispersão ($X^2/gl \gg 1$ denuncia variação extra-binomial).
+\end{itemize}
+
+\begin{alerta}[As 4 Limitações Clássicas das Medidas de Ajuste sob Dados Individuais ($m_i = 1$)]
+\begin{enumerate}[leftmargin=1.3em]
+  \item \textbf{Falha assintótica de $D_p$:} para respostas Bernoulli puras ($y_i \in \{0,1\}$, $m_i=1$), o número de parâmetros do modelo saturado cresce à mesma taxa que $n$, de modo que $D_p$ passa a depender quase só das probabilidades $\hat{\pi}_i$ e \textbf{NÃO segue} $\chi^2_{n-p}$. Logo, não serve como teste global de qualidade de ajuste.
+  \item \textbf{Limitação do $\text{AIC}$:} não possui $p$-valor nem teste de hipótese formal; fornece apenas ordenação relativa entre modelos ajustados ao mesmo conjunto de dados.
+  \item \textbf{Limitação de $X^2$ de Pearson:} sofre da mesma falha assintótica quando $m_i=1$ e é instável para $\hat{\pi}_i$ muito próximas de $0$ ou $1$.
+  \item \textbf{Limitação de Hosmer--Lemeshow ($\hat{C}$):} embora adequado para $m_i=1$, depende da escolha arbitrária do número de grupos ($g=10$ decis) e possui menor poder para detectar desvios isolados nas caudas.
+\end{enumerate}
+\end{alerta}
+
+\subsection*{Como Interpretar o Teste de Hosmer--Lemeshow ($\hat{C}$)}
+Agrupam-se as observações ordenadas por risco predito $\hat{\pi}_i$ em $g=10$ decis:
+\[
+  \hat{C} = \sum_{k=1}^g \frac{(O_k - E_k)^2}{m_k \bar{\pi}_k (1-\bar{\pi}_k)} \sim_a \chi^2_{g-2} = \chi^2_8 \quad (\text{sob } H_0).
+\]
+\begin{redacao}[Teste de Hosmer--Lemeshow]
+``Sob as hipóteses $H_0$: o modelo logístico ajusta-se adequadamente (calibração correta) vs. $H_1$: há falta de ajuste, obteve-se $\hat{C} = \dots$ ($gl = 8$, $p = \dots$). Como $p > 0{,}05$, não se rejeita $H_0$ ao nível de $5\%$, atestando excelente calibração entre as probabilidades preditas e as frequências observadas.''
+\end{redacao}
+
+% ==============================================================================
+\section{Gráfico Meio-Normal com Envelope Simulado -- \texttt{hnp} (Item \textit{e})}
+% ==============================================================================
+
+O gráfico meio-normal (\texttt{hnp}, Atkinson 1985) compara os valores absolutos ordenados dos resíduos deviance $|r_{Di}|_{(i)}$ aos quantis teóricos meio-normais, construindo bandas de confiança de $95\%$ via reamostragem paramétrica de Monte Carlo (ex.: 99 réplicas) sob o modelo ajustado.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Regra de ouro:} em MLGs discretos/assimétricos, os pontos \textbf{não precisam formar uma reta de $45^\circ$}. O ajuste é adequado quando a \textbf{quase totalidade dos pontos} permanece \textbf{dentro das bandas} (tolerância empírica até $\approx 5\%$ fora; ideal: $0\%$).
+  \item \textbf{Sinais de problema:} vários pontos consecutivos ou quase todos os resíduos saindo das bandas acusam erro na distribuição escolhida, função de ligação inadequada, omissão de termo não linear ou \textbf{superdispersão severa} (ex.: modelo Binomial vs. Beta-Binomial quando $D/gl \gg 1$ e pontos escapam acima da banda superior).
+\end{itemize}
+
+% ==============================================================================
+\section{Diagnóstico de Pontos Influentes e Sensibilidade Leave-One-Out (Item \textit{f})}
+% ==============================================================================
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Medida} & \textbf{O Que Mede} & \textbf{Pontos de Corte Usados na Prova} \\
+\midrule
+Alavancagem ($h_{ii}$) & Afastamento no espaço das covariáveis $X$ & $h_{ii} > 2p/n$ (alerta) ou $3p/n$ (alta) \\
+Resíduo Padronizado ($r_{Di}, r_{Gi}$) & Discrepância na resposta $Y_i$ & $|r_i| > 2$ (atenção) ou $|r_i| > 3$ (extremo) \\
+Distância de Cook ($D_i$) & Impacto global em todo vetor $\hat{\boldsymbol{\beta}}$ & $D_i > 0{,}5$ / $D_i > 1$ ou $4/(n-p)$ \\
+$\text{DFBETAS}_{ij}$ & Mudança no coeficiente específico $\hat{\beta}_j$ (em $EP$) & $|\text{DFBETAS}| > 2/\sqrt{n}$ (alerta) ou $> 1$ (grave) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{redacao}[Interpretação Conjunta e Análise Leave-One-Out (LOO)]
+``Ter alto $h_{ii}$ ou $|r_{Di}| > 2$ isoladamente não prova influência prejudicial; é necessário que a observação distorça as estimativas ($D_i$ e $\text{DFBETAS}$ elevados). Ao reajustar o modelo sem os pontos destacados (LOO), observa-se variação relativa máxima $|\Delta\%\hat{\beta}| < 5\%$, sem inversão de sinal nem alteração da significância estatística. Conclui-se que não há pontos influentes deletérios e todas as $n$ observações devem ser mantidas.''
+\end{redacao}
+*(Se, ao contrário, a remoção de um artefato como um ponto isolado com erro inverter um coeficiente ou mudar radicalmente a significância, recomenda-se reportar a análise de sensibilidade e investigar/remover o termo ou erro responsável).*
+
+% ==============================================================================
+\section{Matriz de Confusão, Armadilha da Prevalência, ROC, AUC e Youden (Itens \textit{g}--\textit{h})}
+% ==============================================================================
+
+\subsection{Métricas da Matriz $2\times 2$ para um Ponto de Corte Fixado $c$}
+Classificando $\hat{Y}_i = 1$ se $\hat{\pi}_i \ge c$ e $\hat{Y}_i = 0$ se $\hat{\pi}_i < c$:
+\[
+  SE = \frac{VP}{VP+FN}, \qquad
+  SP = \frac{VN}{VN+FP}, \qquad
+  \text{Acc} = \frac{VP+VN}{N}, \qquad
+  VPP = \frac{VP}{VP+FP}, \qquad
+  VPN = \frac{VN}{VN+FN}.
+\]
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Sensibilidade ($SE$):} probabilidade de o modelo detectar corretamente quem \textit{tem} o desfecho ($P(\hat{Y}=1 \mid Y=1)$).
+  \item \textbf{Especificidade ($SP$):} probabilidade de descartar corretamente quem \textit{não tem} o desfecho ($P(\hat{Y}=0 \mid Y=0)$).
+  \item \textbf{Armadilha do corte padrão $c_0 = 0{,}50$:} quando a prevalência amostral de casos é alta (ex.: $\bar{y} > 60\%$), muitas observações naturalmente superam $\hat{\pi}_i \ge 0{,}50$, gerando $SE$ elevada, porém \textbf{Especificidade baixa} e excesso de falsos positivos ($FP$). O inverso ocorre em doenças raras ($\bar{y} < 10\%$): o corte $0{,}50$ produz $SE \approx 0$ com acurácia artificialmente alta!
+\end{itemize}
+
+\subsection{Curva ROC, Área sob a Curva (AUC) e Ponto Ótimo de Youden}
+A Curva ROC traça $SE(c)$ contra $1 - SP(c)$ (Taxa de Falsos Positivos) percorrendo \textbf{todos} os limiares $c \in [0, 1]$:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Significado da $\text{AUC}$:} é a probabilidade de o modelo atribuir $\hat{\pi}_{\text{caso}} > \hat{\pi}_{\text{não-caso}}$ ao sortear aleatoriamente um caso positivo e um negativo. Diferente da acurácia, é invariante ao ponto de corte e ao desbalanceamento.
+  \item \textbf{Classificação de Hosmer \& Lemeshow:} $\text{AUC}=0{,}5$ (aleatório); $[0{,}5;\,0{,}7)$ discriminação fraca; $[0{,}7;\,0{,}8)$ \textbf{aceitável/razoável}; $[0{,}8;\,0{,}9)$ \textbf{excelente}; $\ge 0{,}9$ excepcional.
+  \item \textbf{Corte Ótimo de Youden:}
+  \[
+    J(c) = SE(c) + SP(c) - 1, \qquad c^* = \arg\max_{c} J(c).
+  \]
+  Em amostras com alta prevalência ($\bar{y} > 0{,}50$), $c^*$ costuma ser $> 0{,}50$, elevando fortemente a Especificidade e reduzindo Falsos Positivos, ao custo controlado de perda moderada na Sensibilidade.
+\end{itemize}
+
+% ==============================================================================
+\section{Curvas de Probabilidade Predita, Equiprobabilidade e Efeito Marginal (Itens \textit{i}--\textit{j})}
+% ==============================================================================
+
+\subsection{Curvas Sigmoidais e Deslocamento Horizontal (Item \textit{i})}
+Plotando $\hat{\pi}(x) = [1 + \exp(-(\hat{\beta}_0 + \hat{\beta}_{\text{cat}} + \hat{\beta}_x x))]^{-1}$ contra a variável contínua $x$ para cada estrato categórico:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Não linearidade na probabilidade:} as curvas exibem formato \textbf{sigmoidal em ``S''}, limitadas entre $0$ e $1$, mesmo quando $\eta(x)$ é estritamente linear em $x$.
+  \item \textbf{Ponto de equiprobabilidade / inflexão ($\hat{\pi} = 0{,}50 \iff \hat{\eta} = 0$):}
+  \[
+    x_{0{,}50}(\text{cat}) = -\frac{\hat{\beta}_0 + \hat{\beta}_{\text{cat}}}{\hat{\beta}_x}.
+  \]
+  \item \textbf{Translação horizontal entre categorias $A$ e $B$:} na ausência de interação, mudar do estrato $A$ para o estrato $B$ desloca horizontalmente a curva em
+  \[
+    \Delta x_{0{,}50} = x_{0{,}50}(A) - x_{0{,}50}(B) = \frac{\hat{\beta}_B - \hat{\beta}_A}{\hat{\beta}_x}
+  \]
+  unidades de $x$ para atingir a mesma chance de $50\%$.
+\end{itemize}
+
+\subsection{Efeito Marginal Condicional, Regra Divide-by-4 e Saturação (Item \textit{j})}
+Diferentemente da regressão linear normal (onde $\partial \mu / \partial x = \beta_x$ é constante), na logística a derivada parcial da função média pela regra da cadeia é:
+\[
+  \frac{\partial \pi(\mathbf{x})}{\partial x_j}
+  = \beta_j \cdot \frac{e^{\eta}}{(1+e^{\eta})^2}
+  = \beta_j \,\pi(\mathbf{x})\,\big[1 - \pi(\mathbf{x})\big].
+\]
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Não constante e em formato de sino (\textit{bell-shaped}):} o efeito marginal de $+1$ unidade em $x_j$ sobre $\pi$ é modulado pelo fator de variância $\pi(1-\pi)$.
+  \item \textbf{Pico máximo (Regra \textit{Divide-by-4}):} a parábola $\pi(1-\pi)$ atinge seu máximo em $\pi = 0{,}50$, onde $0{,}5\times 0{,}5 = 0{,}25$. Logo, o incremento máximo possível em pontos percentuais de probabilidade por unidade de $x_j$ ocorre exatamente no ponto de inflexão $x_{0{,}50}$ e vale:
+  \[
+    \max\left(\frac{\partial \pi}{\partial x_j}\right) = 0{,}25\,\hat{\beta}_j = \frac{\hat{\beta}_j}{4}.
+  \]
+  \item \textbf{Saturação assintótica nas caudas:} quando $x_j$ é muito pequeno ($\pi \to 0$) ou muito grande ($\pi \to 1$), $\pi(1-\pi) \to 0$: unidades adicionais produzem incrementos marginais praticamente nulos em $\pi$ (apesar de o $OR = e^{\hat{\beta}_j}$ permanecer idêntico).
+\end{itemize}
+
+\end{document}
