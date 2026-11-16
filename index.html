@@ -32,6 +32,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #f8fafc !important;
@@ -45,6 +49,34 @@
     code, pre {
       font-family: Consolas, Monaco, "Courier New", monospace;
     }
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    code {
+      overflow-wrap: anywhere;
+    }
+    .katex .katex-mathml {
+      display: none !important;
+    }
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 0.45rem 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .grid > *, .flex > * {
+      min-width: 0;
+    }
     .slide-stage-wrapper {
       background: #ffffff !important;
       color: #0f172a !important;
@@ -53,6 +85,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow-x: hidden;
     }
     .slide-stage-wrapper .mod-slide-card {
       display: block;
@@ -95,7 +128,11 @@
       color: #1e293b;
     }
     .slide-slot .mod-slide-card table {
+      display: block;
       width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border-collapse: collapse;
       margin: 0.9rem 0;
       font-size: 0.93rem;
@@ -128,35 +165,64 @@
       padding: 0 !important;
     }
     .text-2xs { font-size: 0.75rem; line-height: 1.15rem; }
+    @media (max-width: 640px) {
+      .katex {
+        font-size: 0.92em;
+        white-space: normal;
+      }
+      .slide-stage-wrapper {
+        padding: 1rem !important;
+        min-height: auto !important;
+      }
+      .slide-slot[data-orig="1"] .mod-slide-card {
+        padding: 1.15rem !important;
+      }
+      .slide-slot .mod-slide-card h1 {
+        font-size: 1.4rem !important;
+        line-height: 1.25 !important;
+      }
+      .slide-slot .mod-slide-card h2 {
+        font-size: 1.18rem !important;
+        line-height: 1.3 !important;
+      }
+      .slide-slot .mod-slide-card h3 {
+        font-size: 1rem !important;
+      }
+      .slide-slot .mod-slide-card p,
+      .slide-slot .mod-slide-card li {
+        font-size: 0.92rem !important;
+        line-height: 1.55 !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
 
   <!-- HEADER FIXO -->
   <header class="bg-white text-slate-900 shadow-sm sticky top-0 z-40 border-b border-slate-200">
-    <div class="max-w-[1520px] mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <span class="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-900 border border-sky-200 font-black text-xs tracking-wider">MATD50 • MLG</span>
-        <div>
-          <h1 class="text-base sm:text-lg font-extrabold leading-tight">Portal Unificado de Estudos (Prova 2)</h1>
-          <p class="text-xs text-slate-600">Material de Aula Interativo • Slides por Tópico → Exemplo &amp; Simulador → Quiz (48 Questões)</p>
+    <div class="max-w-[1520px] mx-auto px-3 sm:px-8 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <span class="shrink-0 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-sky-100 text-sky-900 border border-sky-200 font-black text-[11px] sm:text-xs tracking-wider">MATD50 • MLG</span>
+        <div class="min-w-0">
+          <h1 class="text-sm sm:text-lg font-extrabold leading-tight truncate">Portal Unificado de Estudos (Prova 2)</h1>
+          <p class="hidden sm:block text-xs text-slate-600">Material de Aula Interativo • Slides por Tópico → Exemplo &amp; Simulador → Quiz (48 Questões)</p>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <div id="global-score-pill" class="px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-mono font-bold text-emerald-800">
+      <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto sm:flex-wrap pb-0.5 sm:pb-0">
+        <div id="global-score-pill" class="shrink-0 whitespace-nowrap px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] sm:text-xs font-mono font-bold text-emerald-800">
           Placar Geral: 0 / 48
         </div>
         <a href="lista_exercicios_abertos.html" target="_blank"
-          class="px-3 py-1.5 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-950 border border-indigo-300 text-xs font-bold transition">
-          ✍️ Lista Aberta (21 Questões Discursivas • Lista 5)
+          class="shrink-0 whitespace-nowrap px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-950 border border-indigo-300 text-[11px] sm:text-xs font-bold transition">
+          ✍️ Lista Aberta (21 Questões • Lista 5)
         </a>
         <a href="resumo_formulas_prova.html" target="_blank"
-          class="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold transition">
+          class="shrink-0 whitespace-nowrap px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] sm:text-xs font-bold transition">
           📄 Colinha de Fórmulas
         </a>
         <a href="slides_apresentacao.html" target="_blank"
-          class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold transition">
+          class="shrink-0 whitespace-nowrap px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-[11px] sm:text-xs font-bold transition">
           🖥️ Deck Puro (45 Slides)
         </a>
       </div>
@@ -164,40 +230,40 @@
 
     <!-- BARRA DE MÓDULOS -->
     <div class="bg-slate-50 border-t border-slate-200">
-      <div class="max-w-[1520px] mx-auto px-4 sm:px-8 py-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+      <div class="max-w-[1520px] mx-auto px-3 sm:px-8 py-1.5 sm:py-2 flex overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 sm:grid sm:grid-cols-3 lg:grid-cols-6">
         
       <button onclick="selectModule(1)" id="mod-nav-1"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-sky-50 text-sky-900 shadow-sm ring-2 ring-sky-500 border border-sky-200">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-sky-50 text-sky-900 shadow-sm ring-2 ring-sky-500 border border-sky-200">
         <span class="truncate"><span class="opacity-75">Módulo 1:</span> ANODEV, Deviance & φ̂</span>
         <span id="mod-badge-1" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
     
       <button onclick="selectModule(2)" id="mod-nav-2"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
         <span class="truncate"><span class="opacity-75">Módulo 2:</span> Diagnóstico, Resíduos & Envelopes</span>
         <span id="mod-badge-2" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
     
       <button onclick="selectModule(3)" id="mod-nav-3"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
         <span class="truncate"><span class="opacity-75">Módulo 3:</span> Logística, OR & Interações</span>
         <span id="mod-badge-3" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
     
       <button onclick="selectModule(4)" id="mod-nav-4"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
         <span class="truncate"><span class="opacity-75">Módulo 4:</span> RR, Cornfield & Eventos Raros</span>
         <span id="mod-badge-4" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
     
       <button onclick="selectModule(5)" id="mod-nav-5"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
         <span class="truncate"><span class="opacity-75">Módulo 5:</span> HL, Curva ROC & Confusão</span>
         <span id="mod-badge-5" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
     
       <button onclick="selectModule(6)" id="mod-nav-6"
-        class="mod-nav-btn text-left px-3 py-2 rounded-lg transition flex items-center justify-between gap-2 text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
+        class="mod-nav-btn shrink-0 min-w-[185px] sm:min-w-0 text-left px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg transition flex items-center justify-between gap-2 text-[11px] sm:text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100">
         <span class="truncate"><span class="opacity-75">Módulo 6:</span> Saídas Reais do R & Revisão</span>
         <span id="mod-badge-6" class="shrink-0 px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-800 font-mono text-[10px]">0/8</span>
       </button>
@@ -207,14 +273,14 @@
   </header>
 
   <!-- CONTEÚDO PRINCIPAL -->
-  <main class="max-w-[1520px] mx-auto px-4 sm:px-8 py-6">
+  <main class="max-w-[1520px] mx-auto px-3 sm:px-8 py-4 sm:py-6">
     
     <section id="module-1" class="module-panel  space-y-5">
       <!-- Cabeçalho do Módulo + Sub-etapas -->
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 1</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 1</span>
             <span class="text-xs text-slate-500 font-medium">15 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">ANODEV, Deviance & φ̂</h2>
@@ -240,18 +306,18 @@
       <div id="stage-1-slides" class="stage-panel-1 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(1, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(1, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-1" class="text-xs font-mono px-2">Slide 1 de 12 <span class="text-slate-500">(Deck #01)</span></span>
-            <button onclick="stepModSlide(1, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(1, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(1, 0)" id="dot-1-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(1, 1)" id="dot-1-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(1, 2)" id="dot-1-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(1, 3)" id="dot-1-3" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(1, 4)" id="dot-1-4" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(1, 5)" id="dot-1-5" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(1, 6)" id="dot-1-6" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(1, 7)" id="dot-1-7" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button><button onclick="goModSlide(1, 8)" id="dot-1-8" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">9</button><button onclick="goModSlide(1, 9)" id="dot-1-9" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">10</button><button onclick="goModSlide(1, 10)" id="dot-1-10" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">11</button><button onclick="goModSlide(1, 11)" id="dot-1-11" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">12</button><button onclick="goModSlide(1, 12)" id="dot-1-12" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">13</button><button onclick="goModSlide(1, 13)" id="dot-1-13" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">14</button><button onclick="goModSlide(1, 14)" id="dot-1-14" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">15</button></div>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(1, 0)" id="dot-1-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(1, 1)" id="dot-1-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(1, 2)" id="dot-1-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(1, 3)" id="dot-1-3" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(1, 4)" id="dot-1-4" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(1, 5)" id="dot-1-5" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(1, 6)" id="dot-1-6" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(1, 7)" id="dot-1-7" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button><button onclick="goModSlide(1, 8)" id="dot-1-8" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">9</button><button onclick="goModSlide(1, 9)" id="dot-1-9" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">10</button><button onclick="goModSlide(1, 10)" id="dot-1-10" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">11</button><button onclick="goModSlide(1, 11)" id="dot-1-11" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">12</button><button onclick="goModSlide(1, 12)" id="dot-1-12" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">13</button><button onclick="goModSlide(1, 13)" id="dot-1-13" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">14</button><button onclick="goModSlide(1, 14)" id="dot-1-14" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">15</button></div>
           <button onclick="selectStage(1, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="1" data-sidx="0" data-orig="1"><div class="mod-slide-card justify-center text-center space-y-6">
         <div class="inline-block mx-auto bg-sky-50 border border-sky-500/40 text-sky-800 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-inner">
           Guia Definitivo de Slides para a Prova 2
@@ -1398,7 +1464,7 @@ Start   10.2466  1   0.001369 **
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 2</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 2</span>
             <span class="text-xs text-slate-500 font-medium">11 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">Diagnóstico, Resíduos & Envelopes</h2>
@@ -1424,18 +1490,18 @@ Start   10.2466  1   0.001369 **
       <div id="stage-2-slides" class="stage-panel-2 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(2, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(2, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-2" class="text-xs font-mono px-2">Slide 1 de 10 <span class="text-slate-500">(Deck #13)</span></span>
-            <button onclick="stepModSlide(2, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(2, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(2, 0)" id="dot-2-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(2, 1)" id="dot-2-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(2, 2)" id="dot-2-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(2, 3)" id="dot-2-3" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(2, 4)" id="dot-2-4" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(2, 5)" id="dot-2-5" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(2, 6)" id="dot-2-6" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(2, 7)" id="dot-2-7" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button><button onclick="goModSlide(2, 8)" id="dot-2-8" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">9</button><button onclick="goModSlide(2, 9)" id="dot-2-9" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">10</button><button onclick="goModSlide(2, 10)" id="dot-2-10" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">11</button></div>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(2, 0)" id="dot-2-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(2, 1)" id="dot-2-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(2, 2)" id="dot-2-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(2, 3)" id="dot-2-3" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(2, 4)" id="dot-2-4" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(2, 5)" id="dot-2-5" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(2, 6)" id="dot-2-6" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(2, 7)" id="dot-2-7" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button><button onclick="goModSlide(2, 8)" id="dot-2-8" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">9</button><button onclick="goModSlide(2, 9)" id="dot-2-9" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">10</button><button onclick="goModSlide(2, 10)" id="dot-2-10" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">11</button></div>
           <button onclick="selectStage(2, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="2" data-sidx="0" data-orig="201"><div class="mod-slide-card space-y-4">
         <div>
           <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Módulo 2: Fundamentos • Traduzindo Cada Ferramenta de Diagnóstico</span>
@@ -2252,7 +2318,7 @@ Start   10.2466  1   0.001369 **
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 3</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 3</span>
             <span class="text-xs text-slate-500 font-medium">8 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">Logística, OR & Interações</h2>
@@ -2278,18 +2344,18 @@ Start   10.2466  1   0.001369 **
       <div id="stage-3-slides" class="stage-panel-3 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(3, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(3, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-3" class="text-xs font-mono px-2">Slide 1 de 7 <span class="text-slate-500">(Deck #21)</span></span>
-            <button onclick="stepModSlide(3, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(3, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(3, 0)" id="dot-3-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(3, 1)" id="dot-3-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(3, 2)" id="dot-3-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(3, 3)" id="dot-3-3" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(3, 4)" id="dot-3-4" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(3, 5)" id="dot-3-5" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(3, 6)" id="dot-3-6" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(3, 7)" id="dot-3-7" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button></div>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(3, 0)" id="dot-3-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(3, 1)" id="dot-3-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(3, 2)" id="dot-3-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(3, 3)" id="dot-3-3" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(3, 4)" id="dot-3-4" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(3, 5)" id="dot-3-5" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(3, 6)" id="dot-3-6" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(3, 7)" id="dot-3-7" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button></div>
           <button onclick="selectStage(3, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="3" data-sidx="0" data-orig="301"><div class="mod-slide-card space-y-4">
         <div>
           <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Módulo 3: Fundamentos • Entendendo Probabilidade, Chance &amp; Logito</span>
@@ -3055,7 +3121,7 @@ Start   10.2466  1   0.001369 **
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 4</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 4</span>
             <span class="text-xs text-slate-500 font-medium">3 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">RR, Cornfield & Eventos Raros</h2>
@@ -3081,19 +3147,19 @@ Start   10.2466  1   0.001369 **
       <div id="stage-4-slides" class="stage-panel-4 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(4, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(4, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-4" class="text-xs font-mono px-2">Slide 1 de 3 <span class="text-slate-500">(Deck #24)</span></span>
-            <button onclick="stepModSlide(4, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(4, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(4, 0)" id="dot-4-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(4, 1)" id="dot-4-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(4, 2)" id="dot-4-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(4, 0)" id="dot-4-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(4, 1)" id="dot-4-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(4, 2)" id="dot-4-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button>
           </div>
           <button onclick="selectStage(4, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="4" data-sidx="0" data-orig="24"><div class="mod-slide-card space-y-4">
         <div>
           <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Módulo 4: Regressão Logística • Slide 68</span>
@@ -3604,7 +3670,7 @@ Start   10.2466  1   0.001369 **
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 5</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 5</span>
             <span class="text-xs text-slate-500 font-medium">6 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">HL, Curva ROC & Confusão</h2>
@@ -3630,18 +3696,18 @@ Start   10.2466  1   0.001369 **
       <div id="stage-5-slides" class="stage-panel-5 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(5, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(5, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-5" class="text-xs font-mono px-2">Slide 1 de 5 <span class="text-slate-500">(Deck #26)</span></span>
-            <button onclick="stepModSlide(5, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(5, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(5, 0)" id="dot-5-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(5, 1)" id="dot-5-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(5, 2)" id="dot-5-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(5, 3)" id="dot-5-3" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(5, 4)" id="dot-5-4" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(5, 5)" id="dot-5-5" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button></div>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(5, 0)" id="dot-5-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(5, 1)" id="dot-5-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(5, 2)" id="dot-5-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(5, 3)" id="dot-5-3" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(5, 4)" id="dot-5-4" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(5, 5)" id="dot-5-5" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button></div>
           <button onclick="selectStage(5, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="5" data-sidx="0" data-orig="501"><div class="mod-slide-card space-y-4">
         <div>
           <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Módulo 5: Fundamentos • Por Dentro da Calibração</span>
@@ -4329,7 +4395,7 @@ X-squared = 6.8216, df = 8, p-value = 0.556
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 6</span>
+            <span class="shrink-0 whitespace-nowrap px-2 py-0.5 rounded bg-brand-900 text-white text-[11px] font-bold uppercase tracking-wider">Módulo 6</span>
             <span class="text-xs text-slate-500 font-medium">8 slides • Exemplo &amp; Laboratório • 8 questões fechadas</span>
           </div>
           <h2 class="text-xl font-black text-slate-900">Saídas Reais do R & Revisão</h2>
@@ -4355,19 +4421,19 @@ X-squared = 6.8216, df = 8, p-value = 0.556
       <div id="stage-6-slides" class="stage-panel-6 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100 text-slate-900 border border-slate-300 px-4 py-2.5 rounded-xl">
           <div class="flex items-center gap-2">
-            <button onclick="stepModSlide(6, -1)" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
+            <button onclick="stepModSlide(6, -1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-bold transition">← Anterior</button>
             <span id="mod-slide-counter-6" class="text-xs font-mono px-2">Slide 1 de 8 <span class="text-slate-500">(Deck #31)</span></span>
-            <button onclick="stepModSlide(6, 1)" class="px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
+            <button onclick="stepModSlide(6, 1)" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition">Próximo →</button>
           </div>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="goModSlide(6, 0)" id="dot-6-0" class="w-6 h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(6, 1)" id="dot-6-1" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(6, 2)" id="dot-6-2" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(6, 3)" id="dot-6-3" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(6, 4)" id="dot-6-4" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(6, 5)" id="dot-6-5" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(6, 6)" id="dot-6-6" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(6, 7)" id="dot-6-7" class="w-6 h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto py-0.5 sm:flex-wrap">
+            <button onclick="goModSlide(6, 0)" id="dot-6-0" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-sky-700 text-white">1</button><button onclick="goModSlide(6, 1)" id="dot-6-1" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">2</button><button onclick="goModSlide(6, 2)" id="dot-6-2" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">3</button><button onclick="goModSlide(6, 3)" id="dot-6-3" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">4</button><button onclick="goModSlide(6, 4)" id="dot-6-4" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">5</button><button onclick="goModSlide(6, 5)" id="dot-6-5" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">6</button><button onclick="goModSlide(6, 6)" id="dot-6-6" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">7</button><button onclick="goModSlide(6, 7)" id="dot-6-7" class="shrink-0 w-7 h-7 sm:w-6 sm:h-6 rounded text-[11px] font-bold transition bg-white text-slate-700 border border-slate-300 hover:bg-sky-50">8</button>
           </div>
           <button onclick="selectStage(6, 'example')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
             Ir ao Exemplo &amp; Simulador →
           </button>
         </div>
 
-        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-7 sm:p-12">
+        <div class="slide-stage-wrapper bg-white rounded-2xl border border-slate-300 shadow-sm p-4 sm:p-12">
           <div class="slide-slot" data-mod="6" data-sidx="0" data-orig="31"><div class="mod-slide-card space-y-4">
         <div>
           <span class="text-xs font-bold text-sky-800 uppercase tracking-wider">Módulo 6: Saídas do R • Slides 25, 36 e 39</span>
@@ -6270,6 +6336,29 @@ sem #69: sexo:ff = -2.47288 (SE=1.47616, z=-1.675, p=0.093893 .)
       renderMath();
     });
     document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.slide-stage-wrapper').forEach(stage => {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let ignoreSwipe = false;
+        stage.addEventListener('touchstart', (ev) => {
+          if (!ev.touches || ev.touches.length !== 1) return;
+          if (ev.target.closest('input, select, textarea, button, a')) { ignoreSwipe = true; return; }
+          const scroller = ev.target.closest('pre, table, .katex-display');
+          ignoreSwipe = !!(scroller && scroller.scrollWidth > scroller.clientWidth + 2);
+          touchStartX = ev.touches[0].clientX;
+          touchStartY = ev.touches[0].clientY;
+        }, { passive: true });
+        stage.addEventListener('touchend', (ev) => {
+          if (ignoreSwipe || !ev.changedTouches || ev.changedTouches.length !== 1) return;
+          const dx = ev.changedTouches[0].clientX - touchStartX;
+          const dy = ev.changedTouches[0].clientY - touchStartY;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > 2 * Math.abs(dy)) {
+            const slot = stage.querySelector('.slide-slot[data-mod]');
+            const mid = slot ? parseInt(slot.dataset.mod, 10) : 1;
+            stepModSlide(mid, dx < 0 ? 1 : -1);
+          }
+        }, { passive: true });
+      });
       renderMath();
     });
   </script>

@@ -12,6 +12,12 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
     body {
       background-color: #090d16;
       color: #f8fafc;
@@ -20,9 +26,11 @@
     }
     .slide {
       display: none;
-      height: calc(100vh - 65px);
-      max-height: 100vh;
+      flex: 1 1 auto;
+      min-height: 0;
       overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 2px;
     }
     .slide.active {
       display: flex;
@@ -34,26 +42,60 @@
     .slide::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     code {
       font-family: Consolas, Monaco, "Courier New", monospace;
+      overflow-wrap: anywhere;
+    }
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .grid > *, .flex > * {
+      min-width: 0;
+    }
+    .katex .katex-mathml {
+      display: none !important;
+    }
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 0.45rem 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    @media (max-width: 640px) {
+      .katex {
+        font-size: 0.92em;
+        white-space: normal;
+      }
+      .slide h1 { font-size: 1.5rem !important; line-height: 1.25 !important; }
+      .slide h2 { font-size: 1.2rem !important; line-height: 1.3 !important; }
     }
   </style>
 </head>
-<body class="h-screen flex flex-col justify-between selection:bg-sky-500 selection:text-white">
+<body class="h-screen h-[100dvh] flex flex-col justify-between selection:bg-sky-500 selection:text-white overflow-hidden">
 
   <!-- TOP HEADER -->
-  <header class="bg-slate-900/90 border-b border-slate-800 px-6 py-2.5 flex justify-between items-center text-xs text-slate-400 z-10 backdrop-blur">
-    <div class="flex items-center space-x-3">
-      <span class="bg-sky-500/20 text-sky-400 font-bold px-2 py-0.5 rounded border border-sky-500/30">MATD50 • UFBA</span>
-      <span class="font-semibold text-slate-300">Modelos Lineares Generalizados — Profa. Rosemeire L. Fiaccone</span>
+  <header class="shrink-0 bg-slate-900/90 border-b border-slate-800 px-3 sm:px-6 py-2 sm:py-2.5 flex justify-between items-center gap-2 text-xs text-slate-400 z-10 backdrop-blur">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+      <span class="shrink-0 bg-sky-500/20 text-sky-400 font-bold px-2 py-0.5 rounded border border-sky-500/30">MATD50 • UFBA</span>
+      <span class="hidden sm:inline font-semibold text-slate-300 truncate">Modelos Lineares Generalizados — Profa. Rosemeire L. Fiaccone</span>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="text-slate-500">Use as setas ← → ou Espaço para navegar</span>
+    <div class="shrink-0 flex items-center gap-2 sm:gap-4">
+      <span class="hidden md:inline text-slate-500">Use as setas ← → ou Espaço para navegar</span>
       <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono" id="slideIndicatorTop">01 / 45</span>
     </div>
   </header>
 
   <!-- MAIN SLIDES CONTAINER -->
-  <main class="flex-1 p-4 md:p-6 flex flex-col justify-center items-center relative overflow-hidden">
-    <div class="w-full max-w-5xl h-full bg-slate-900 border border-slate-800/80 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col justify-between relative">
+  <main class="flex-1 min-h-0 p-2 sm:p-4 md:p-6 flex flex-col justify-center items-center relative overflow-hidden">
+    <div id="slidesContainerCard" class="w-full max-w-5xl h-full bg-slate-900 border border-slate-800/80 rounded-2xl shadow-2xl p-3.5 sm:p-6 md:p-8 flex flex-col justify-between relative min-h-0">
 
       <!-- ========================================== -->
       <!-- SLIDE 1: CAPA -->
@@ -1376,14 +1418,14 @@ m2 (~Start): Resid. Dev = 68.072 (79 df) vs m1: 61.380 (77 df)</code></pre>
       </div>
 
       <!-- FOOTER CONTROLS & PROGRESS BAR -->
-      <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-        <div class="flex items-center space-x-2">
-          <button onclick="prevSlide()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded transition font-bold">← Anterior</button>
-          <button onclick="nextSlide()" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded transition font-bold">Próximo →</button>
-          <span class="ml-2 font-mono" id="slideIndicator">Slide 1 de 45</span>
+      <div class="shrink-0 pt-2.5 sm:pt-4 border-t border-slate-800 flex justify-between items-center gap-2 text-xs text-slate-400">
+        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <button onclick="prevSlide()" class="shrink-0 whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-white px-2.5 sm:px-3 py-1.5 rounded transition font-bold text-[11px] sm:text-xs">← Anterior</button>
+          <button onclick="nextSlide()" class="shrink-0 whitespace-nowrap bg-sky-600 hover:bg-sky-500 text-white px-2.5 sm:px-3 py-1.5 rounded transition font-bold text-[11px] sm:text-xs">Próximo →</button>
+          <span class="whitespace-nowrap ml-0.5 sm:ml-2 font-mono text-[11px] sm:text-xs" id="slideIndicator">Slide 1 de 45</span>
         </div>
-        <div class="flex items-center space-x-3">
-          <button onclick="toggleFullscreen()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded border border-slate-700">⛶ Tela Cheia</button>
+        <div class="shrink-0 flex items-center gap-2 sm:gap-3">
+          <button onclick="toggleFullscreen()" class="shrink-0 whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 sm:px-2.5 py-1.5 rounded border border-slate-700 text-[11px] sm:text-xs">⛶ <span class="hidden sm:inline">Tela Cheia</span></button>
         </div>
       </div>
 
@@ -1453,6 +1495,29 @@ m2 (~Start): Resid. Dev = 68.072 (79 df) vs m1: 61.380 (77 df)</code></pre>
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+      const containerCard = document.getElementById('slidesContainerCard');
+      if (containerCard) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let ignoreSwipe = false;
+        containerCard.addEventListener('touchstart', (ev) => {
+          if (!ev.touches || ev.touches.length !== 1) return;
+          if (ev.target.closest('button, a, input, select')) { ignoreSwipe = true; return; }
+          const scroller = ev.target.closest('pre, table, .katex-display');
+          ignoreSwipe = !!(scroller && scroller.scrollWidth > scroller.clientWidth + 2);
+          touchStartX = ev.touches[0].clientX;
+          touchStartY = ev.touches[0].clientY;
+        }, { passive: true });
+        containerCard.addEventListener('touchend', (ev) => {
+          if (ignoreSwipe || !ev.changedTouches || ev.changedTouches.length !== 1) return;
+          const dx = ev.changedTouches[0].clientX - touchStartX;
+          const dy = ev.changedTouches[0].clientY - touchStartY;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > 2 * Math.abs(dy)) {
+            if (dx < 0) nextSlide();
+            else prevSlide();
+          }
+        }, { passive: true });
+      }
       renderMath();
       showSlide(0);
     });
